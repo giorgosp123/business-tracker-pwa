@@ -1304,6 +1304,306 @@
             border-radius: 3px;
         }
 
+        /* Theme Selector Panel */
+        .theme-panel {
+            margin: 20px 0;
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.08), rgba(142, 68, 173, 0.08));
+            border-radius: 20px;
+            border: 1px solid rgba(155, 89, 182, 0.2);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        body.dark-mode .theme-panel {
+            background: linear-gradient(135deg, rgba(155, 89, 182, 0.08), rgba(142, 68, 173, 0.08));
+            border: 1px solid rgba(155, 89, 182, 0.15);
+        }
+
+        .theme-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(155, 89, 182, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .theme-header h3 {
+            margin: 0;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-theme-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            background: linear-gradient(45deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+            color: #8e44ad;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+            min-height: 36px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-theme-btn:hover {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        body.dark-mode .toggle-theme-btn {
+            background: linear-gradient(45deg, rgba(155, 89, 182, 0.1), rgba(142, 68, 173, 0.1));
+            color: #9b59b6;
+            border: 1px solid rgba(155, 89, 182, 0.3);
+        }
+
+        body.dark-mode .toggle-theme-btn:hover {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+
+        .theme-content {
+            padding: 20px;
+        }
+
+        .theme-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .theme-item {
+            background: rgba(255,255,255,0.8);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .theme-item.active {
+            border-color: #9b59b6;
+            box-shadow: 0 8px 25px rgba(155, 89, 182, 0.3);
+        }
+
+        body.dark-mode .theme-item {
+            background: rgba(52, 73, 94, 0.8);
+        }
+
+        .theme-preview {
+            width: 100%;
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .theme-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode .theme-name {
+            color: #ecf0f1;
+        }
+
+        .theme-description {
+            font-size: 11px;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+
+        body.dark-mode .theme-description {
+            color: #bdc3c7;
+        }
+
+        /* Theme Color Schemes */
+        .theme-default .theme-preview {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+
+        .theme-ocean .theme-preview {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        .theme-sunset .theme-preview {
+            background: linear-gradient(45deg, #f093fb, #f5576c);
+        }
+
+        .theme-forest .theme-preview {
+            background: linear-gradient(45deg, #43e97b, #38f9d7);
+        }
+
+        .theme-royal .theme-preview {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+        }
+
+        .theme-fire .theme-preview {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+        }
+
+        .theme-gold .theme-preview {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        .theme-ice .theme-preview {
+            background: linear-gradient(45deg, #74b9ff, #0984e3);
+        }
+
+        /* Theme Variables */
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --primary-light: rgba(103, 126, 234, 0.1);
+            --secondary-light: rgba(118, 75, 162, 0.1);
+        }
+
+        body.theme-ocean {
+            --primary-color: #4facfe;
+            --secondary-color: #00f2fe;
+            --primary-light: rgba(79, 172, 254, 0.1);
+            --secondary-light: rgba(0, 242, 254, 0.1);
+        }
+
+        body.theme-sunset {
+            --primary-color: #f093fb;
+            --secondary-color: #f5576c;
+            --primary-light: rgba(240, 147, 251, 0.1);
+            --secondary-light: rgba(245, 87, 108, 0.1);
+        }
+
+        body.theme-forest {
+            --primary-color: #43e97b;
+            --secondary-color: #38f9d7;
+            --primary-light: rgba(67, 233, 123, 0.1);
+            --secondary-light: rgba(56, 249, 215, 0.1);
+        }
+
+        body.theme-royal {
+            --primary-color: #9b59b6;
+            --secondary-color: #8e44ad;
+            --primary-light: rgba(155, 89, 182, 0.1);
+            --secondary-light: rgba(142, 68, 173, 0.1);
+        }
+
+        body.theme-fire {
+            --primary-color: #ff6b6b;
+            --secondary-color: #ee5a52;
+            --primary-light: rgba(255, 107, 107, 0.1);
+            --secondary-light: rgba(238, 90, 82, 0.1);
+        }
+
+        body.theme-gold {
+            --primary-color: #f39c12;
+            --secondary-color: #e67e22;
+            --primary-light: rgba(243, 156, 18, 0.1);
+            --secondary-light: rgba(230, 126, 34, 0.1);
+        }
+
+        body.theme-ice {
+            --primary-color: #74b9ff;
+            --secondary-color: #0984e3;
+            --primary-light: rgba(116, 185, 255, 0.1);
+            --secondary-light: rgba(9, 132, 227, 0.1);
+        }
+
+        /* Apply theme variables to existing elements */
+        .stat-value, .analytics-header h3, .chart-select-row label, .dropdown-label {
+            color: var(--primary-color) !important;
+        }
+
+        body.dark-mode .stat-value, body.dark-mode .analytics-header h3, 
+        body.dark-mode .chart-select-row label, body.dark-mode .dropdown-label {
+            color: var(--primary-color) !important;
+        }
+
+        .stat-card, .analytics-panel, .chart-type-btn, #forecastPeriod, #chartCategory {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary-light)) !important;
+        }
+
+        .chart-type-btn.active {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+
+        th {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+
+        button:not(.delete-btn):not(.chart-type-btn) {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+
+        .insights-header h3 {
+            background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        .notification {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+        }
+
+        .notification.success {
+            background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
+        }
+
+        .notification.error {
+            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
+        }
+
+        .notification.warning {
+            background: linear-gradient(45deg, #f39c12, #e67e22) !important;
+        }
+
+        h2 {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        body.dark-mode h2 {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            background-clip: text !important;
+        }
+
+        /* Theme transition effects */
+        * {
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease !important;
+        }
+
+        /* Desktop theme grid improvements */
+        @media (min-width: 768px) {
+            .theme-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
         /* iOS safe areas */
         @supports (padding: max(0px)) {
             .container {
@@ -1329,6 +1629,7 @@
             <div class="user-buttons">
                 <button id="exportExcelBtn">📥 Excel</button>
                 <button id="exportPdfBtn">📥 PDF</button>
+                <button id="themeBtn">🎨 Θέματα</button>
                 <button id="darkModeBtn">🌙/☀️</button>
                 <button id="logoutBtn">Έξοδος</button>
             </div>
@@ -1425,6 +1726,61 @@
                 <div class="stat-card">
                     <div class="stat-value" id="volatilityIndex">0%</div>
                     <div class="stat-label">⚡ Αστάθεια</div>
+                </div>
+            </div>
+            
+            <!-- Theme Selector Panel -->
+            <div class="theme-panel" id="themePanel" style="display: none;">
+                <div class="theme-header">
+                    <h3>🎨 Επιλογή Θέματος</h3>
+                    <button class="toggle-theme-btn" id="toggleThemeBtn">🎯 Επιλογή Στυλ</button>
+                </div>
+                <div class="theme-content" id="themeContent">
+                    <div class="theme-grid">
+                        <div class="theme-item theme-default active" data-theme="default">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">🌟 Κλασικό</div>
+                            <div class="theme-description">Το αρχικό μπλε θέμα</div>
+                        </div>
+                        <div class="theme-item theme-ocean" data-theme="ocean">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">🌊 Ωκεανός</div>
+                            <div class="theme-description">Γαλάζιο και δροσερό</div>
+                        </div>
+                        <div class="theme-item theme-sunset" data-theme="sunset">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">🌅 Ηλιοβασίλεμα</div>
+                            <div class="theme-description">Ροζ και κόκκινο</div>
+                        </div>
+                        <div class="theme-item theme-forest" data-theme="forest">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">🌲 Δάσος</div>
+                            <div class="theme-description">Πράσινο και φυσικό</div>
+                        </div>
+                        <div class="theme-item theme-royal" data-theme="royal">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">👑 Βασιλικό</div>
+                            <div class="theme-description">Μοβ και κομψό</div>
+                        </div>
+                        <div class="theme-item theme-fire" data-theme="fire">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">🔥 Φωτιά</div>
+                            <div class="theme-description">Κόκκινο και δυναμικό</div>
+                        </div>
+                        <div class="theme-item theme-gold" data-theme="gold">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">✨ Χρυσό</div>
+                            <div class="theme-description">Πορτοκαλί και ζεστό</div>
+                        </div>
+                        <div class="theme-item theme-ice" data-theme="ice">
+                            <div class="theme-preview"></div>
+                            <div class="theme-name">❄️ Παγωμένο</div>
+                            <div class="theme-description">Γαλάζιο και κρύο</div>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="toggle-theme-btn" id="resetThemeBtn">🔄 Επαναφορά Προεπιλογής</button>
+                    </div>
                 </div>
             </div>
             
@@ -1564,6 +1920,67 @@
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDark);
             updateChart();
+        };
+
+        // Theme management
+        let currentTheme = 'default';
+        
+        const applyTheme = (theme) => {
+            // Remove all theme classes
+            document.body.classList.remove('theme-default', 'theme-ocean', 'theme-sunset', 'theme-forest', 'theme-royal', 'theme-fire', 'theme-gold', 'theme-ice');
+            
+            // Add new theme class
+            if (theme !== 'default') {
+                document.body.classList.add(`theme-${theme}`);
+            }
+            
+            currentTheme = theme;
+            localStorage.setItem('selectedTheme', theme);
+            
+            // Update active theme indicator
+            document.querySelectorAll('.theme-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-theme="${theme}"]`).classList.add('active');
+            
+            // Update chart if it exists
+            if (chart) {
+                updateChart();
+            }
+            
+            showNotification(`🎨 Θέμα "${getThemeName(theme)}" εφαρμόστηκε!`, "success");
+        };
+        
+        const getThemeName = (theme) => {
+            const names = {
+                'default': 'Κλασικό',
+                'ocean': 'Ωκεανός', 
+                'sunset': 'Ηλιοβασίλεμα',
+                'forest': 'Δάσος',
+                'royal': 'Βασιλικό',
+                'fire': 'Φωτιά',
+                'gold': 'Χρυσό',
+                'ice': 'Παγωμένο'
+            };
+            return names[theme] || 'Κλασικό';
+        };
+        
+        const toggleThemePanel = () => {
+            const panel = document.getElementById('themePanel');
+            const isVisible = panel.style.display !== 'none';
+            
+            if (isVisible) {
+                panel.style.display = 'none';
+                showNotification("🎨 Πάνελ θεμάτων κρύφτηκε", "info", 1500);
+            } else {
+                panel.style.display = 'block';
+                panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                showNotification("🎨 Επιλέξτε το αγαπημένο σας θέμα!", "info", 2000);
+            }
+        };
+        
+        const resetTheme = () => {
+            applyTheme('default');
         };
 
         // Category management
@@ -3375,6 +3792,77 @@ function sanitizeKey(email) {
 }
         // Make functions globally available
         window.deleteCategory = deleteCategory;
+        
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            // Initialize theme from localStorage
+            const savedTheme = localStorage.getItem('selectedTheme') || 'default';
+            applyTheme(savedTheme);
+            
+            // Theme selector event listeners
+            document.getElementById('themeBtn').addEventListener('click', toggleThemePanel);
+            document.getElementById('toggleThemeBtn').addEventListener('click', toggleThemePanel);
+            document.getElementById('resetThemeBtn').addEventListener('click', resetTheme);
+            
+            // Theme selection
+            document.querySelectorAll('.theme-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const theme = item.dataset.theme;
+                    applyTheme(theme);
+                });
+            });
+            
+            // Existing event listeners
+            document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+            document.getElementById('darkModeBtn').addEventListener('click', toggleDarkMode);
+            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+            document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
+            document.getElementById('compareBtn').addEventListener('click', compareData);
+            document.getElementById('forecastBtn').addEventListener('click', generateForecast);
+            document.getElementById('downloadChartBtn').addEventListener('click', downloadChart);
+            document.getElementById('toggleAnalyticsBtn').addEventListener('click', toggleAnalytics);
+            document.getElementById('toggleInsightsBtn').addEventListener('click', toggleInsights);
+            document.getElementById('refreshInsightsBtn').addEventListener('click', refreshInsights);
+            
+            // Chart type buttons
+            document.querySelectorAll('.chart-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.chart-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentChartType = btn.dataset.type;
+                    updateChart();
+                });
+            });
+            
+            // Category and year change handlers
+            document.getElementById('chartCategory').addEventListener('change', updateChart);
+            document.getElementById('yearSelect').addEventListener('change', (e) => {
+                selectedYear = parseInt(e.target.value);
+                if (!salesData[selectedYear]) {
+                    salesData[selectedYear] = {};
+                }
+                renderTable();
+                populateCategoryDropdown();
+                updateChart();
+            });
+            
+            // Enter key handlers
+            document.getElementById('categoryName').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    addCategory();
+                }
+            });
+            
+            // Initialize everything
+            populateYearDropdown();
+            loadFromFirebaseAndLocalStorage();
+            
+            // Load dark mode preference
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        });
     </script>
     <!-- ...existing code... -->
     <!-- Firebase App (core) -->
