@@ -935,6 +935,17 @@
             transform: scale(1.05);
         }
 
+        body.dark-mode .refresh-insights-btn {
+            background: linear-gradient(45deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+            color: #2ecc71;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+        }
+
+        body.dark-mode .refresh-insights-btn:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
         .insights-content {
             padding: 20px;
         }
@@ -1421,15 +1432,18 @@
             <div class="insights-panel" id="insightsPanel">
                 <div class="insights-header">
                     <h3>🔍 Έξυπνες Προτάσεις AI</h3>
-                    <button class="refresh-insights-btn" id="refreshInsightsBtn">🔄 Ανανέωση</button>
+                    <button class="refresh-insights-btn" id="toggleInsightsBtn">� Προβολή Λεπτομερειών</button>
                 </div>
-                <div class="insights-content" id="insightsContent">
+                <div class="insights-content" id="insightsContent" style="display: none;">
                     <div class="insights-loading" id="insightsLoading" style="display: none;">
                         <div class="spinner"></div>
                         <div>🧠 Το AI αναλύει τα δεδομένα σας...</div>
                     </div>
                     <div class="insights-grid" id="insightsGrid">
                         <!-- Insights will be populated here -->
+                    </div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="refresh-insights-btn" id="refreshInsightsBtn">🔄 Ανανέωση Αναλύσεων</button>
                     </div>
                 </div>
             </div>
@@ -1582,7 +1596,6 @@
             renderTable();
             populateCategoryDropdown();
             updateChart();
-            refreshInsights(); // Refresh AI insights when data changes
             showNotification("✅ Κατηγορία προστέθηκε επιτυχώς!", "success");
         };
 const deleteCategory = (category, rowElement) => {
@@ -1766,9 +1779,6 @@ const deleteCategory = (category, rowElement) => {
             });
             row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
             updateChart();
-            
-            // Refresh insights when data changes
-            setTimeout(() => refreshInsights(), 500);
             
             // Mobile success feedback
             showNotification("✅ Τιμή ενημερώθηκε!", "success", 1500);
@@ -3258,12 +3268,34 @@ function loadFromFirebase() {
                 }
             });
 
+            // Smart Insights panel toggle
+            document.getElementById('toggleInsightsBtn').addEventListener('click', () => {
+                const content = document.getElementById('insightsContent');
+                const btn = document.getElementById('toggleInsightsBtn');
+                
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    btn.textContent = '📊 Απόκρυψη Λεπτομερειών';
+                    // Auto-refresh insights when panel is opened
+                    if (!document.getElementById('insightsGrid').innerHTML.trim()) {
+                        refreshInsights();
+                    }
+                } else {
+                    content.style.display = 'none';
+                    btn.textContent = '📊 Προβολή Λεπτομερειών';
+                }
+            });
+
             // Smart Insights refresh button
             document.getElementById('refreshInsightsBtn').addEventListener('click', refreshInsights);
             
-            // Initialize insights
+            // Initialize insights when data is loaded
             setTimeout(() => {
-                refreshInsights();
+                // Only auto-generate if there's data
+                const hasData = Object.keys(salesData[selectedYear]).length > 0;
+                if (hasData) {
+                    refreshInsights();
+                }
             }, 1000);
             
             // Δοκίμασε να φορτώσεις από Firebase, αν αποτύχει χρησιμοποίησε localStorage
