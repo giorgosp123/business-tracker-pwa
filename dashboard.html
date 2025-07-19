@@ -600,6 +600,7 @@
             <div class="user-buttons">
                 <button id="exportExcelBtn">📥 Excel</button>
                 <button id="exportPdfBtn">📥 PDF</button>
+                <button id="backupBtn">💾 Backup</button>
                 <button id="darkModeBtn">🌙/☀️</button>
                 <button id="logoutBtn">Έξοδος</button>
             </div>
@@ -685,6 +686,7 @@
         // Utility functions
         const saveToLocalStorage = () => {
             localStorage.setItem('salesData', JSON.stringify(salesData));
+            console.log('✅ Data saved to localStorage');
         };
 
         const showLoading = () => {
@@ -734,7 +736,11 @@
 
             salesData[selectedYear][category] = { sales: {} };
             catInput.value = "";
+            
+            // Save to both Firebase and localStorage
             saveToFirebase();
+            saveToLocalStorage();
+            
             renderTable();
             populateCategoryDropdown();
             updateChart();
@@ -743,7 +749,11 @@
 const deleteCategory = (category, rowElement) => {
     // Χωρίς confirm pop-up
     delete salesData[selectedYear][category];
+    
+    // Save to both Firebase and localStorage
     saveToFirebase();
+    saveToLocalStorage();
+    
     rowElement.classList.add('fade-out');
     setTimeout(() => {
         rowElement.remove();
@@ -828,7 +838,11 @@ const deleteCategory = (category, rowElement) => {
         const saveCellValue = (cell, input, category, month) => {
             const newValue = parseFloat(input.value);
             salesData[selectedYear][category].sales[month] = isNaN(newValue) ? 0 : newValue;
+            
+            // Save to both Firebase and localStorage
             saveToFirebase();
+            saveToLocalStorage();
+            
             cell.textContent = (isNaN(newValue) ? 0 : newValue).toLocaleString();
 
             // Update total
@@ -876,7 +890,11 @@ const deleteCategory = (category, rowElement) => {
             if (newName && newName !== oldName && !salesData[selectedYear][newName]) {
                 salesData[selectedYear][newName] = salesData[selectedYear][oldName];
                 delete salesData[selectedYear][oldName];
+                
+                // Save to both Firebase and localStorage
                 saveToFirebase();
+                saveToLocalStorage();
+                
                 renderTable();
                 populateCategoryDropdown();
                 updateChart();
@@ -1347,8 +1365,35 @@ options: {
             showNotification("✅ Το γράφημα κατέβηκε επιτυχώς!", "success");
         };
 
+        // Backup and restore functions
+        const manualBackup = () => {
+            try {
+                // Save to Firebase
+                saveToFirebase();
+                
+                // Save to localStorage
+                saveToLocalStorage();
+                
+                // Create downloadable backup file
+                const dataStr = JSON.stringify(salesData, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `business_tracker_backup_${new Date().toISOString().split('T')[0]}.json`;
+                link.click();
+                URL.revokeObjectURL(url);
+                
+                showNotification("✅ Backup ολοκληρώθηκε! Αρχείο κατέβηκε.", "success");
+            } catch (error) {
+                console.error('Backup error:', error);
+                showNotification("❌ Σφάλμα κατά το backup!", "error");
+            }
+        };
+
         // Initialize sample data
         const initializeSampleData = () => {
+            console.log('Initializing sample data for year:', selectedYear);
             if (Object.keys(salesData[selectedYear]).length === 0) {
                 salesData[selectedYear] = {
                     'Προϊόντα Α': {
@@ -1366,7 +1411,9 @@ options: {
                         }
                     }
                 };
+                console.log('Sample data initialized:', salesData[selectedYear]);
                 saveToFirebase();
+                saveToLocalStorage();
             }
         };
 
@@ -1387,6 +1434,7 @@ options: {
             document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
             document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
             document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
+            document.getElementById('backupBtn').addEventListener('click', manualBackup);
             document.getElementById('compareBtn').addEventListener('click', compareWithPreviousYear);
             document.getElementById('forecastBtn').addEventListener('click', forecast);
             document.getElementById('downloadChartBtn').addEventListener('click', downloadChart);
@@ -1409,7 +1457,6 @@ options: {
             document.addEventListener('touchmove', function() {}, {passive: true});
         };
 
-        // Apply saved dark mode
         const applySavedDarkMode = () => {
             const darkMode = localStorage.getItem('darkMode') === 'true';
             if (darkMode) {
@@ -1417,52 +1464,111 @@ options: {
             }
         };
 
+        // Load data from localStorage as fallback
+        const loadFromLocalStorage = () => {
+            console.log('Loading from localStorage...');
+            const localData = localStorage.getItem('salesData');
+            if (localData) {
+                try {
+                    const parsedData = JSON.parse(localData);
+                    Object.keys(parsedData).forEach(year => {
+                        salesData[year] = parsedData[year];
+                    });
+                    console.log('✅ Data loaded from localStorage:', salesData);
+                    return true;
+                } catch (error) {
+                    console.error('❌ Error parsing localStorage data:', error);
+                    return false;
+                }
+            }
+            return false;
+        };
+
         
 function loadFromFirebase() {
     const rawEmail = sessionStorage.getItem('loggedInUser');
-    const username = sanitizeKey(rawEmail);
-    if (!username) return;
+    console.log('Raw email from session:', rawEmail);
+    
+    let username;
+    if (rawEmail && rawEmail.trim() !== '') {
+        username = sanitizeKey(rawEmail);
+    } else {
+        // Χρησιμοποίησε default username αν δεν υπάρχει logged user
+        username = 'default_user';
+        sessionStorage.setItem('loggedInUser', 'default_user@example.com');
+    }
+    
+    console.log('Using username for Firebase:', username);
+    
     firebase.database().ref('salesData/' + username).once('value').then(snapshot => {
         const data = snapshot.val();
+        console.log('Data loaded from Firebase:', data);
+        
         if (data) {
             Object.keys(data).forEach(year => {
                 salesData[year] = data[year];
             });
             // Ενημέρωσε το selectedYear αν δεν υπάρχει
-         if (!salesData[selectedYear]) {
-    selectedYear = Object.keys(salesData).sort().pop(); // τελευταίο διαθέσιμο έτος
-}
+            if (!salesData[selectedYear]) {
+                selectedYear = Object.keys(salesData).sort().pop(); // τελευταίο διαθέσιμο έτος
+            }
             populateYearDropdown();
             renderTable();
             populateCategoryDropdown();
             updateChart();
         } else {
+            console.log('No data found, initializing sample data');
             initializeSampleData();
             populateYearDropdown();
             renderTable();
             populateCategoryDropdown();
             updateChart();
         }
+    }).catch(error => {
+        console.error('Firebase load error:', error);
+        // Fallback σε localStorage αν το Firebase αποτύχει
+        const localData = localStorage.getItem('salesData');
+        if (localData) {
+            const parsedData = JSON.parse(localData);
+            Object.keys(parsedData).forEach(year => {
+                salesData[year] = parsedData[year];
+            });
+        } else {
+            initializeSampleData();
+        }
+        populateYearDropdown();
+        renderTable();
+        populateCategoryDropdown();
+        updateChart();
     });
 }
         // Initialize application
         document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Application starting...');
+            
             // Set username
             const userDisplay = document.getElementById('userDisplay');
-            const username = sessionStorage.getItem('loggedInUser') || 'Χρήστης';
-            userDisplay.textContent = username;
+            let username = sessionStorage.getItem('loggedInUser') || 'Χρήστης';
+            
+            // Αν δεν υπάρχει username, δημιούργησε ένα default
+            if (!username || username === 'Χρήστης') {
+                username = 'default_user@example.com';
+                sessionStorage.setItem('loggedInUser', username);
+            }
+            
+            userDisplay.textContent = username.split('@')[0] || 'Χρήστης';
+            console.log('Username set to:', username);
 
             // Initialize functionality
             applySavedDarkMode();
-            //initializeSampleData();
-            //populateYearDropdown();
-            //renderTable();
-            //populateCategoryDropdown();
             setupEventListeners();
-            //updateChart();
+            
+            // Δοκίμασε να φορτώσεις από Firebase, αν αποτύχει χρησιμοποίησε localStorage
+            console.log('📥 Loading data...');
             loadFromFirebase();
+
             console.log('Loaded salesData:', salesData);
-console.log('Selected year:', selectedYear);
+            console.log('Selected year:', selectedYear);
 
             // Service Worker registration
             if ("serviceWorker" in navigator) {
@@ -1473,8 +1579,14 @@ console.log('Selected year:', selectedYear);
 
             // Welcome message
             setTimeout(() => {
-                showNotification(`🎉 Καλώς ήρθες, ${username}!`, "success");
+                showNotification(`🎉 Καλώς ήρθες, ${username.split('@')[0]}!`, "success");
             }, 1000);
+            
+            // Auto-save κάθε 30 δευτερόλεπτα
+            setInterval(() => {
+                saveToLocalStorage();
+                console.log('💾 Auto-save to localStorage');
+            }, 30000);
         });
 
         // Responsive chart resize
@@ -1494,11 +1606,32 @@ console.log('Selected year:', selectedYear);
         });
 
         function saveToFirebase() {
-    const rawEmail = sessionStorage.getItem('loggedInUser');
-const username = sanitizeKey(rawEmail);
-    if (!username) return;
-    firebase.database().ref('salesData/' + username).set(salesData);
-}
+            const rawEmail = sessionStorage.getItem('loggedInUser');
+            console.log('Saving with email:', rawEmail);
+            
+            let username;
+            if (rawEmail && rawEmail.trim() !== '') {
+                username = sanitizeKey(rawEmail);
+            } else {
+                // Χρησιμοποίησε default username αν δεν υπάρχει logged user
+                username = 'default_user';
+                sessionStorage.setItem('loggedInUser', 'default_user@example.com');
+            }
+            
+            console.log('Saving to Firebase with username:', username);
+            console.log('Data being saved:', salesData);
+            
+            // Αποθήκευση στο Firebase
+            firebase.database().ref('salesData/' + username).set(salesData).then(() => {
+                console.log('✅ Data saved to Firebase successfully');
+            }).catch(error => {
+                console.error('❌ Firebase save error:', error);
+            });
+            
+            // Backup στο localStorage
+            localStorage.setItem('salesData', JSON.stringify(salesData));
+            localStorage.setItem('salesData_backup_' + username, JSON.stringify(salesData));
+        }
 // filepath: [dashboard.html](http://_vscodecontentref_/0)
 function sanitizeKey(email) {
     // Αντικαθιστά . # $ [ ] με _
