@@ -880,6 +880,212 @@
             background: rgba(79, 172, 254, 0.1);
         }
 
+        /* Smart Insights Panel */
+        .insights-panel {
+            margin: 20px 0;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.08), rgba(39, 174, 96, 0.08));
+            border-radius: 20px;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        body.dark-mode .insights-panel {
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.08), rgba(39, 174, 96, 0.08));
+            border: 1px solid rgba(46, 204, 113, 0.15);
+        }
+
+        .insights-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(46, 204, 113, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .insights-header h3 {
+            margin: 0;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .refresh-insights-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            background: linear-gradient(45deg, rgba(46, 204, 113, 0.1), rgba(39, 174, 96, 0.1));
+            color: #27ae60;
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            min-height: 36px;
+            transition: all 0.3s ease;
+        }
+
+        .refresh-insights-btn:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .insights-content {
+            padding: 20px;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        .insight-item {
+            background: rgba(255,255,255,0.8);
+            border-radius: 12px;
+            padding: 15px;
+            border-left: 4px solid #2ecc71;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .insight-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.15);
+        }
+
+        body.dark-mode .insight-item {
+            background: rgba(52, 73, 94, 0.8);
+            border-left: 4px solid #2ecc71;
+        }
+
+        .insight-icon {
+            display: inline-block;
+            font-size: 20px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        .insight-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #27ae60;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.dark-mode .insight-title {
+            color: #2ecc71;
+        }
+
+        .insight-description {
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        body.dark-mode .insight-description {
+            color: #ecf0f1;
+        }
+
+        .insight-action {
+            font-size: 12px;
+            color: #27ae60;
+            font-weight: 500;
+            font-style: italic;
+            padding: 5px 10px;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 6px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        body.dark-mode .insight-action {
+            color: #2ecc71;
+            background: rgba(46, 204, 113, 0.15);
+        }
+
+        /* Priority indicators */
+        .insight-item.high-priority {
+            border-left-color: #e74c3c;
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(255,255,255,0.8));
+        }
+
+        .insight-item.medium-priority {
+            border-left-color: #f39c12;
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(255,255,255,0.8));
+        }
+
+        .insight-item.low-priority {
+            border-left-color: #3498db;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(255,255,255,0.8));
+        }
+
+        body.dark-mode .insight-item.high-priority {
+            background: linear-gradient(135deg, rgba(231, 76, 60, 0.05), rgba(52, 73, 94, 0.8));
+        }
+
+        body.dark-mode .insight-item.medium-priority {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.05), rgba(52, 73, 94, 0.8));
+        }
+
+        body.dark-mode .insight-item.low-priority {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.05), rgba(52, 73, 94, 0.8));
+        }
+
+        .priority-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .priority-badge.high {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .priority-badge.medium {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .priority-badge.low {
+            background: rgba(52, 152, 219, 0.1);
+            color: #3498db;
+        }
+
+        /* Insights loading animation */
+        .insights-loading {
+            text-align: center;
+            padding: 30px;
+            color: #27ae60;
+        }
+
+        .insights-loading .spinner {
+            width: 30px;
+            height: 30px;
+            border: 3px solid rgba(46, 204, 113, 0.3);
+            border-top: 3px solid #2ecc71;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 10px;
+        }
+
         /* Loading spinner */
         .loading-spinner {
             display: none;
@@ -1022,6 +1228,11 @@
 
             .analytics-grid {
                 grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+            }
+
+            .insights-grid {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
             }
 
@@ -1206,6 +1417,23 @@
                 </div>
             </div>
             
+            <!-- Smart Insights Panel -->
+            <div class="insights-panel" id="insightsPanel">
+                <div class="insights-header">
+                    <h3>🔍 Έξυπνες Προτάσεις AI</h3>
+                    <button class="refresh-insights-btn" id="refreshInsightsBtn">🔄 Ανανέωση</button>
+                </div>
+                <div class="insights-content" id="insightsContent">
+                    <div class="insights-loading" id="insightsLoading" style="display: none;">
+                        <div class="spinner"></div>
+                        <div>🧠 Το AI αναλύει τα δεδομένα σας...</div>
+                    </div>
+                    <div class="insights-grid" id="insightsGrid">
+                        <!-- Insights will be populated here -->
+                    </div>
+                </div>
+            </div>
+            
             <!-- Advanced Analytics Panel -->
             <div class="analytics-panel" id="analyticsPanel">
                 <div class="analytics-header">
@@ -1354,6 +1582,7 @@
             renderTable();
             populateCategoryDropdown();
             updateChart();
+            refreshInsights(); // Refresh AI insights when data changes
             showNotification("✅ Κατηγορία προστέθηκε επιτυχώς!", "success");
         };
 const deleteCategory = (category, rowElement) => {
@@ -1537,6 +1766,9 @@ const deleteCategory = (category, rowElement) => {
             });
             row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
             updateChart();
+            
+            // Refresh insights when data changes
+            setTimeout(() => refreshInsights(), 500);
             
             // Mobile success feedback
             showNotification("✅ Τιμή ενημερώθηκε!", "success", 1500);
@@ -1785,6 +2017,289 @@ const deleteCategory = (category, rowElement) => {
             const denominator = Math.sqrt((n * sumXX - sumX * sumX) * (n * sumYY - sumY * sumY));
             
             return denominator !== 0 ? numerator / denominator : 0;
+        };
+
+        // Smart Insights AI System
+        const generateSmartInsights = () => {
+            const insights = [];
+            const selectedCategory = document.getElementById('chartCategory').value;
+            
+            // Get data for analysis
+            let monthlyData = [];
+            let categories = Object.keys(salesData[selectedYear]);
+            
+            if (selectedCategory && salesData[selectedYear][selectedCategory]) {
+                months.forEach(month => {
+                    monthlyData.push(salesData[selectedYear][selectedCategory].sales[month] || 0);
+                });
+            } else {
+                months.forEach(month => {
+                    let monthTotal = 0;
+                    categories.forEach(cat => {
+                        monthTotal += salesData[selectedYear][cat].sales[month] || 0;
+                    });
+                    monthlyData.push(monthTotal);
+                });
+            }
+
+            // Analyze trends and generate insights
+            insights.push(...analyzeGrowthTrends(monthlyData, selectedCategory));
+            insights.push(...analyzeSeasonalPatterns(monthlyData, selectedCategory));
+            insights.push(...analyzePerformanceIssues(monthlyData, selectedCategory));
+            insights.push(...analyzeOpportunities(monthlyData, selectedCategory));
+            insights.push(...analyzeCategoryComparison(categories));
+            
+            return insights.sort((a, b) => {
+                const priorityOrder = { 'high': 3, 'medium': 2, 'low': 1 };
+                return priorityOrder[b.priority] - priorityOrder[a.priority];
+            });
+        };
+
+        const analyzeGrowthTrends = (data, category) => {
+            const insights = [];
+            const recentMonths = data.slice(-3);
+            const previousMonths = data.slice(-6, -3);
+            
+            const recentAvg = recentMonths.reduce((a, b) => a + b, 0) / 3;
+            const previousAvg = previousMonths.reduce((a, b) => a + b, 0) / 3;
+            const growthRate = previousAvg > 0 ? ((recentAvg - previousAvg) / previousAvg * 100) : 0;
+
+            if (growthRate > 20) {
+                insights.push({
+                    icon: '🚀',
+                    title: 'Εκρηκτική Ανάπτυξη',
+                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι συνολικές πωλήσεις σας'} παρουσιάζει εντυπωσιακή ανάπτυξη ${growthRate.toFixed(1)}% τους τελευταίους 3 μήνες!`,
+                    action: '💡 Συνιστάται: Αύξηση αποθέματος και marketing budget για αυτήν την κατηγορία',
+                    priority: 'high'
+                });
+            } else if (growthRate > 10) {
+                insights.push({
+                    icon: '📈',
+                    title: 'Θετική Τάση',
+                    description: `Παρατηρείται σταθερή ανάπτυξη ${growthRate.toFixed(1)}% - μια υγιής τάση που αξίζει προσοχή.`,
+                    action: '💡 Συνιστάται: Διατήρηση της τρέχουσας στρατηγικής',
+                    priority: 'medium'
+                });
+            } else if (growthRate < -15) {
+                insights.push({
+                    icon: '⚠️',
+                    title: 'Απότομη Πτώση',
+                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} έχει μειωθεί κατά ${Math.abs(growthRate).toFixed(1)}% τους τελευταίους μήνες.`,
+                    action: '🎯 Άμεση δράση: Ανάλυση αιτιών και αναθεώρηση στρατηγικής',
+                    priority: 'high'
+                });
+            } else if (growthRate < -5) {
+                insights.push({
+                    icon: '📉',
+                    title: 'Καθοδική Τάση',
+                    description: `Παρατηρείται μείωση ${Math.abs(growthRate).toFixed(1)}% που χρήζει προσοχής.`,
+                    action: '💡 Συνιστάται: Εξέταση νέων στρατηγικών marketing',
+                    priority: 'medium'
+                });
+            }
+
+            return insights;
+        };
+
+        const analyzeSeasonalPatterns = (data, category) => {
+            const insights = [];
+            const seasonalityIndex = calculateSeasonalityIndex(data);
+            
+            // Find best and worst months
+            let bestMonthIndex = 0;
+            let worstMonthIndex = 0;
+            data.forEach((value, index) => {
+                if (value > data[bestMonthIndex]) bestMonthIndex = index;
+                if (value < data[worstMonthIndex]) worstMonthIndex = index;
+            });
+
+            if (seasonalityIndex > 2) {
+                insights.push({
+                    icon: '🌊',
+                    title: 'Ισχυρή Εποχικότητα',
+                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} παρουσιάζει έντονη εποχικότητα. Ο καλύτερος μήνας είναι ${months[bestMonthIndex]} και ο χειρότερος ${months[worstMonthIndex]}.`,
+                    action: '📅 Προγραμματίστε αύξηση αποθέματος πριν τον ${months[bestMonthIndex]}',
+                    priority: 'medium'
+                });
+            }
+
+            if (bestMonthIndex >= 10 || bestMonthIndex <= 1) { // Nov, Dec, Jan, Feb
+                insights.push({
+                    icon: '🎄',
+                    title: 'Χειμερινή Ζήτηση',
+                    description: 'Οι καλύτερες επιδόσεις παρατηρούνται κατά τη χειμερινή περίοδο.',
+                    action: '❄️ Ετοιμάστε ειδικές προσφορές για τις γιορτές',
+                    priority: 'low'
+                });
+            } else if (bestMonthIndex >= 5 && bestMonthIndex <= 8) { // Jun-Sep
+                insights.push({
+                    icon: '☀️',
+                    title: 'Καλοκαιρινή Άνοδος',
+                    description: 'Οι καλοκαιρινοί μήνες δείχνουν ισχυρή απόδοση.',
+                    action: '🏖️ Εκμεταλλευτείτε τη θερινή περίοδο με στοχευμένες καμπάνιες',
+                    priority: 'low'
+                });
+            }
+
+            return insights;
+        };
+
+        const analyzePerformanceIssues = (data, category) => {
+            const insights = [];
+            const volatility = calculateVolatilityIndex(data);
+            const zeroMonths = data.filter(val => val === 0).length;
+
+            if (volatility > 50) {
+                insights.push({
+                    icon: '⚡',
+                    title: 'Υψηλή Αστάθεια',
+                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} παρουσιάζει υψηλή αστάθεια (${volatility}%), που μπορεί να δημιουργήσει προβλήματα πρόβλεψης.`,
+                    action: '🎯 Εξετάστε τους παράγοντες που προκαλούν αυτές τις διακυμάνσεις',
+                    priority: 'medium'
+                });
+            }
+
+            if (zeroMonths > 3) {
+                insights.push({
+                    icon: '🚫',
+                    title: 'Μήνες Χωρίς Πωλήσεις',
+                    description: `Υπάρχουν ${zeroMonths} μήνες χωρίς καταγεγραμμένες πωλήσεις.`,
+                    action: '📝 Ελέγξτε αν υπάρχουν λείποντα δεδομένα ή περίοδοι αδράνειας',
+                    priority: 'medium'
+                });
+            }
+
+            return insights;
+        };
+
+        const analyzeOpportunities = (data, category) => {
+            const insights = [];
+            const total = data.reduce((a, b) => a + b, 0);
+            const avg = total / 12;
+            const lastThreeMonths = data.slice(-3);
+            const lastThreeAvg = lastThreeMonths.reduce((a, b) => a + b, 0) / 3;
+
+            if (lastThreeAvg < avg * 0.8) {
+                insights.push({
+                    icon: '💎',
+                    title: 'Ευκαιρία Ανάκαμψης',
+                    description: 'Οι τελευταίες επιδόσεις είναι κάτω από τον ετήσιο μέσο όρο. Υπάρχει δυναμικό για βελτίωση.',
+                    action: '🚀 Εφαρμόστε νέες στρατηγικές για να φτάσετε το κανονικό επίπεδο',
+                    priority: 'medium'
+                });
+            }
+
+            if (total > 0 && avg > 1000) {
+                insights.push({
+                    icon: '🏆',
+                    title: 'Υψηλή Απόδοση',
+                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} παρουσιάζει εξαιρετικές επιδόσεις με μέσο όρο ${avg.toLocaleString()}.`,
+                    action: '⭐ Χρησιμοποιήστε αυτήν την επιτυχία ως παράδειγμα για άλλες κατηγορίες',
+                    priority: 'low'
+                });
+            }
+
+            return insights;
+        };
+
+        const analyzeCategoryComparison = (categories) => {
+            const insights = [];
+            
+            if (categories.length > 1) {
+                const categoryTotals = categories.map(cat => {
+                    const total = months.reduce((sum, month) => {
+                        return sum + (salesData[selectedYear][cat].sales[month] || 0);
+                    }, 0);
+                    return { category: cat, total };
+                }).sort((a, b) => b.total - a.total);
+
+                const topCategory = categoryTotals[0];
+                const bottomCategory = categoryTotals[categoryTotals.length - 1];
+
+                if (topCategory.total > bottomCategory.total * 3) {
+                    insights.push({
+                        icon: '⚖️',
+                        title: 'Ανισορροπία Κατηγοριών',
+                        description: `Η κατηγορία "${topCategory.category}" υπερτερεί σημαντικά έναντι των άλλων (${(topCategory.total / bottomCategory.total).toFixed(1)}x περισσότερες πωλήσεις).`,
+                        action: '🎯 Εστιάστε στην ανάπτυξη των υπόλοιπων κατηγοριών για ισορροπία',
+                        priority: 'medium'
+                    });
+                }
+
+                if (categories.length >= 5) {
+                    insights.push({
+                        icon: '📊',
+                        title: 'Πολυεπίπεδο Portfolio',
+                        description: `Διαχειρίζεστε ${categories.length} κατηγορίες - ένα υγιές διαφοροποιημένο portfolio.`,
+                        action: '✅ Συνεχίστε τη στρατηγική διαφοροποίησης',
+                        priority: 'low'
+                    });
+                }
+            }
+
+            return insights;
+        };
+
+        const renderSmartInsights = (insights) => {
+            const grid = document.getElementById('insightsGrid');
+            
+            if (insights.length === 0) {
+                grid.innerHTML = `
+                    <div class="insight-item low-priority">
+                        <div class="insight-title">
+                            <span class="insight-icon">📊</span>
+                            Ανάλυση Δεδομένων
+                        </div>
+                        <div class="insight-description">
+                            Προσθέστε περισσότερα δεδομένα για να λαμβάνετε εξατομικευμένες συμβουλές από το AI σύστημα.
+                        </div>
+                        <div class="insight-action">
+                            💡 Συμπληρώστε τα μηνιαία δεδομένα πωλήσεων
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = insights.map(insight => `
+                <div class="insight-item ${insight.priority}-priority">
+                    <div class="priority-badge ${insight.priority}">${
+                        insight.priority === 'high' ? 'ΕΠΕΙΓΟΝ' : 
+                        insight.priority === 'medium' ? 'ΜΕΤΡΙΟ' : 'ΠΛΗΡΟΦ.'
+                    }</div>
+                    <div class="insight-title">
+                        <span class="insight-icon">${insight.icon}</span>
+                        ${insight.title}
+                    </div>
+                    <div class="insight-description">
+                        ${insight.description}
+                    </div>
+                    <div class="insight-action">
+                        ${insight.action}
+                    </div>
+                </div>
+            `).join('');
+        };
+
+        const refreshInsights = () => {
+            const loading = document.getElementById('insightsLoading');
+            const grid = document.getElementById('insightsGrid');
+            
+            // Show loading
+            loading.style.display = 'block';
+            grid.style.opacity = '0.3';
+            
+            // Simulate AI processing time
+            setTimeout(() => {
+                const insights = generateSmartInsights();
+                renderSmartInsights(insights);
+                
+                // Hide loading
+                loading.style.display = 'none';
+                grid.style.opacity = '1';
+                
+                showNotification(`🧠 AI ανέλυσε τα δεδομένα και βρήκε ${insights.length} προτάσεις!`, 'success');
+            }, 1500);
         };
 
         const calculatePerformanceMetrics = (data) => {
@@ -2742,6 +3257,14 @@ function loadFromFirebase() {
                     btn.textContent = '📊 Προβολή Λεπτομερειών';
                 }
             });
+
+            // Smart Insights refresh button
+            document.getElementById('refreshInsightsBtn').addEventListener('click', refreshInsights);
+            
+            // Initialize insights
+            setTimeout(() => {
+                refreshInsights();
+            }, 1000);
             
             // Δοκίμασε να φορτώσεις από Firebase, αν αποτύχει χρησιμοποίησε localStorage
             console.log('📥 Loading data...');
