@@ -600,7 +600,6 @@
             <div class="user-buttons">
                 <button id="exportExcelBtn">📥 Excel</button>
                 <button id="exportPdfBtn">📥 PDF</button>
-                <button id="backupBtn">💾 Backup</button>
                 <button id="darkModeBtn">🌙/☀️</button>
                 <button id="logoutBtn">Έξοδος</button>
             </div>
@@ -1365,32 +1364,6 @@ options: {
             showNotification("✅ Το γράφημα κατέβηκε επιτυχώς!", "success");
         };
 
-        // Backup and restore functions
-        const manualBackup = () => {
-            try {
-                // Save to Firebase
-                saveToFirebase();
-                
-                // Save to localStorage
-                saveToLocalStorage();
-                
-                // Create downloadable backup file
-                const dataStr = JSON.stringify(salesData, null, 2);
-                const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                const url = URL.createObjectURL(dataBlob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = `business_tracker_backup_${new Date().toISOString().split('T')[0]}.json`;
-                link.click();
-                URL.revokeObjectURL(url);
-                
-                showNotification("✅ Backup ολοκληρώθηκε! Αρχείο κατέβηκε.", "success");
-            } catch (error) {
-                console.error('Backup error:', error);
-                showNotification("❌ Σφάλμα κατά το backup!", "error");
-            }
-        };
-
         // Initialize sample data
         const initializeSampleData = () => {
             console.log('Initializing sample data for year:', selectedYear);
@@ -1434,7 +1407,6 @@ options: {
             document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
             document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
             document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
-            document.getElementById('backupBtn').addEventListener('click', manualBackup);
             document.getElementById('compareBtn').addEventListener('click', compareWithPreviousYear);
             document.getElementById('forecastBtn').addEventListener('click', forecast);
             document.getElementById('downloadChartBtn').addEventListener('click', downloadChart);
