@@ -1993,8 +1993,39 @@
         /* Touch improvements */
         .fade-out {
             opacity: 0;
-            transform: translateX(-100px);
-            transition: all 0.5s ease;
+            transform: translateX(-100px) scale(0.8);
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            filter: blur(2px);
+        }
+
+        /* Enhanced fade out for table rows */
+        tr.fade-out {
+            background: linear-gradient(90deg, rgba(231, 76, 60, 0.1), transparent) !important;
+            border-left: 4px solid #e74c3c;
+            animation: fadeOutSlide 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeOutSlide {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+                max-height: auto;
+                filter: blur(0);
+            }
+            50% {
+                opacity: 0.3;
+                transform: translateX(-30px) scale(0.95);
+                filter: blur(1px);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-120px) scale(0.7);
+                max-height: 0;
+                padding: 0;
+                margin: 0;
+                filter: blur(3px);
+            }
         }
 
         /* Advanced Mobile Gestures */
@@ -4238,20 +4269,33 @@
             showNotification("✅ Κατηγορία προστέθηκε επιτυχώς!", "success");
         };
 const deleteCategory = (category, rowElement) => {
-    // Χωρίς confirm pop-up
-    delete salesData[selectedYear][category];
+    // Add haptic feedback and visual indicator
+    if (navigator.vibrate) {
+        navigator.vibrate([50, 30, 50]); // Short vibration pattern
+    }
     
-    // Save to both Firebase and localStorage
-    saveToFirebase();
-    saveToLocalStorage();
-    
+    // Add deletion animation class
     rowElement.classList.add('fade-out');
+    
+    // Show immediate feedback
+    showNotification("🗑️ Διαγραφή κατηγορίας...", "warning", 1000);
+    
+    // Delete data after animation starts
+    setTimeout(() => {
+        delete salesData[selectedYear][category];
+        
+        // Save to both Firebase and localStorage
+        saveToFirebase();
+        saveToLocalStorage();
+    }, 200);
+    
+    // Remove element and update UI after animation completes
     setTimeout(() => {
         rowElement.remove();
         populateCategoryDropdown();
         updateChart();
-        showNotification("✅ Κατηγορία διαγράφηκε!", "success");
-    }, 500);
+        showNotification("✅ Κατηγορία διαγράφηκε επιτυχώς!", "success");
+    }, 600);
 };
 
         // Table rendering
