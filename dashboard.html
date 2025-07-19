@@ -1619,7 +1619,7 @@
             }
             
             /* Ensure all header buttons are uniform */
-            #darkModeBtn, #logoutBtn, #languageBtn {
+            #darkModeBtn, #logoutBtn, .language-toggle {
                 padding: 10px 12px !important;
                 font-size: 12px !important;
                 min-height: 40px !important;
@@ -1875,7 +1875,7 @@
                 max-width: none !important;
             }
             
-            #darkModeBtn, #logoutBtn {
+            #darkModeBtn, #logoutBtn, .language-toggle {
                 padding: 12px 18px !important;
                 font-size: 14px !important;
                 min-height: 44px !important;
@@ -2687,6 +2687,11 @@
             box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
         }
 
+        .smart-suggestions-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(155, 89, 182, 0.3);
+        }
+
         .goals-grid {
             display: grid;
             grid-template-columns: 1fr;
@@ -2900,6 +2905,72 @@
         .goal-action-btn.delete:hover {
             background: rgba(231, 76, 60, 0.2);
             transform: scale(1.05);
+        }
+
+        /* Goals Performance Summary */
+        .goals-performance-summary {
+            background: rgba(255,255,255,0.6);
+            border-radius: 12px;
+            padding: 15px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+        }
+
+        body.dark-mode .goals-performance-summary {
+            background: rgba(52, 73, 94, 0.6);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .performance-summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+
+        .performance-metric {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 8px;
+            border: 1px solid rgba(52, 152, 219, 0.1);
+        }
+
+        body.dark-mode .performance-metric {
+            background: rgba(52, 73, 94, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .metric-icon {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .metric-details {
+            flex: 1;
+        }
+
+        .metric-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2c3e50;
+            line-height: 1;
+        }
+
+        body.dark-mode .metric-value {
+            color: #ecf0f1;
+        }
+
+        .metric-label {
+            font-size: 10px;
+            color: #7f8c8d;
+            font-weight: 500;
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        body.dark-mode .metric-label {
+            color: #bdc3c7;
         }
 
         /* Mobile adjustments for goals */
@@ -3239,6 +3310,74 @@
             grid-column: span 2;
         }
 
+        /* Modern Language Toggle Button */
+        .language-toggle {
+            background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 10px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: white;
+            touch-action: manipulation;
+            min-height: 44px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 44px;
+        }
+
+        .language-toggle:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .language-toggle:hover:before {
+            left: 100%;
+        }
+
+        .language-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+        }
+
+        .language-toggle:active {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+        }
+
+        .language-toggle .flag-emoji {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .language-toggle:hover .flag-emoji {
+            transform: scale(1.2);
+        }
+
+        /* Dark mode styles for language toggle */
+        body.dark-mode .language-toggle {
+            background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+            box-shadow: 0 2px 12px rgba(255,255,255,0.1);
+        }
+
+        body.dark-mode .language-toggle:hover {
+            background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+            box-shadow: 0 4px 20px rgba(255,255,255,0.2);
+        }
+
         /* Keyboard Shortcuts Modal Styles */
         .shortcuts-modal {
             position: fixed;
@@ -3502,13 +3641,9 @@
                             <span class="dropdown-icon">🎨</span>
                             <span>Αλλαγή Θέματος</span>
                         </div>
-                        <div class="dropdown-item" onclick="document.getElementById('languageBtn').click()">
-                            <span class="dropdown-icon">🌐</span>
-                            <span>Αλλαγή Γλώσσας</span>
-                        </div>
                         <div class="dropdown-item" onclick="toggleCalculator()">
                             <span class="dropdown-icon">🔢</span>
-                            <span>Αριθμομηχανή</span>
+                            <span class="translate">calculator</span>
                         </div>
                         <div class="dropdown-item shortcuts-mobile-hide" onclick="showKeyboardShortcuts()">
                             <span class="dropdown-icon">⌨️</span>
@@ -3520,10 +3655,12 @@
                 <button id="exportPdfBtn" style="display: none;">📥 PDF</button>
                 <button id="goalsBtn" style="display: none;">🎯 Στόχοι</button>
                 <button id="themeBtn" style="display: none;">🎨 Θέματα</button>
-                <button id="languageBtn" style="display: none;">🌐 Γλώσσα</button>
-                <button id="calculatorBtn" style="display: none;">🔢 Αριθμομηχανή</button>
+                <button id="calculatorBtn" style="display: none;">🔢 <span class="translate">calculator</span></button>
                 <button id="shortcutsBtn" style="display: none;">⌨️ Συντομεύσεις</button>
                 <button id="darkModeBtn">🌙/☀️</button>
+                <button id="modernLanguageToggle" class="language-toggle" onclick="toggleLanguage()" title="Change Language">
+                    <span class="flag-emoji" id="languageFlag">🇬🇷</span>
+                </button>
                 <button id="logoutBtn">🚪 Έξοδος</button>
             </div>
         </div>
@@ -3625,32 +3762,40 @@
             <!-- Goals & Targets Panel -->
             <div class="goals-panel" id="goalsPanel" style="display: none;">
                 <div class="goals-header">
-                    <h3>🎯 Στόχοι & Επιδόσεις</h3>
-                    <button class="toggle-goals-btn" id="toggleGoalsBtn">📈 Διαχείριση Στόχων</button>
+                    <h3>🎯 <span class="translate" data-translate-key="goalsTargetsTitle"></span>Στόχοι & Επιδόσεις</span></h3>
+                    <button class="toggle-goals-btn" id="toggleGoalsBtn">📈 <span class="translate" data-translate-key="manageGoals">Διαχείριση Στόχων</span></button>
                 </div>
                 <div class="goals-content" id="goalsContent">
                     <div class="goal-input-section">
                         <div class="goal-input-row">
                             <div class="goal-input-group">
-                                <label for="goalCategory">📊 Κατηγορία:</label>
+                                <label for="goalCategory">📊 <span class="translate" data-translate-key="goalCategory">Κατηγορία</span>:</label>
                                 <select id="goalCategory" class="goal-input">
-                                    <option value="">Όλες οι Κατηγορίες</option>
+                                    <option value=""><span class="translate" data-translate-key="allCategories">Όλες οι Κατηγορίες</span></option>
                                 </select>
                             </div>
                             <div class="goal-input-group">
-                                <label for="goalTarget">🎯 Στόχος:</label>
-                                <input type="number" id="goalTarget" class="goal-input" placeholder="π.χ. 50000" min="0">
+                                <label for="goalTarget">🎯 <span class="translate" data-translate-key="goalTarget">Στόχος</span>:</label>
+                                <input type="number" id="goalTarget" class="goal-input" min="0">
                             </div>
                             <div class="goal-input-group">
-                                <label for="goalPeriod">📅 Περίοδος:</label>
+                                <label for="goalPeriod">📅 <span class="translate" data-translate-key="goalPeriod">Περίοδος</span>:</label>
                                 <select id="goalPeriod" class="goal-input">
-                                    <option value="monthly">Μηνιαίος</option>
-                                    <option value="quarterly">Τριμηνιαίος</option>
-                                    <option value="yearly">Ετήσιος</option>
+                                    <option value="monthly"><span class="translate" data-translate-key="monthly">Μηνιαίος</span></option>
+                                    <option value="quarterly"><span class="translate" data-translate-key="quarterly">Τριμηνιαίος</span></option>
+                                    <option value="yearly"><span class="translate" data-translate-key="yearly">Ετήσιος</span></option>
                                 </select>
                             </div>
-                            <button class="add-goal-btn" id="addGoalBtn">➕ Προσθήκη</button>
+                            <button class="add-goal-btn" id="addGoalBtn">➕ <span class="translate" data-translate-key="addGoal">Προσθήκη</span></button>
+                            <button class="smart-suggestions-btn" id="smartSuggestionsBtn" onclick="showGoalSuggestions()" 
+                                style="background: linear-gradient(45deg, #9b59b6, #8e44ad); color: white; border: none; border-radius: 8px; padding: 10px 16px; font-size: 12px; font-weight: 600; cursor: pointer; min-height: 38px; transition: all 0.3s ease; margin-left: 10px;" 
+                                data-translate-key="smartSuggestionsTooltip">💡 <span class="translate" data-translate-key="smartSuggestions">Έξυπνες Προτάσεις</span></button>
                         </div>
+                    </div>
+                    
+                    <!-- Performance Summary -->
+                    <div class="goals-performance-summary" id="goalsPerformanceSummary" style="margin-bottom: 20px;">
+                        <!-- Performance metrics will be populated here -->
                     </div>
                     
                     <div class="goals-grid" id="goalsGrid">
@@ -3659,7 +3804,7 @@
                     
                     <div style="text-align: center; margin-top: 15px; display: none;" id="noGoalsMessage">
                         <div style="color: #7f8c8d; font-style: italic; font-size: 14px;">
-                            🎯 Δεν έχετε ορίσει στόχους ακόμα. Προσθέστε τον πρώτο σας στόχο!
+                            🎯 <span class="translate" data-translate-key="noGoalsYet">Δεν έχετε ορίσει στόχους ακόμα. Προσθέστε τον πρώτο σας στόχο!</span>
                         </div>
                     </div>
                 </div>
@@ -3668,54 +3813,54 @@
             <!-- Theme Selector Panel -->
             <div class="theme-panel" id="themePanel" style="display: none;">
                 <div class="theme-header">
-                    <h3>🎨 Επιλογή Θέματος</h3>
-                    <button class="toggle-theme-btn" id="toggleThemeBtn">🎯 Επιλογή Στυλ</button>
+                    <h3>🎨 <span class="translate">themeSelection</span></h3>
+                    <button class="toggle-theme-btn" id="toggleThemeBtn">🎯 <span class="translate">selectStyle</span></button>
                 </div>
                 <div class="theme-content" id="themeContent">
                     <div class="theme-grid">
                         <div class="theme-item theme-default active" data-theme="default">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">🌟 Κλασικό</div>
-                            <div class="theme-description">Το αρχικό μπλε θέμα</div>
+                            <div class="theme-name">🌟 <span class="translate">themeClassic</span></div>
+                            <div class="theme-description translate">themeClassicDesc</div>
                         </div>
                         <div class="theme-item theme-ocean" data-theme="ocean">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">🌊 Ωκεανός</div>
-                            <div class="theme-description">Γαλάζιο και δροσερό</div>
+                            <div class="theme-name">🌊 <span class="translate">themeOcean</span></div>
+                            <div class="theme-description translate">themeOceanDesc</div>
                         </div>
                         <div class="theme-item theme-sunset" data-theme="sunset">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">🌅 Ηλιοβασίλεμα</div>
-                            <div class="theme-description">Ροζ και κόκκινο</div>
+                            <div class="theme-name">🌅 <span class="translate">themeSunset</span></div>
+                            <div class="theme-description translate">themeSunsetDesc</div>
                         </div>
                         <div class="theme-item theme-forest" data-theme="forest">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">🌲 Δάσος</div>
-                            <div class="theme-description">Πράσινο και φυσικό</div>
+                            <div class="theme-name">🌲 <span class="translate">themeForest</span></div>
+                            <div class="theme-description translate">themeForestDesc</div>
                         </div>
                         <div class="theme-item theme-royal" data-theme="royal">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">👑 Βασιλικό</div>
-                            <div class="theme-description">Μοβ και κομψό</div>
+                            <div class="theme-name">👑 <span class="translate">themeRoyal</span></div>
+                            <div class="theme-description translate">themeRoyalDesc</div>
                         </div>
                         <div class="theme-item theme-fire" data-theme="fire">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">🔥 Φωτιά</div>
-                            <div class="theme-description">Κόκκινο και δυναμικό</div>
+                            <div class="theme-name">🔥 <span class="translate">themeFire</span></div>
+                            <div class="theme-description translate">themeFireDesc</div>
                         </div>
                         <div class="theme-item theme-gold" data-theme="gold">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">✨ Χρυσό</div>
-                            <div class="theme-description">Πορτοκαλί και ζεστό</div>
+                            <div class="theme-name">✨ <span class="translate">themeGold</span></div>
+                            <div class="theme-description translate">themeGoldDesc</div>
                         </div>
                         <div class="theme-item theme-ice" data-theme="ice">
                             <div class="theme-preview"></div>
-                            <div class="theme-name">❄️ Παγωμένο</div>
-                            <div class="theme-description">Γαλάζιο και κρύο</div>
+                            <div class="theme-name">❄️ <span class="translate">themeIce</span></div>
+                            <div class="theme-description translate">themeIceDesc</div>
                         </div>
                     </div>
                     <div style="text-align: center; margin-top: 15px;">
-                        <button class="toggle-theme-btn" id="resetThemeBtn">🔄 Επαναφορά Προεπιλογής</button>
+                        <button class="toggle-theme-btn" id="resetThemeBtn">🔄 <span class="translate">resetTheme</span></button>
                     </div>
                 </div>
             </div>
@@ -3743,68 +3888,68 @@
             <!-- Advanced Analytics Panel -->
             <div class="analytics-panel" id="analyticsPanel">
                 <div class="analytics-header">
-                    <h3>🧠 Προηγμένα Αναλυτικά Στοιχεία</h3>
-                    <button class="toggle-analytics-btn" id="toggleAnalyticsBtn">📊 Προβολή Λεπτομερειών</button>
+                    <h3 class="translate">advancedAnalytics</h3>
+                    <button class="toggle-analytics-btn" id="toggleAnalyticsBtn">📊 <span class="translate">viewDetails</span></button>
                 </div>
                 <div class="analytics-content" id="analyticsContent" style="display: none;">
                     <div class="analytics-grid">
                         <div class="analytics-card">
-                            <div class="analytics-title">📊 Μετρικές Απόδοσης</div>
-                            <div class="metric-row" data-tooltip="📈 Ποσοστιαία αλλαγή πωλήσεων σε σχέση με το προηγούμενο τρίμηνο. Δείχνει βραχυπρόθεσμη τάση.">
-                                <span class="metric-label">Τριμηνιαία Ανάπτυξη:</span>
+                            <div class="analytics-title">📊 <span class="translate">performanceMetrics</span></div>
+                            <div class="metric-row" data-tooltip-key="quarterlyGrowthTooltip">
+                                <span class="metric-label translate">quarterlyGrowth</span>
                                 <span class="metric-value" id="qoqGrowth">0%</span>
                             </div>
-                            <div class="metric-row" data-tooltip="📅 Ποσοστιαία αλλαγή πωλήσεων σε σχέση με την ίδια περίοδο του προηγούμενου έτους. Δείχνει μακροπρόθεσμη τάση.">
-                                <span class="metric-label">Ετήσια Ανάπτυξη:</span>
+                            <div class="metric-row" data-tooltip-key="annualGrowthTooltip">
+                                <span class="metric-label translate">annualGrowth</span>
                                 <span class="metric-value" id="yoyGrowth">0%</span>
                             </div>
-                            <div class="metric-row" data-tooltip="🏆 Η καλύτερη μηνιαία απόδοση που έχει καταγραφεί. Χρήσιμο για τον καθορισμό ρεαλιστικών στόχων.">
-                                <span class="metric-label">Μέγιστη Απόδοση:</span>
+                            <div class="metric-row" data-tooltip-key="maxPerformanceTooltip">
+                                <span class="metric-label translate">maxPerformance</span>
                                 <span class="metric-value" id="peakPerformance">-</span>
                             </div>
-                            <div class="metric-row" data-tooltip="🎯 Πόσο σταθερές είναι οι πωλήσεις μας. Υψηλός βαθμός = προβλέψιμη απόδοση, Χαμηλός = ασταθής.">
-                                <span class="metric-label">Βαθμός Συνέπειας:</span>
+                            <div class="metric-row" data-tooltip-key="consistencyScoreTooltip">
+                                <span class="metric-label translate">consistencyScore</span>
                                 <span class="metric-value" id="consistencyScore">0%</span>
                             </div>
                         </div>
                         
                         <div class="analytics-card">
-                            <div class="analytics-title">🎯 Ανάλυση Αγοράς</div>
-                            <div class="metric-row" data-tooltip="🚀 Η γενική κατεύθυνση της αγοράς. Θετική = ανοδική τάση, Αρνητική = καθοδική τάση, Ουδέτερη = σταθερή.">
-                                <span class="metric-label">Δυναμική Αγοράς:</span>
-                                <span class="metric-value" id="marketMomentum">Ουδέτερη</span>
+                            <div class="analytics-title">🎯 <span class="translate">marketAnalysis</span></div>
+                            <div class="metric-row" data-tooltip-key="marketMomentumTooltip">
+                                <span class="metric-label translate">marketMomentum</span>
+                                <span class="metric-value" id="marketMomentum"><span class="translate">neutral</span></span>
                             </div>
-                            <div class="metric-row" data-tooltip="📊 Η γενική κατεύθυνση των πωλήσεων. Ανοδική = αύξηση, Καθοδική = μείωση, Σταθερή = χωρίς αλλαγή.">
-                                <span class="metric-label">Κατεύθυνση Τάσης:</span>
-                                <span class="metric-value" id="trendDirection">Σταθερή</span>
+                            <div class="metric-row" data-tooltip-key="trendDirectionTooltip">
+                                <span class="metric-label translate">trendDirection</span>
+                                <span class="metric-value" id="trendDirection"><span class="translate">stable</span></span>
                             </div>
-                            <div class="metric-row" data-tooltip="⚠️ Αξιολόγηση κινδύνου βάσει αστάθειας πωλήσεων. Υψηλό = μεγάλος κίνδυνος, Χαμηλό = ασφαλής.">
-                                <span class="metric-label">Επίπεδο Κινδύνου:</span>
-                                <span class="metric-value" id="riskLevel">Μέτριο</span>
+                            <div class="metric-row" data-tooltip-key="riskLevelTooltip">
+                                <span class="metric-label translate">riskLevel</span>
+                                <span class="metric-value" id="riskLevel"><span class="translate">medium</span></span>
                             </div>
-                            <div class="metric-row" data-tooltip="💪 Πόσο γρήγορα ανακάμπτει η επιχείρηση από δύσκολες περιόδους. Υψηλός = γρήγορη ανάκαμψη.">
-                                <span class="metric-label">Ρυθμός Ανάκαμψης:</span>
+                            <div class="metric-row" data-tooltip-key="recoveryRateTooltip">
+                                <span class="metric-label translate">recoveryRate</span>
                                 <span class="metric-value" id="recoveryRate">0%</span>
                             </div>
                         </div>
                         
                         <div class="analytics-card">
-                            <div class="analytics-title">🔮 Προβλεπτικές Εκτιμήσεις</div>
-                            <div class="metric-row" data-tooltip="🎯 Πόσο ακριβείς είναι οι προβλέψεις του AI μοντέλου μας. Υψηλή ακρίβεια = αξιόπιστες προβλέψεις.">
-                                <span class="metric-label">Ακρίβεια Πρόβλεψης:</span>
+                            <div class="analytics-title">🔮 <span class="translate">predictiveEstimates</span></div>
+                            <div class="metric-row" data-tooltip-key="forecastAccuracyTooltip">
+                                <span class="metric-label translate">forecastAccuracy</span>
                                 <span class="metric-value" id="forecastAccuracy">85%</span>
                             </div>
-                            <div class="metric-row" data-tooltip="📅 Πώς αναμένουμε να πάει η επιχείρηση τους επόμενους 3 μήνες. Βασίζεται στα τρέχοντα δεδομένα.">
-                                <span class="metric-label">Προοπτικές Τριμήνου:</span>
-                                <span class="metric-value" id="nextQuarterOutlook">Θετικές</span>
+                            <div class="metric-row" data-tooltip-key="nextQuarterOutlookTooltip">
+                                <span class="metric-label translate">nextQuarterOutlook</span>
+                                <span class="metric-value" id="nextQuarterOutlook"><span class="translate">positive</span></span>
                             </div>
-                            <div class="metric-row" data-tooltip="🌦️ Πόσο επηρεάζουν οι εποχές τις πωλήσεις. Υψηλή = μεγάλη διακύμανση ανά εποχή.">
-                                <span class="metric-label">Επίδραση Εποχικότητας:</span>
-                                <span class="metric-value" id="seasonalityImpact">Μέτρια</span>
+                            <div class="metric-row" data-tooltip-key="seasonalityImpactTooltip">
+                                <span class="metric-label translate">seasonalityImpact</span>
+                                <span class="metric-value" id="seasonalityImpact"><span class="translate">medium</span></span>
                             </div>
-                            <div class="metric-row" data-tooltip="🤖 Πόσο σίγουρο είναι το AI για τις προβλέψεις του. Υψηλή εμπιστοσύνη = αξιόπιστα αποτελέσματα.">
-                                <span class="metric-label">Εμπιστοσύνη Μοντέλου:</span>
-                                <span class="metric-value" id="modelConfidence">Υψηλή</span>
+                            <div class="metric-row" data-tooltip-key="modelConfidenceTooltip">
+                                <span class="metric-label translate">modelConfidence</span>
+                                <span class="metric-value" id="modelConfidence"><span class="translate">high</span></span>
                             </div>
                         </div>
                     </div>
@@ -3818,7 +3963,7 @@
     <!-- Calculator Widget -->
     <div id="calculatorWidget" class="calculator-widget" style="display: none;">
         <div class="calculator-header">
-            <h3>🔢 Αριθμομηχανή</h3>
+            <h3>🔢 <span class="translate">calculator</span></h3>
             <button onclick="toggleCalculator()" class="close-calc">✕</button>
         </div>
         <div class="calculator-display">
@@ -3861,95 +4006,95 @@
     <div id="shortcutsModal" class="shortcuts-modal" style="display: none;">
         <div class="shortcuts-content">
             <div class="shortcuts-header">
-                <h3>⌨️ Πλήκτρα Συντόμευσης</h3>
+                <h3 id="shortcutsTitle">⌨️ Πλήκτρα Συντόμευσης</h3>
                 <button onclick="closeShortcuts()" class="close-shortcuts">✕</button>
             </div>
             <div class="shortcuts-grid">
                 <div class="shortcut-category">
-                    <h4>🏢 Γενικά</h4>
+                    <h4 id="shortcutGeneralTitle">🏢 Γενικά</h4>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + N</span>
-                        <span class="shortcut-desc">Νέα Κατηγορία</span>
+                        <span class="shortcut-desc" id="shortcutNewCategory">Νέα Κατηγορία</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + S</span>
-                        <span class="shortcut-desc">Αποθήκευση</span>
+                        <span class="shortcut-desc" id="shortcutSave">Αποθήκευση</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + D</span>
-                        <span class="shortcut-desc">Dark Mode</span>
+                        <span class="shortcut-desc" id="shortcutDarkMode">Dark Mode</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Esc</span>
-                        <span class="shortcut-desc">Κλείσιμο Modal</span>
+                        <span class="shortcut-desc" id="shortcutCloseModal">Κλείσιμο Modal</span>
                     </div>
                 </div>
                 
                 <div class="shortcut-category">
-                    <h4>📊 Γραφήματα</h4>
+                    <h4 id="shortcutChartsTitle">📊 Γραφήματα</h4>
                     <div class="shortcut-item">
                         <span class="shortcut-key">1, 2, 3, 4</span>
-                        <span class="shortcut-desc">Αλλαγή Τύπου Γραφήματος</span>
+                        <span class="shortcut-desc" id="shortcutChangeChartType">Αλλαγή Τύπου Γραφήματος</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + F</span>
-                        <span class="shortcut-desc">Πρόβλεψη</span>
+                        <span class="shortcut-desc" id="shortcutForecast">Πρόβλεψη</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + C</span>
-                        <span class="shortcut-desc">Σύγκριση</span>
+                        <span class="shortcut-desc" id="shortcutComparison">Σύγκριση</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + G</span>
-                        <span class="shortcut-desc">Στόχοι</span>
+                        <span class="shortcut-desc" id="shortcutGoals">Στόχοι</span>
                     </div>
                 </div>
                 
                 <div class="shortcut-category">
-                    <h4>📤 Εξαγωγή</h4>
+                    <h4 id="shortcutExportTitle">📤 Εξαγωγή</h4>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + E</span>
-                        <span class="shortcut-desc">Excel</span>
+                        <span class="shortcut-desc" id="shortcutExcel">Excel</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + P</span>
-                        <span class="shortcut-desc">PDF</span>
+                        <span class="shortcut-desc" id="shortcutPDF">PDF</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + I</span>
-                        <span class="shortcut-desc">Λήψη Γραφήματος</span>
+                        <span class="shortcut-desc" id="shortcutDownloadChart">Λήψη Γραφήματος</span>
                     </div>
                 </div>
                 
                 <div class="shortcut-category">
-                    <h4>🔧 Εργαλεία</h4>
+                    <h4 id="shortcutToolsTitle">🔧 Εργαλεία</h4>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + K</span>
-                        <span class="shortcut-desc">Αριθμομηχανή</span>
+                        <span class="shortcut-desc" id="shortcutCalculator">Αριθμομηχανή</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + ?</span>
-                        <span class="shortcut-desc">Αυτό το Μενού</span>
+                        <span class="shortcut-desc" id="shortcutThisMenu">Αυτό το Μενού</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + T</span>
-                        <span class="shortcut-desc">Αλλαγή Θέματος</span>
+                        <span class="shortcut-desc" id="shortcutChangeTheme">Αλλαγή Θέματος</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + R</span>
-                        <span class="shortcut-desc">Ανανέωση AI Insights</span>
+                        <span class="shortcut-desc" id="shortcutRefreshInsights">Ανανέωση AI Insights</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + A</span>
-                        <span class="shortcut-desc">Toggle Analytics</span>
+                        <span class="shortcut-desc" id="shortcutToggleAnalytics">Toggle Analytics</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">Ctrl + J</span>
-                        <span class="shortcut-desc">Toggle AI Insights</span>
+                        <span class="shortcut-desc" id="shortcutToggleInsights">Toggle AI Insights</span>
                     </div>
                     <div class="shortcut-item">
                         <span class="shortcut-key">H</span>
-                        <span class="shortcut-desc">Βοήθεια (Αυτό το Μενού)</span>
+                        <span class="shortcut-desc" id="shortcutHelp">Βοήθεια (Αυτό το Μενού)</span>
                     </div>
                 </div>
             </div>
@@ -3983,6 +4128,8 @@
                 changeLanguage: 'Αλλαγή Γλώσσας',
                 calculator: 'Αριθμομηχανή',
                 shortcuts: 'Πλήκτρα Συντόμευσης',
+                resetTheme: 'Επαναφορά Προεπιλογής',
+                calculatorActivated: 'Αριθμομηχανή ενεργοποιήθηκε!',
                 logout: 'Έξοδος',
                 statisticsCenter: 'Κέντρο Στατιστικών',
                 categoryName: 'Όνομα Κατηγορίας',
@@ -4067,9 +4214,249 @@
                 trendStrengthLabel: 'Ισχύς Τάσης',
                 volatilityLabel: 'Αστάθεια',
                 
+                // Trend strength values
+                strongUpward: 'Ισχυρή Ανοδική',
+                strongDownward: 'Ισχυρή Καθοδική',
+                moderateUpward: 'Μέτρια Ανοδική',
+                moderateDownward: 'Μέτρια Καθοδική',
+                weakUpward: 'Ασθενής Ανοδική',
+                weakDownward: 'Ασθενής Καθοδική',
+                sideways: 'Πλευρική',
+                insufficientData: 'Ανεπαρκή Δεδομένα',
+                
+                // AI Insights
+                smartInsights: 'Έξυπνες Προτάσεις AI',
+                viewDetails: 'Προβολή Λεπτομερειών',
+                hideDetails: 'Απόκρυψη Λεπτομερειών',
+                aiAnalyzing: 'Το AI αναλύει τα δεδομένα σας...',
+                refreshAnalysis: 'Ανανέωση Αναλύσεων',
+                
+                // Insight titles and actions
+                explosiveGrowth: 'Εκρηκτική Ανάπτυξη',
+                positivetrend: 'Θετική Τάση',
+                sharpDecline: 'Απότομη Πτώση',
+                downwardTrend: 'Καθοδική Τάση',
+                strongSeasonality: 'Ισχυρή Εποχικότητα',
+                winterDemand: 'Χειμερινή Ζήτηση',
+                summerPeak: 'Καλοκαιρινή Αιχμή',
+                springGrowth: 'Ανοιξιάτικη Ανάπτυξη',
+                autumnSlowdown: 'Φθινοπωρινή Επιβράδυνση',
+                stagnation: 'Στασιμότητα',
+                volatility: 'Υψηλή Αστάθεια',
+                marketLeader: 'Ηγέτης Αγοράς',
+                underperformer: 'Χαμηλή Απόδοση',
+                balancedPortfolio: 'Ισορροπημένο Χαρτοφυλάκιο',
+                concentrationRisk: 'Κίνδυνος Συγκέντρωσης',
+                
+                // Insight actions
+                increaseInventory: 'Συνιστάται: Αύξηση αποθέματος και marketing budget για αυτήν την κατηγορία',
+                maintainStrategy: 'Συνιστάται: Διατήρηση της τρέχουσας στρατηγικής',
+                immediateAction: 'Άμεση δράση: Ανάλυση αιτιών και αναθεώρηση στρατηγικής',
+                reviewMarketing: 'Συνιστάται: Εξέταση νέων στρατηγικών marketing',
+                prepareInventory: 'Προγραμματίστε αύξηση αποθέματος πριν τον',
+                holidayOffers: 'Ετοιμάστε ειδικές προσφορές για τις γιορτές',
+                summerCampaign: 'Σχεδιάστε καλοκαιρινή καμπάνια marketing',
+                springPromotion: 'Αξιοποιήστε την ανοιξιάτικη ενέργεια με νέα προϊόντα',
+                autumnStrategy: 'Προετοιμαστείτε για φθινοπωρινή στρατηγική',
+                findGrowthOpportunities: 'Αναζητήστε ευκαιρίες ανάπτυξης',
+                stabilizeOperations: 'Εστιάστε στη σταθεροποίηση των λειτουργιών',
+                capitalizeSuccess: 'Αξιοποιήστε την επιτυχία αυτής της κατηγορίας',
+                improvePerformance: 'Βελτιώστε την απόδοση αυτής της κατηγορίας',
+                maintainBalance: 'Διατηρήστε την ισορροπία στο χαρτοφυλάκιό σας',
+                diversifyPortfolio: 'Διαφοροποιήστε το χαρτοφυλάκιό σας',
+                
+                // Advanced Analytics
+                advancedAnalytics: 'Προηγμένα Αναλυτικά Στοιχεία',
+                performanceMetrics: 'Μετρικές Απόδοσης',
+                marketAnalysis: 'Ανάλυση Αγοράς',
+                predictiveEstimates: 'Προβλεπτικές Εκτιμήσεις',
+                
+                // Performance metrics
+                quarterlyGrowth: 'Τριμηνιαία Ανάπτυξη:',
+                annualGrowth: 'Ετήσια Ανάπτυξη:',
+                maxPerformance: 'Μέγιστη Απόδοση:',
+                consistencyScore: 'Βαθμός Συνέπειας:',
+                
+                // Market analysis
+                marketMomentum: 'Δυναμική Αγοράς:',
+                trendDirection: 'Κατεύθυνση Τάσης:',
+                riskLevel: 'Επίπεδο Κινδύνου:',
+                recoveryRate: 'Ρυθμός Ανάκαμψης:',
+                
+                // Predictive estimates
+                forecastAccuracy: 'Ακρίβεια Πρόβλεψης:',
+                nextQuarterOutlook: 'Προοπτικές Τριμήνου:',
+                seasonalityImpact: 'Επίδραση Εποχικότητας:',
+                modelConfidence: 'Εμπιστοσύνη Μοντέλου:',
+                
+                // Values for analytics
+                neutral: 'Ουδέτερη',
+                positive: 'Θετική',
+                negative: 'Αρνητική',
+                stable: 'Σταθερή',
+                upward: 'Ανοδική',
+                downward: 'Καθοδική',
+                high: 'Υψηλή',
+                medium: 'Μέτρια',
+                low: 'Χαμηλή',
+                excellent: 'Εξαιρετικές',
+                good: 'Καλές',
+                poor: 'Φτωχές',
+                
+                // Extended values for analytics
+                strongPositive: 'Ισχυρά Θετική',
+                strongNegative: 'Ισχυρά Αρνητική',
+                strongUpward: 'Ισχυρά Ανοδική',
+                veryHigh: 'Πολύ Υψηλό',
+                veryPositive: 'Πολύ Θετικές',
+                cautious: 'Προσεκτικές',
+                neutral2: 'Ουδέτερες',
+                minimal: 'Ελάχιστη',
+                veryHigh2: 'Πολύ Υψηλή',
+                
+                // Tooltips for Advanced Analytics
+                quarterlyGrowthTooltip: 'Ποσοστιαία αλλαγή πωλήσεων σε σχέση με το προηγούμενο τρίμηνο. Δείχνει βραχυπρόθεσμη τάση.',
+                annualGrowthTooltip: 'Ποσοστιαία αλλαγή πωλήσεων σε σχέση με την ίδια περίοδο του προηγούμενου έτους. Δείχνει μακροπρόθεσμη τάση.',
+                maxPerformanceTooltip: 'Η καλύτερη μηνιαία απόδοση που έχει καταγραφεί. Χρήσιμο για τον καθορισμό ρεαλιστικών στόχων.',
+                consistencyScoreTooltip: 'Πόσο σταθερές είναι οι πωλήσεις μας. Υψηλός βαθμός = προβλέψιμη απόδοση, Χαμηλός = ασταθής.',
+                marketMomentumTooltip: 'Η γενική κατεύθυνση της αγοράς. Θετική = ανοδική τάση, Αρνητική = καθοδική τάση, Ουδέτερη = σταθερή.',
+                trendDirectionTooltip: 'Η γενική κατεύθυνση των πωλήσεων. Ανοδική = αύξηση, Καθοδική = μείωση, Σταθερή = χωρίς αλλαγή.',
+                riskLevelTooltip: 'Αξιολόγηση κινδύνου βάσει αστάθειας πωλήσεων. Υψηλό = μεγάλος κίνδυνος, Χαμηλό = ασφαλής.',
+                recoveryRateTooltip: 'Πόσο γρήγορα ανακάμπτει η επιχείρηση από δύσκολες περιόδους. Υψηλός = γρήγορη ανάκαμψη.',
+                forecastAccuracyTooltip: 'Πόσο ακριβείς είναι οι προβλέψεις του AI μοντέλου μας. Υψηλή ακρίβεια = αξιόπιστες προβλέψεις.',
+                nextQuarterOutlookTooltip: 'Πώς αναμένουμε να πάει η επιχείρηση τους επόμενους 3 μήνες. Βασίζεται στα τρέχοντα δεδομένα.',
+                seasonalityImpactTooltip: 'Πόσο επηρεάζουν οι εποχές τις πωλήσεις. Υψηλή = μεγάλη διακύμανση ανά εποχή.',
+                modelConfidenceTooltip: 'Πόσο σίγουρο είναι το AI για τις προβλέψεις του. Υψηλή εμπιστοσύνη = αξιόπιστα αποτελέσματα.',
+                
+                // Theme names
+                themeSelection: 'Επιλογή Θέματος',
+                selectStyle: 'Επιλογή Στυλ',
+                themeClassic: 'Κλασικό',
+                themeClassicDesc: 'Το αρχικό μπλε θέμα',
+                themeDark: 'Σκοτεινό',
+                themeDarkDesc: 'Μαύρο και στυλάτο',
+                themeOcean: 'Ωκεανός',
+                themeOceanDesc: 'Μπλε και γαλάζιο',
+                themeSunset: 'Ηλιοβασίλεμα',
+                themeSunsetDesc: 'Πορτοκαλί και ροζ',
+                themeForest: 'Δάσος',
+                themeForestDesc: 'Πράσινο και φυσικό',
+                themeRoyal: 'Βασιλικό',
+                themeRoyalDesc: 'Μοβ και πολυτελές',
+                themeFire: 'Φωτιά',
+                themeFireDesc: 'Κόκκινο και δυναμικό',
+                themeGold: 'Χρυσό',
+                themeGoldDesc: 'Πορτοκαλί και ζεστό',
+                themeIce: 'Παγωμένο',
+                themeIceDesc: 'Γαλάζιο και κρύο',
+                themeApplied: 'εφαρμόστηκε!',
+                selectFavoriteTheme: 'Επιλέξτε το αγαπημένο σας θέμα!',
+                themePanelHidden: 'Πάνελ θεμάτων κρύφτηκε',
+                
+                // Goals & Targets
+                goalsTargetsTitle: 'Στόχοι & Επιδόσεις',
+                manageGoals: 'Διαχείριση Στόχων',
+                goalCategory: 'Κατηγορία',
+                goalTarget: 'Στόχος',
+                goalPeriod: 'Περίοδος',
+                allCategories: 'Όλες οι Κατηγορίες',
+                monthly: 'Μηνιαίος',
+                quarterly: 'Τριμηνιαίος',
+                yearly: 'Ετήσιος',
+                addGoal: 'Προσθήκη',
+                goalAdded: 'προστέθηκε!',
+                goalDeleted: 'Στόχος διαγράφηκε!',
+                goalsPanelHidden: 'Πάνελ στόχων κρύφτηκε',
+                setYourGoals: 'Ορίστε τους στόχους σας!',
+                noGoalsYet: 'Δεν έχετε ορίσει στόχους ακόμα. Προσθέστε τον πρώτο σας στόχο!',
+                enterValidTarget: 'Παρακαλώ εισάγετε έγκυρο στόχο.',
+                targetPlaceholder: 'π.χ. 50000',
+                goalStatus: 'Κατάσταση',
+                achieved: 'Επιτεύχθηκε',
+                inProgress: 'Σε Εξέλιξη',
+                atRisk: 'Κίνδυνος',
+                targetLabel: 'Στόχος:',
+                currentLabel: 'Τρέχον:',
+                ofTarget: 'του στόχου',
+                deleteGoal: 'Διαγραφή',
+                deleteGoalTooltip: 'Διαγραφή στόχου',
+                smartSuggestions: 'Έξυπνες Προτάσεις',
+                smartSuggestionsTooltip: 'Έξυπνες προτάσεις στόχων βασισμένες στα δεδομένα σας',
+                
+                // Cell editing notifications
+                valueUpdated: 'Τιμή ενημερώθηκε!',
+                categoryNameUpdated: 'Όνομα κατηγορίας ενημερώθηκε!',
+                excelExportCompleted: 'Εξαγωγή Excel ολοκληρώθηκε!',
+                pdfExportCompleted: 'Εξαγωγή PDF ολοκληρώθηκε!',
+                
+                // Comparison and forecast notifications
+                noDataFoundForCategory: 'Δεν βρέθηκαν δεδομένα για την κατηγορία',
+                noDataFoundForCategoryYear: 'Δεν βρέθηκαν δεδομένα για την κατηγορία',
+                selectCategoryForForecast: 'Παρακαλώ επιλέξτε κατηγορία για πρόβλεψη.',
+                noChartToDownload: 'Δεν υπάρχει γράφημα για λήψη.',
+                chartDownloadedSuccessfully: 'Το γράφημα κατέβηκε επιτυχώς!',
+                
+                // System notifications
+                advancedAnalyticsActivated: 'Προηγμένη Ανάλυση ενεργοποιήθηκε!',
+                keyboardShortcutsNew: 'Νέο: Συντομεύσεις πληκτρολογίου! Πατήστε H για βοήθεια',
+                autoUpdateSystemActive: 'Σύστημα Αυτόματης Ενημέρωσης ενεργό!',
+                liveUpdatesActive: 'Ζωντανές Ενημερώσεις: Κάθε αλλαγή ενημερώνει αυτόματα!',
+                dataRefreshed: 'Δεδομένα ανανεώθηκαν!',
+                memoryClearedShortcut: 'Μνήμη καθαρίστηκε',
+                keyboardShortcutsShown: 'Συντομεύσεις πληκτρολογίου εμφανίστηκαν!',
+                dataSavedShortcut: 'Δεδομένα αποθηκεύτηκαν!',
+                modalsClosed: 'Τα παράθυρα έκλεισαν',
+                
+                // Additional system notifications
+                forecastCompleted: 'Πρόβλεψη ολοκληρώθηκε!',
+                forecastCompletedMonths: 'Πρόβλεψη {months} μηνών ολοκληρώθηκε!',
+                welcome: 'Καλώς ήρθες',
+                saved: 'Αποθηκεύτηκε:',
+                memory: 'Μνήμη:',
+                chart: 'Γράφημα:',
+                statsCard: 'Κάρτα στατιστικών ✨',
+                chartViewToggle: 'Εναλλαγή προβολής γραφήματος 📊',
+                connectionRestored: 'Σύνδεση αποκαταστάθηκε! 🌐',
+                offlineMode: 'Λειτουργία εκτός σύνδεσης 📴',
+                dataSynced: 'Συγχρονίστηκαν δεδομένα! 🔄',
+                newVersionAvailable: 'Νέα έκδοση διαθέσιμη! 🔄',
+                installationStarted: 'Εγκατάσταση ξεκίνησε! 🎉',
+                
                 // Language selection
                 selectLanguage: 'Επιλέξτε Γλώσσα',
-                languageChanged: 'Η γλώσσα άλλαξε επιτυχώς!'
+                languageChanged: 'Η γλώσσα άλλαξε επιτυχώς!',
+                
+                // Keyboard shortcuts
+                keyboardShortcuts: 'Πλήκτρα Συντόμευσης',
+                shortcutGeneral: 'Γενικά',
+                shortcutCharts: 'Γραφήματα',
+                shortcutExport: 'Εξαγωγή',
+                shortcutTools: 'Εργαλεία',
+                shortcutNewCategory: 'Νέα Κατηγορία',
+                shortcutSave: 'Αποθήκευση',
+                shortcutDarkMode: 'Dark Mode',
+                shortcutCloseModal: 'Κλείσιμο Modal',
+                shortcutChangeChartType: 'Αλλαγή Τύπου Γραφήματος',
+                shortcutForecast: 'Πρόβλεψη',
+                shortcutComparison: 'Σύγκριση',
+                shortcutGoals: 'Στόχοι',
+                shortcutExcel: 'Excel',
+                shortcutPDF: 'PDF',
+                shortcutDownloadChart: 'Λήψη Γραφήματος',
+                shortcutCalculator: 'Αριθμομηχανή',
+                shortcutThisMenu: 'Αυτό το Μενού',
+                shortcutChangeTheme: 'Αλλαγή Θέματος',
+                shortcutRefreshInsights: 'Ανανέωση AI Insights',
+                shortcutToggleAnalytics: 'Toggle Analytics',
+                shortcutToggleInsights: 'Toggle AI Insights',
+                shortcutHelp: 'Βοήθεια (Αυτό το Μενού)',
+                
+                // Floating button tooltip
+                shortcutsTooltip: 'Ctrl + ? για Shortcuts',
+                
+                // Language toggle
+                changeToEnglish: 'Αλλαγή σε Αγγλικά',
+                changeToGreek: 'Change to Greek'
             },
             en: {
                 // UI Elements
@@ -4083,6 +4470,8 @@
                 changeLanguage: 'Change Language',
                 calculator: 'Calculator',
                 shortcuts: 'Keyboard Shortcuts',
+                resetTheme: 'Reset Default',
+                calculatorActivated: 'Calculator activated!',
                 logout: 'Logout',
                 statisticsCenter: 'Statistics Center',
                 categoryName: 'Category Name',
@@ -4167,9 +4556,249 @@
                 trendStrengthLabel: 'Trend Strength',
                 volatilityLabel: 'Volatility',
                 
+                // Trend strength values
+                strongUpward: 'Strong Upward',
+                strongDownward: 'Strong Downward',
+                moderateUpward: 'Moderate Upward',
+                moderateDownward: 'Moderate Downward',
+                weakUpward: 'Weak Upward',
+                weakDownward: 'Weak Downward',
+                sideways: 'Sideways',
+                insufficientData: 'Insufficient Data',
+                
+                // AI Insights
+                smartInsights: 'Smart AI Insights',
+                viewDetails: 'View Details',
+                hideDetails: 'Hide Details',
+                aiAnalyzing: 'AI is analyzing your data...',
+                refreshAnalysis: 'Refresh Analysis',
+                
+                // Insight titles and actions
+                explosiveGrowth: 'Explosive Growth',
+                positivetrend: 'Positive Trend',
+                sharpDecline: 'Sharp Decline',
+                downwardTrend: 'Downward Trend',
+                strongSeasonality: 'Strong Seasonality',
+                winterDemand: 'Winter Demand',
+                summerPeak: 'Summer Peak',
+                springGrowth: 'Spring Growth',
+                autumnSlowdown: 'Autumn Slowdown',
+                stagnation: 'Stagnation',
+                volatility: 'High Volatility',
+                marketLeader: 'Market Leader',
+                underperformer: 'Underperformer',
+                balancedPortfolio: 'Balanced Portfolio',
+                concentrationRisk: 'Concentration Risk',
+                
+                // Insight actions
+                increaseInventory: 'Recommended: Increase inventory and marketing budget for this category',
+                maintainStrategy: 'Recommended: Maintain current strategy',
+                immediateAction: 'Immediate action: Analyze causes and revise strategy',
+                reviewMarketing: 'Recommended: Consider new marketing strategies',
+                prepareInventory: 'Schedule inventory increase before',
+                holidayOffers: 'Prepare special holiday offers',
+                summerCampaign: 'Design summer marketing campaign',
+                springPromotion: 'Leverage spring energy with new products',
+                autumnStrategy: 'Prepare autumn strategy',
+                findGrowthOpportunities: 'Look for growth opportunities',
+                stabilizeOperations: 'Focus on stabilizing operations',
+                capitalizeSuccess: 'Capitalize on this category\'s success',
+                improvePerformance: 'Improve this category\'s performance',
+                maintainBalance: 'Maintain balance in your portfolio',
+                diversifyPortfolio: 'Diversify your portfolio',
+                
+                // Advanced Analytics
+                advancedAnalytics: 'Advanced Analytics',
+                performanceMetrics: 'Performance Metrics',
+                marketAnalysis: 'Market Analysis',
+                predictiveEstimates: 'Predictive Estimates',
+                
+                // Performance metrics
+                quarterlyGrowth: 'Quarterly Growth:',
+                annualGrowth: 'Annual Growth:',
+                maxPerformance: 'Peak Performance:',
+                consistencyScore: 'Consistency Score:',
+                
+                // Market analysis
+                marketMomentum: 'Market Momentum:',
+                trendDirection: 'Trend Direction:',
+                riskLevel: 'Risk Level:',
+                recoveryRate: 'Recovery Rate:',
+                
+                // Predictive estimates
+                forecastAccuracy: 'Forecast Accuracy:',
+                nextQuarterOutlook: 'Next Quarter Outlook:',
+                seasonalityImpact: 'Seasonality Impact:',
+                modelConfidence: 'Model Confidence:',
+                
+                // Values for analytics
+                neutral: 'Neutral',
+                positive: 'Positive',
+                negative: 'Negative',
+                stable: 'Stable',
+                upward: 'Upward',
+                downward: 'Downward',
+                high: 'High',
+                medium: 'Medium',
+                low: 'Low',
+                excellent: 'Excellent',
+                good: 'Good',
+                poor: 'Poor',
+                
+                // Extended values for analytics
+                strongPositive: 'Strongly Positive',
+                strongNegative: 'Strongly Negative',
+                strongUpward: 'Strongly Upward',
+                veryHigh: 'Very High',
+                veryPositive: 'Very Positive',
+                cautious: 'Cautious',
+                neutral2: 'Neutral',
+                minimal: 'Minimal',
+                veryHigh2: 'Very High',
+                
+                // Tooltips for Advanced Analytics
+                quarterlyGrowthTooltip: 'Percentage change in sales compared to the previous quarter. Shows short-term trends.',
+                annualGrowthTooltip: 'Percentage change in sales compared to the same period last year. Shows long-term trends.',
+                maxPerformanceTooltip: 'The best monthly performance on record. Useful for setting realistic targets.',
+                consistencyScoreTooltip: 'How stable our sales are. High score = predictable performance, Low = unstable.',
+                marketMomentumTooltip: 'The general direction of the market. Positive = upward trend, Negative = downward trend, Neutral = stable.',
+                trendDirectionTooltip: 'The general direction of sales. Upward = increase, Downward = decrease, Stable = no change.',
+                riskLevelTooltip: 'Risk assessment based on sales volatility. High = high risk, Low = safe.',
+                recoveryRateTooltip: 'How quickly the business recovers from difficult periods. High = fast recovery.',
+                forecastAccuracyTooltip: 'How accurate our AI model predictions are. High accuracy = reliable forecasts.',
+                nextQuarterOutlookTooltip: 'How we expect the business to perform in the next 3 months. Based on current data.',
+                seasonalityImpactTooltip: 'How much seasons affect sales. High = large seasonal variation.',
+                modelConfidenceTooltip: 'How confident the AI is about its predictions. High confidence = reliable results.',
+                
+                // Theme names
+                themeSelection: 'Theme Selection',
+                selectStyle: 'Select Style',
+                themeClassic: 'Classic',
+                themeClassicDesc: 'The original blue theme',
+                themeDark: 'Dark',
+                themeDarkDesc: 'Black and stylish',
+                themeOcean: 'Ocean',
+                themeOceanDesc: 'Blue and aqua',
+                themeSunset: 'Sunset',
+                themeSunsetDesc: 'Orange and pink',
+                themeForest: 'Forest',
+                themeForestDesc: 'Green and natural',
+                themeRoyal: 'Royal',
+                themeRoyalDesc: 'Purple and luxurious',
+                themeFire: 'Fire',
+                themeFireDesc: 'Red and dynamic',
+                themeGold: 'Gold',
+                themeGoldDesc: 'Orange and warm',
+                themeIce: 'Ice',
+                themeIceDesc: 'Light blue and cold',
+                themeApplied: 'applied!',
+                selectFavoriteTheme: 'Select your favorite theme!',
+                themePanelHidden: 'Theme panel hidden',
+                
+                // Goals & Targets  
+                goalsTargetsTitle: 'Goals & Performance',
+                manageGoals: 'Manage Goals',
+                goalCategory: 'Category',
+                goalTarget: 'Target',
+                goalPeriod: 'Period',
+                allCategories: 'All Categories',
+                monthly: 'Monthly',
+                quarterly: 'Quarterly',
+                yearly: 'Yearly',
+                addGoal: 'Add',
+                goalAdded: 'added!',
+                goalDeleted: 'Goal deleted!',
+                goalsPanelHidden: 'Goals panel hidden',
+                setYourGoals: 'Set your goals!',
+                noGoalsYet: 'You haven\'t set any goals yet. Add your first goal!',
+                enterValidTarget: 'Please enter a valid target.',
+                targetPlaceholder: 'e.g. 50000',
+                goalStatus: 'Status',
+                achieved: 'Achieved',
+                inProgress: 'In Progress',
+                atRisk: 'At Risk',
+                targetLabel: 'Target:',
+                currentLabel: 'Current:',
+                ofTarget: 'of target',
+                deleteGoal: 'Delete',
+                deleteGoalTooltip: 'Delete goal',
+                smartSuggestions: 'Smart Suggestions',
+                smartSuggestionsTooltip: 'Smart goal suggestions based on your data',
+                
+                // Cell editing notifications
+                valueUpdated: 'Value updated!',
+                categoryNameUpdated: 'Category name updated!',
+                excelExportCompleted: 'Excel export completed!',
+                pdfExportCompleted: 'PDF export completed!',
+                
+                // Comparison and forecast notifications
+                noDataFoundForCategory: 'No data found for category',
+                noDataFoundForCategoryYear: 'No data found for category',
+                selectCategoryForForecast: 'Please select a category for forecast.',
+                noChartToDownload: 'No chart available for download.',
+                chartDownloadedSuccessfully: 'Chart downloaded successfully!',
+                
+                // System notifications
+                advancedAnalyticsActivated: 'Advanced Analytics activated!',
+                keyboardShortcutsNew: 'New: Keyboard shortcuts! Press H for help',
+                autoUpdateSystemActive: 'Auto-Update System active!',
+                liveUpdatesActive: 'Live Updates: Every change updates automatically!',
+                dataRefreshed: 'Data refreshed!',
+                memoryClearedShortcut: 'Memory cleared',
+                keyboardShortcutsShown: 'Keyboard shortcuts shown!',
+                dataSavedShortcut: 'Data saved!',
+                modalsClosed: 'Modals closed',
+                
+                // Additional system notifications
+                forecastCompleted: 'Forecast completed!',
+                forecastCompletedMonths: 'Forecast {months} months completed!',
+                welcome: 'Welcome',
+                saved: 'Saved:',
+                memory: 'Memory:',
+                chart: 'Chart:',
+                statsCard: 'Stats card ✨',
+                chartViewToggle: 'Chart view toggle 📊',
+                connectionRestored: 'Connection restored! 🌐',
+                offlineMode: 'Offline mode 📴',
+                dataSynced: 'Data synced! 🔄',
+                newVersionAvailable: 'New version available! 🔄',
+                installationStarted: 'Installation started! 🎉',
+                
                 // Language selection
                 selectLanguage: 'Select Language',
-                languageChanged: 'Language changed successfully!'
+                languageChanged: 'Language changed successfully!',
+                
+                // Keyboard shortcuts
+                keyboardShortcuts: 'Keyboard Shortcuts',
+                shortcutGeneral: 'General',
+                shortcutCharts: 'Charts',
+                shortcutExport: 'Export',
+                shortcutTools: 'Tools',
+                shortcutNewCategory: 'New Category',
+                shortcutSave: 'Save',
+                shortcutDarkMode: 'Dark Mode',
+                shortcutCloseModal: 'Close Modal',
+                shortcutChangeChartType: 'Change Chart Type',
+                shortcutForecast: 'Forecast',
+                shortcutComparison: 'Comparison',
+                shortcutGoals: 'Goals',
+                shortcutExcel: 'Excel',
+                shortcutPDF: 'PDF',
+                shortcutDownloadChart: 'Download Chart',
+                shortcutCalculator: 'Calculator',
+                shortcutThisMenu: 'This Menu',
+                shortcutChangeTheme: 'Change Theme',
+                shortcutRefreshInsights: 'Refresh AI Insights',
+                shortcutToggleAnalytics: 'Toggle Analytics',
+                shortcutToggleInsights: 'Toggle AI Insights',
+                shortcutHelp: 'Help (This Menu)',
+                
+                // Floating button tooltip
+                shortcutsTooltip: 'Ctrl + ? for Shortcuts',
+                
+                // Language toggle
+                changeToEnglish: 'Change to English',
+                changeToGreek: 'Αλλαγή σε Ελληνικά'
             }
         };
         
@@ -4205,6 +4834,29 @@
                 statCards[6].setAttribute('data-tooltip', `📊 ${t.trendStrengthTooltip}`);
                 statCards[7].setAttribute('data-tooltip', `⚡ ${t.volatilityTooltip}`);
             }
+            
+            // Advanced Analytics tooltips
+            const analyticsRows = document.querySelectorAll('[data-tooltip-key]');
+            analyticsRows.forEach(row => {
+                const tooltipKey = row.getAttribute('data-tooltip-key');
+                if (t[tooltipKey]) {
+                    // Add appropriate emoji prefix based on tooltip type
+                    let emoji = '📊';
+                    if (tooltipKey.includes('quarterly') || tooltipKey.includes('annual')) emoji = '📈';
+                    if (tooltipKey.includes('maxPerformance')) emoji = '🏆';
+                    if (tooltipKey.includes('consistency')) emoji = '🎯';
+                    if (tooltipKey.includes('momentum')) emoji = '🚀';
+                    if (tooltipKey.includes('trend')) emoji = '📊';
+                    if (tooltipKey.includes('risk')) emoji = '⚠️';
+                    if (tooltipKey.includes('recovery')) emoji = '💪';
+                    if (tooltipKey.includes('forecast')) emoji = '🎯';
+                    if (tooltipKey.includes('quarter')) emoji = '📅';
+                    if (tooltipKey.includes('seasonality')) emoji = '🌦️';
+                    if (tooltipKey.includes('model')) emoji = '🤖';
+                    
+                    row.setAttribute('data-tooltip', `${emoji} ${t[tooltipKey]}`);
+                }
+            });
         };
 
         const updateStatLabels = () => {
@@ -4269,6 +4921,25 @@
         };
 
         // Language functions
+        const toggleLanguage = () => {
+            const newLang = currentLanguage === 'el' ? 'en' : 'el';
+            changeLanguage(newLang);
+        };
+
+        const updateLanguageToggleButton = () => {
+            const flagElement = document.getElementById('languageFlag');
+            const toggleButton = document.getElementById('modernLanguageToggle');
+            const t = translations[currentLanguage];
+            
+            if (currentLanguage === 'el') {
+                flagElement.textContent = '🇬🇷';
+                toggleButton.title = t.changeToEnglish;
+            } else {
+                flagElement.textContent = '🇺🇸';
+                toggleButton.title = t.changeToGreek;
+            }
+        };
+
         const changeLanguage = (lang) => {
             currentLanguage = lang;
             localStorage.setItem('language', lang);
@@ -4299,9 +4970,8 @@
             dropdownItems[1].textContent = t.exportPdf;
             dropdownItems[2].textContent = t.goalsTargets;
             dropdownItems[3].textContent = t.changeTheme;
-            dropdownItems[4].textContent = t.changeLanguage;
-            dropdownItems[5].textContent = t.calculator;
-            if (dropdownItems[6]) dropdownItems[6].textContent = t.shortcuts;
+            dropdownItems[4].textContent = t.calculator;
+            if (dropdownItems[5]) dropdownItems[5].textContent = t.shortcuts;
             
             // Update chart type buttons
             const lineBtn = document.getElementById('lineChartBtn');
@@ -4323,6 +4993,40 @@
             const downloadBtn = document.getElementById('downloadChartBtn');
             if (downloadBtn) downloadBtn.textContent = `📥 ${t.downloadChart}`;
             
+            // Update logout button
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) logoutBtn.textContent = `🚪 ${t.logout}`;
+            
+            // Update insights panel
+            const insightsTitle = document.querySelector('#insightsPanel .insights-header h3');
+            if (insightsTitle) insightsTitle.textContent = `🔍 ${t.smartInsights}`;
+            
+            const toggleInsightsBtn = document.getElementById('toggleInsightsBtn');
+            if (toggleInsightsBtn) toggleInsightsBtn.textContent = `📊 ${t.viewDetails}`;
+            
+            const aiAnalyzingDiv = document.querySelector('#insightsLoading div:last-child');
+            if (aiAnalyzingDiv) aiAnalyzingDiv.textContent = `🧠 ${t.aiAnalyzing}`;
+            
+            const refreshInsightsBtn = document.getElementById('refreshInsightsBtn');
+            if (refreshInsightsBtn) refreshInsightsBtn.textContent = `🔄 ${t.refreshAnalysis}`;
+            
+            // Update analytics panel
+            const analyticsTitle = document.querySelector('#analyticsPanel .analytics-header h3');
+            if (analyticsTitle) analyticsTitle.textContent = `🧠 ${currentLanguage === 'el' ? 'Προηγμένα Αναλυτικά Στοιχεία' : 'Advanced Analytics'}`;
+            
+            const toggleAnalyticsBtn = document.getElementById('toggleAnalyticsBtn');
+            if (toggleAnalyticsBtn) {
+                const isVisible = document.getElementById('analyticsContent').style.display !== 'none';
+                toggleAnalyticsBtn.textContent = `📊 ${isVisible ? t.hideDetails : t.viewDetails}`;
+            }
+            
+            // Update insights toggle button state
+            const insightsToggleBtn = document.getElementById('toggleInsightsBtn');
+            if (insightsToggleBtn) {
+                const isVisible = document.getElementById('insightsContent').style.display !== 'none';
+                insightsToggleBtn.textContent = `📊 ${isVisible ? t.hideDetails : t.viewDetails}`;
+            }
+            
             // Update tooltips
             updateTooltips();
             
@@ -4337,6 +5041,148 @@
             
             // Update category dropdown
             populateCategoryDropdown();
+            
+            // Update goals panel elements
+            updateGoalsPanel();
+            
+            // Update keyboard shortcuts modal
+            updateKeyboardShortcutsModal();
+            
+            // Update language toggle button
+            updateLanguageToggleButton();
+            
+            // Update all translated spans
+            updateAllTranslatedElements();
+            
+            // Update theme panel toggle button if exists
+            const toggleThemeBtn = document.getElementById('toggleThemeBtn');
+            if (toggleThemeBtn) {
+                const themeSpan = toggleThemeBtn.querySelector('.translate');
+                if (themeSpan) {
+                    themeSpan.textContent = t.selectStyle;
+                }
+            }
+        };
+
+        const updateKeyboardShortcutsModal = () => {
+            const t = translations[currentLanguage];
+            
+            // Update modal title and category headers
+            const shortcutsTitle = document.getElementById('shortcutsTitle');
+            if (shortcutsTitle) shortcutsTitle.textContent = `⌨️ ${t.keyboardShortcuts}`;
+            
+            const generalTitle = document.getElementById('shortcutGeneralTitle');
+            if (generalTitle) generalTitle.textContent = `🏢 ${t.shortcutGeneral}`;
+            
+            const chartsTitle = document.getElementById('shortcutChartsTitle');
+            if (chartsTitle) chartsTitle.textContent = `📊 ${t.shortcutCharts}`;
+            
+            const exportTitle = document.getElementById('shortcutExportTitle');
+            if (exportTitle) exportTitle.textContent = `📤 ${t.shortcutExport}`;
+            
+            const toolsTitle = document.getElementById('shortcutToolsTitle');
+            if (toolsTitle) toolsTitle.textContent = `🔧 ${t.shortcutTools}`;
+            
+            // Update shortcut descriptions
+            const shortcutElements = {
+                'shortcutNewCategory': t.shortcutNewCategory,
+                'shortcutSave': t.shortcutSave,
+                'shortcutDarkMode': t.shortcutDarkMode,
+                'shortcutCloseModal': t.shortcutCloseModal,
+                'shortcutChangeChartType': t.shortcutChangeChartType,
+                'shortcutForecast': t.shortcutForecast,
+                'shortcutComparison': t.shortcutComparison,
+                'shortcutGoals': t.shortcutGoals,
+                'shortcutExcel': t.shortcutExcel,
+                'shortcutPDF': t.shortcutPDF,
+                'shortcutDownloadChart': t.shortcutDownloadChart,
+                'shortcutCalculator': t.shortcutCalculator,
+                'shortcutThisMenu': t.shortcutThisMenu,
+                'shortcutChangeTheme': t.shortcutChangeTheme,
+                'shortcutRefreshInsights': t.shortcutRefreshInsights,
+                'shortcutToggleAnalytics': t.shortcutToggleAnalytics,
+                'shortcutToggleInsights': t.shortcutToggleInsights,
+                'shortcutHelp': t.shortcutHelp
+            };
+            
+            Object.keys(shortcutElements).forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.textContent = shortcutElements[id];
+            });
+            
+            // Update floating shortcuts button tooltip
+            const floatingShortcuts = document.getElementById('floatingShortcuts');
+            if (floatingShortcuts) floatingShortcuts.title = t.shortcutsTooltip;
+        };
+
+        const updateGoalsPanel = () => {
+            const t = translations[currentLanguage];
+            
+            // Update goal input placeholder
+            const goalTargetInput = document.getElementById('goalTarget');
+            if (goalTargetInput) {
+                goalTargetInput.placeholder = t.targetPlaceholder;
+            }
+            
+            // Update goal period options
+            const goalPeriodSelect = document.getElementById('goalPeriod');
+            if (goalPeriodSelect) {
+                const currentValue = goalPeriodSelect.value || 'monthly';
+                goalPeriodSelect.innerHTML = `
+                    <option value="monthly">${t.monthly}</option>
+                    <option value="quarterly">${t.quarterly}</option>
+                    <option value="yearly">${t.yearly}</option>
+                `;
+                goalPeriodSelect.value = currentValue;
+            }
+            
+            // Update goals toggle button
+            const toggleGoalsBtn = document.getElementById('toggleGoalsBtn');
+            if (toggleGoalsBtn) {
+                const goalsSpan = toggleGoalsBtn.querySelector('.translate');
+                if (goalsSpan) {
+                    goalsSpan.textContent = t.manageGoals;
+                }
+            }
+            
+            // Update smart suggestions button
+            const smartSuggestionsBtn = document.getElementById('smartSuggestionsBtn');
+            if (smartSuggestionsBtn) {
+                const smartSpan = smartSuggestionsBtn.querySelector('.translate');
+                if (smartSpan) {
+                    smartSpan.textContent = t.smartSuggestions;
+                }
+                smartSuggestionsBtn.title = t.smartSuggestionsTooltip;
+            }
+            
+            // Refresh goals display if panel is visible
+            const goalsPanel = document.getElementById('goalsPanel');
+            if (goalsPanel && goalsPanel.style.display !== 'none') {
+                populateGoalCategoryDropdown();
+                renderGoals();
+            }
+        };
+
+        const updateAllTranslatedElements = () => {
+            const t = translations[currentLanguage];
+            
+            // Update all elements with class 'translate'
+            document.querySelectorAll('.translate').forEach(element => {
+                // Check if element has a data-translate-key attribute
+                const key = element.getAttribute('data-translate-key') || element.textContent.trim();
+                if (t[key]) {
+                    element.textContent = t[key];
+                } else {
+                    // For span elements that contain translation keys
+                    const spanParent = element.parentNode;
+                    if (spanParent && spanParent.innerHTML.includes('class="translate"')) {
+                        const key = element.textContent.trim();
+                        if (t[key]) {
+                            element.textContent = t[key];
+                        }
+                    }
+                }
+            });
         };
 
         const updateTableHeaders = () => {
@@ -4499,34 +5345,37 @@
                 updateChart();
             }
             
-            showNotification(`🎨 Θέμα "${getThemeName(theme)}" εφαρμόστηκε!`, "success");
+            const t = translations[currentLanguage];
+            showNotification(`🎨 ${t.themeSelection} "${getThemeName(theme)}" ${t.themeApplied}`, "success");
         };
         
         const getThemeName = (theme) => {
-            const names = {
-                'default': 'Κλασικό',
-                'ocean': 'Ωκεανός', 
-                'sunset': 'Ηλιοβασίλεμα',
-                'forest': 'Δάσος',
-                'royal': 'Βασιλικό',
-                'fire': 'Φωτιά',
-                'gold': 'Χρυσό',
-                'ice': 'Παγωμένο'
+            const t = translations[currentLanguage];
+            const themeKeys = {
+                'default': 'themeClassic',
+                'ocean': 'themeOcean', 
+                'sunset': 'themeSunset',
+                'forest': 'themeForest',
+                'royal': 'themeRoyal',
+                'fire': 'themeFire',
+                'gold': 'themeGold',
+                'ice': 'themeIce'
             };
-            return names[theme] || 'Κλασικό';
+            return t[themeKeys[theme]] || t.themeClassic;
         };
         
         const toggleThemePanel = () => {
             const panel = document.getElementById('themePanel');
             const isVisible = panel.style.display !== 'none';
+            const t = translations[currentLanguage];
             
             if (isVisible) {
                 panel.style.display = 'none';
-                showNotification("🎨 Πάνελ θεμάτων κρύφτηκε", "info", 1500);
+                showNotification(`🎨 ${t.themePanelHidden}`, "info", 1500);
             } else {
                 panel.style.display = 'block';
                 panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                showNotification("🎨 Επιλέξτε το αγαπημένο σας θέμα!", "info", 2000);
+                showNotification(`🎨 ${t.selectFavoriteTheme}`, "info", 2000);
             }
         };
         
@@ -4537,18 +5386,15 @@
             const category = document.getElementById('goalCategory').value;
             const target = parseFloat(document.getElementById('goalTarget').value);
             const period = document.getElementById('goalPeriod').value;
+            const t = translations[currentLanguage];
             
             if (!target || target <= 0) {
-                showNotification("⚠️ Παρακαλώ εισάγετε έγκυρο στόχο.", "warning");
+                showNotification(`⚠️ ${t.enterValidTarget}`, "warning");
                 return;
             }
             
-            const goalName = category || 'Όλες οι Κατηγορίες';
-            const periodText = {
-                'monthly': 'Μηνιαίος',
-                'quarterly': 'Τριμηνιαίος', 
-                'yearly': 'Ετήσιος'
-            }[period];
+            const goalName = category || t.allCategories;
+            const periodText = t[period];
             
             const newGoal = {
                 id: Date.now(),
@@ -4567,14 +5413,15 @@
             document.getElementById('goalTarget').value = '';
             
             renderGoals();
-            showNotification(`🎯 Στόχος "${goalName} - ${target.toLocaleString()}" προστέθηκε!`, "success");
+            showNotification(`🎯 ${t.goalTarget} "${goalName} - ${target.toLocaleString()}" ${t.goalAdded}`, "success");
         };
         
         const deleteGoal = (goalId) => {
+            const t = translations[currentLanguage];
             goalsData = goalsData.filter(goal => goal.id !== goalId);
             localStorage.setItem('goalsData', JSON.stringify(goalsData));
             renderGoals();
-            showNotification("🗑️ Στόχος διαγράφηκε!", "success");
+            showNotification(`🗑️ ${t.goalDeleted}`, "success");
         };
         
         const calculateGoalProgress = (goal) => {
@@ -4582,13 +5429,13 @@
             let current = 0;
             
             if (goal.period === 'monthly') {
-                const currentMonth = months[currentDate.getMonth()];
+                const currentMonthKey = monthKeys[currentDate.getMonth()];
                 if (goal.category) {
-                    current = salesData[selectedYear][goal.category]?.sales[currentMonth] || 0;
+                    current = salesData[selectedYear][goal.category]?.sales[currentMonthKey] || 0;
                 } else {
                     // Sum all categories for current month
                     Object.keys(salesData[selectedYear]).forEach(cat => {
-                        current += salesData[selectedYear][cat].sales[currentMonth] || 0;
+                        current += salesData[selectedYear][cat].sales[currentMonthKey] || 0;
                     });
                 }
             } else if (goal.period === 'quarterly') {
@@ -4601,25 +5448,25 @@
                 ][quarter];
                 
                 if (goal.category) {
-                    quarterMonths.forEach(month => {
-                        current += salesData[selectedYear][goal.category]?.sales[month] || 0;
+                    quarterMonths.forEach(monthKey => {
+                        current += salesData[selectedYear][goal.category]?.sales[monthKey] || 0;
                     });
                 } else {
                     Object.keys(salesData[selectedYear]).forEach(cat => {
-                        quarterMonths.forEach(month => {
-                            current += salesData[selectedYear][cat].sales[month] || 0;
+                        quarterMonths.forEach(monthKey => {
+                            current += salesData[selectedYear][cat].sales[monthKey] || 0;
                         });
                     });
                 }
             } else { // yearly
                 if (goal.category) {
-                    months.forEach(month => {
-                        current += salesData[selectedYear][goal.category]?.sales[month] || 0;
+                    monthKeys.forEach(monthKey => {
+                        current += salesData[selectedYear][goal.category]?.sales[monthKey] || 0;
                     });
                 } else {
                     Object.keys(salesData[selectedYear]).forEach(cat => {
-                        months.forEach(month => {
-                            current += salesData[selectedYear][cat].sales[month] || 0;
+                        monthKeys.forEach(monthKey => {
+                            current += salesData[selectedYear][cat].sales[monthKey] || 0;
                         });
                     });
                 }
@@ -4636,6 +5483,7 @@
         const renderGoals = () => {
             const container = document.getElementById('goalsGrid');
             const noGoalsMsg = document.getElementById('noGoalsMessage');
+            const t = translations[currentLanguage];
             
             if (goalsData.length === 0) {
                 container.innerHTML = '';
@@ -4648,11 +5496,7 @@
             let html = '';
             goalsData.forEach(goal => {
                 const progress = calculateGoalProgress(goal);
-                const statusText = {
-                    'achieved': 'Επιτεύχθηκε',
-                    'in-progress': 'Σε Εξέλιξη',
-                    'at-risk': 'Κίνδυνος'
-                }[progress.status];
+                const statusText = t[progress.status] || progress.status;
                 
                 const statusIcon = {
                     'achieved': '✅',
@@ -4660,51 +5504,397 @@
                     'at-risk': '⚠️'
                 }[progress.status];
                 
+                // Check for newly achieved goals
+                if (progress.status === 'achieved' && !goal.celebrated) {
+                    goal.celebrated = true;
+                    localStorage.setItem('goalsData', JSON.stringify(goalsData));
+                    setTimeout(() => {
+                        const displayName = goal.category ? goal.category : t.allCategories;
+                        celebrateGoalAchievement(`${displayName} - ${t[goal.period]}`);
+                    }, 500);
+                }
+                
+                // Update goal names to use current language
+                const displayCategoryName = goal.category ? goal.category : t.allCategories;
+                const displayPeriodText = t[goal.period] || goal.periodText;
+                
+                // Calculate time remaining
+                const now = new Date();
+                let timeRemaining = '';
+                if (goal.period === 'monthly') {
+                    const daysLeft = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate() - now.getDate();
+                    timeRemaining = `${daysLeft} ${currentLanguage === 'el' ? 'μέρες' : 'days'}`;
+                } else if (goal.period === 'quarterly') {
+                    const quarterEnd = new Date(now.getFullYear(), (Math.floor(now.getMonth() / 3) + 1) * 3, 0);
+                    const daysLeft = Math.ceil((quarterEnd - now) / (1000 * 60 * 60 * 24));
+                    timeRemaining = `${daysLeft} ${currentLanguage === 'el' ? 'μέρες' : 'days'}`;
+                } else { // yearly
+                    const yearEnd = new Date(now.getFullYear(), 11, 31);
+                    const daysLeft = Math.ceil((yearEnd - now) / (1000 * 60 * 60 * 24));
+                    timeRemaining = `${daysLeft} ${currentLanguage === 'el' ? 'μέρες' : 'days'}`;
+                }
+                
                 html += `
-                    <div class="goal-item">
+                    <div class="goal-item" data-goal-id="${goal.id}">
                         <div class="goal-header-row">
                             <div class="goal-title">
-                                ${statusIcon} ${goal.categoryName} - ${goal.periodText}
+                                ${statusIcon} ${displayCategoryName} - ${displayPeriodText}
                             </div>
                             <div class="goal-status ${progress.status}">${statusText}</div>
                         </div>
                         <div class="goal-details">
-                            <div class="goal-target">Στόχος: ${goal.target.toLocaleString()}€</div>
-                            <div class="goal-current">Τρέχον: ${progress.current.toLocaleString()}€</div>
+                            <div class="goal-target">${t.targetLabel} ${goal.target.toLocaleString()}€</div>
+                            <div class="goal-current">${t.currentLabel} ${progress.current.toLocaleString()}€</div>
                         </div>
                         <div class="progress-bar">
                             <div class="progress-fill ${progress.status}" style="width: ${progress.percentage}%"></div>
                         </div>
-                        <div class="progress-text">${progress.percentage.toFixed(1)}% του στόχου</div>
+                        <div class="progress-text">${progress.percentage.toFixed(1)}% ${t.ofTarget}</div>
+                        <div class="goal-time-remaining" style="font-size: 11px; color: #7f8c8d; text-align: center; margin-top: 5px;">
+                            ⏰ ${timeRemaining} ${currentLanguage === 'el' ? 'απομένουν' : 'remaining'}
+                        </div>
                         <div class="goal-actions">
-                            <button class="goal-action-btn delete" onclick="deleteGoal(${goal.id})" title="Διαγραφή στόχου">🗑️ Διαγραφή</button>
+                            <button class="goal-action-btn delete" onclick="deleteGoal(${goal.id})" title="${t.deleteGoalTooltip}">🗑️ ${t.deleteGoal}</button>
                         </div>
                     </div>
                 `;
             });
             
             container.innerHTML = html;
+            
+            // Update performance summary
+            updateGoalsPerformanceSummary();
         };
         
         const toggleGoalsPanel = () => {
             const panel = document.getElementById('goalsPanel');
             const isVisible = panel.style.display !== 'none';
+            const t = translations[currentLanguage];
             
             if (isVisible) {
                 panel.style.display = 'none';
-                showNotification("🎯 Πάνελ στόχων κρύφτηκε", "info", 1500);
+                showNotification(`🎯 ${t.goalsPanelHidden}`, "info", 1500);
             } else {
                 panel.style.display = 'block';
                 panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 populateGoalCategoryDropdown();
                 renderGoals();
-                showNotification("🎯 Ορίστε τους στόχους σας!", "info", 2000);
+                updateGoalsPerformanceSummary();
+                showNotification(`🎯 ${t.setYourGoals}`, "info", 2000);
             }
         };
-        
+
+        // Goal celebration function
+        const celebrateGoalAchievement = (goalName) => {
+            const t = translations[currentLanguage];
+            
+            // Create celebration modal
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.8);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                border-radius: 20px;
+                padding: 40px;
+                max-width: 400px;
+                width: 90%;
+                text-align: center;
+                color: white;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                animation: celebrationBounce 0.6s ease;
+            `;
+            
+            content.innerHTML = `
+                <div style="font-size: 60px; margin-bottom: 20px;">🎉</div>
+                <h2 style="margin-bottom: 20px; font-size: 24px;">${currentLanguage === 'el' ? 'Συγχαρητήρια!' : 'Congratulations!'}</h2>
+                <p style="font-size: 16px; margin-bottom: 30px;">
+                    ${currentLanguage === 'el' ? 
+                        `Επιτύχατε τον στόχο σας: "${goalName}"!` : 
+                        `You achieved your goal: "${goalName}"!`}
+                </p>
+                <button onclick="closeCelebration()" style="
+                    background: rgba(255,255,255,0.2);
+                    color: white;
+                    border: 2px solid white;
+                    border-radius: 12px;
+                    padding: 12px 24px;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                ">✨ ${currentLanguage === 'el' ? 'Τέλεια!' : 'Awesome!'}</button>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // Add celebration styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes celebrationBounce {
+                    0% { transform: scale(0.3) rotate(0deg); opacity: 0; }
+                    50% { transform: scale(1.1) rotate(5deg); }
+                    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+                }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Global close function
+            window.closeCelebration = () => {
+                document.body.removeChild(modal);
+                document.head.removeChild(style);
+                delete window.closeCelebration;
+            };
+            
+            // Auto close after 5 seconds
+            setTimeout(() => {
+                if (window.closeCelebration) {
+                    closeCelebration();
+                }
+            }, 5000);
+        };
+
+        // Performance tracking for goals
+        const getGoalPerformanceData = () => {
+            const t = translations[currentLanguage];
+            if (goalsData.length === 0) return null;
+            
+            let totalGoals = goalsData.length;
+            let achievedGoals = 0;
+            let atRiskGoals = 0;
+            let averageProgress = 0;
+            
+            goalsData.forEach(goal => {
+                const progress = calculateGoalProgress(goal);
+                averageProgress += progress.percentage;
+                
+                if (progress.status === 'achieved') achievedGoals++;
+                if (progress.status === 'at-risk') atRiskGoals++;
+            });
+            
+            averageProgress = averageProgress / totalGoals;
+            
+            return {
+                totalGoals,
+                achievedGoals,
+                atRiskGoals,
+                averageProgress: Math.round(averageProgress),
+                achievementRate: Math.round((achievedGoals / totalGoals) * 100)
+            };
+        };
+
+        const updateGoalsPerformanceSummary = () => {
+            const performanceData = getGoalPerformanceData();
+            const summaryElement = document.getElementById('goalsPerformanceSummary');
+            const t = translations[currentLanguage];
+            
+            if (!summaryElement || !performanceData) return;
+            
+            const { totalGoals, achievedGoals, atRiskGoals, averageProgress, achievementRate } = performanceData;
+            
+            let performanceIcon = '📊';
+            let performanceColor = '#f39c12';
+            
+            if (achievementRate >= 70) {
+                performanceIcon = '🏆';
+                performanceColor = '#27ae60';
+            } else if (achievementRate >= 40) {
+                performanceIcon = '📈';
+                performanceColor = '#3498db';
+            } else {
+                performanceIcon = '⚠️';
+                performanceColor = '#e74c3c';
+            }
+            
+            summaryElement.innerHTML = `
+                <div class="performance-summary-grid">
+                    <div class="performance-metric">
+                        <div class="metric-icon" style="color: ${performanceColor}">${performanceIcon}</div>
+                        <div class="metric-details">
+                            <div class="metric-value">${totalGoals}</div>
+                            <div class="metric-label">${currentLanguage === 'el' ? 'Σύνολο Στόχων' : 'Total Goals'}</div>
+                        </div>
+                    </div>
+                    <div class="performance-metric">
+                        <div class="metric-icon" style="color: #27ae60">✅</div>
+                        <div class="metric-details">
+                            <div class="metric-value">${achievedGoals}</div>
+                            <div class="metric-label">${currentLanguage === 'el' ? 'Επιτεύχθηκαν' : 'Achieved'}</div>
+                        </div>
+                    </div>
+                    <div class="performance-metric">
+                        <div class="metric-icon" style="color: #e74c3c">⚠️</div>
+                        <div class="metric-details">
+                            <div class="metric-value">${atRiskGoals}</div>
+                            <div class="metric-label">${currentLanguage === 'el' ? 'Σε Κίνδυνο' : 'At Risk'}</div>
+                        </div>
+                    </div>
+                    <div class="performance-metric">
+                        <div class="metric-icon" style="color: #3498db">📊</div>
+                        <div class="metric-details">
+                            <div class="metric-value">${averageProgress}%</div>
+                            <div class="metric-label">${currentLanguage === 'el' ? 'Μέση Πρόοδος' : 'Avg Progress'}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        };
+
+        // Smart goal suggestions
+        const generateGoalSuggestions = () => {
+            const suggestions = [];
+            
+            Object.keys(salesData[selectedYear]).forEach(category => {
+                const categoryData = salesData[selectedYear][category].sales;
+                let total = 0;
+                let monthsWithData = 0;
+                
+                monthKeys.forEach(monthKey => {
+                    const value = categoryData[monthKey] || 0;
+                    if (value > 0) {
+                        total += value;
+                        monthsWithData++;
+                    }
+                });
+                
+                if (monthsWithData > 0) {
+                    const avgMonthly = total / monthsWithData;
+                    const suggestedMonthly = Math.ceil(avgMonthly * 1.2); // 20% growth target
+                    const suggestedQuarterly = Math.ceil(avgMonthly * 3 * 1.15); // 15% growth for quarterly
+                    const suggestedYearly = Math.ceil(avgMonthly * 12 * 1.1); // 10% growth for yearly
+                    
+                    suggestions.push({
+                        category,
+                        monthly: suggestedMonthly,
+                        quarterly: suggestedQuarterly,
+                        yearly: suggestedYearly,
+                        avgMonthly: Math.round(avgMonthly)
+                    });
+                }
+            });
+            
+            return suggestions;
+        };
+
+        const showGoalSuggestions = () => {
+            const suggestions = generateGoalSuggestions();
+            
+            if (suggestions.length === 0) {
+                showNotification(
+                    currentLanguage === 'el' ? 
+                    "📊 Προσθέστε πρώτα δεδομένα πωλήσεων για προτάσεις στόχων" :
+                    "📊 Add sales data first to get goal suggestions", 
+                    "info", 3000
+                );
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.7); z-index: 10000; display: flex;
+                justify-content: center; align-items: center; overflow-y: auto;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white; border-radius: 16px; padding: 30px;
+                max-width: 700px; width: 90%; max-height: 80vh; overflow-y: auto;
+                text-align: left; box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            `;
+            
+            if (document.body.classList.contains('dark-mode')) {
+                content.style.background = '#2c3e50';
+                content.style.color = '#ecf0f1';
+            }
+            
+            let suggestionsHtml = `
+                <h3 style="margin-bottom: 20px; color: #667eea; text-align: center;">
+                    💡 ${currentLanguage === 'el' ? 'Έξυπνες Προτάσεις Στόχων' : 'Smart Goal Suggestions'}
+                </h3>
+            `;
+            
+            suggestions.forEach(suggestion => {
+                suggestionsHtml += `
+                    <div style="background: rgba(102, 126, 234, 0.1); border-radius: 12px; padding: 15px; margin-bottom: 15px;">
+                        <h4 style="margin: 0 0 10px 0; color: #667eea;">${suggestion.category}</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                            <button onclick="applyGoalSuggestion('${suggestion.category}', ${suggestion.monthly}, 'monthly')" 
+                                style="padding: 8px 12px; background: rgba(46, 204, 113, 0.1); color: #27ae60; border: 1px solid rgba(46, 204, 113, 0.3); border-radius: 6px; cursor: pointer; font-size: 11px;">
+                                📅 ${currentLanguage === 'el' ? 'Μηνιαίος' : 'Monthly'}: ${suggestion.monthly.toLocaleString()}€
+                            </button>
+                            <button onclick="applyGoalSuggestion('${suggestion.category}', ${suggestion.quarterly}, 'quarterly')" 
+                                style="padding: 8px 12px; background: rgba(52, 152, 219, 0.1); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); border-radius: 6px; cursor: pointer; font-size: 11px;">
+                                📊 ${currentLanguage === 'el' ? 'Τριμηνιαίος' : 'Quarterly'}: ${suggestion.quarterly.toLocaleString()}€
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            suggestionsHtml += `
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="closeSuggestions()" style="
+                        background: #e74c3c; color: white; border: none; border-radius: 8px;
+                        padding: 10px 20px; cursor: pointer; font-weight: 600;
+                    ">✕ ${currentLanguage === 'el' ? 'Κλείσιμο' : 'Close'}</button>
+                </div>
+            `;
+            
+            content.innerHTML = suggestionsHtml;
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // Global functions for the modal
+            window.applyGoalSuggestion = (category, target, period) => {
+                document.getElementById('goalCategory').value = category;
+                document.getElementById('goalTarget').value = target;
+                document.getElementById('goalPeriod').value = period;
+                closeSuggestions();
+                showNotification(
+                    currentLanguage === 'el' ? 
+                    `💡 Στόχος εφαρμόστηκε! Πατήστε "Προσθήκη"` :
+                    `💡 Goal applied! Click "Add"`, 
+                    "success", 3000
+                );
+            };
+            
+            window.closeSuggestions = () => {
+                document.body.removeChild(modal);
+                delete window.applyGoalSuggestion;
+                delete window.closeSuggestions;
+            };
+        };
+
+        // Function to update goals when data changes
+        const updateGoalsWhenDataChanges = () => {
+            const goalsPanel = document.getElementById('goalsPanel');
+            if (goalsPanel && goalsPanel.style.display !== 'none' && goalsData.length > 0) {
+                renderGoals();
+            }
+        };
+
         const populateGoalCategoryDropdown = () => {
             const select = document.getElementById('goalCategory');
-            select.innerHTML = '<option value="">Όλες οι Κατηγορίες</option>';
+            const t = translations[currentLanguage];
+            select.innerHTML = `<option value="">${t.allCategories}</option>`;
             
             Object.keys(salesData[selectedYear]).forEach(category => {
                 const option = document.createElement('option');
@@ -4752,6 +5942,7 @@
             renderTable();
             populateCategoryDropdown();
             updateChart();
+            updateGoalsWhenDataChanges();
             showNotification(`✅ ${t.categoryAdded}`, "success");
         };
 const deleteCategory = (category, rowElement) => {
@@ -4785,6 +5976,7 @@ const deleteCategory = (category, rowElement) => {
         rowElement.remove();
         populateCategoryDropdown();
         updateChart();
+        updateGoalsWhenDataChanges();
         showNotification(`✅ ${t.categoryDeleted}`, "success");
     }, 600);
 };
@@ -4957,9 +6149,11 @@ const deleteCategory = (category, rowElement) => {
             });
             row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
             updateChart();
+            updateGoalsWhenDataChanges();
             
             // Mobile success feedback
-            showNotification("✅ Τιμή ενημερώθηκε!", "success", 1500);
+            const t = translations[currentLanguage];
+            showNotification(`✅ ${t.valueUpdated}`, "success", 1500);
         };
 
         const editCategoryName = (cell) => {
@@ -5004,7 +6198,8 @@ const deleteCategory = (category, rowElement) => {
                 renderTable();
                 populateCategoryDropdown();
                 updateChart();
-                showNotification("✅ Όνομα κατηγορίας ενημερώθηκε!", "success");
+                const t = translations[currentLanguage];
+                showNotification(`✅ ${t.categoryNameUpdated}`, "success");
             } else {
                 cell.textContent = oldName;
             }
@@ -5161,7 +6356,7 @@ const deleteCategory = (category, rowElement) => {
         };
 
         const calculateTrendStrength = (data) => {
-            if (data.length < 3) return 'Ανεπαρκή Δεδομένα';
+            if (data.length < 3) return translations[currentLanguage].insufficientData;
             
             // Linear regression to determine trend direction and strength
             const n = data.length;
@@ -5178,11 +6373,12 @@ const deleteCategory = (category, rowElement) => {
             
             // Determine strength based on slope and correlation
             const strength = Math.abs(correlation * slope);
+            const t = translations[currentLanguage];
             
-            if (strength > 100) return slope > 0 ? 'Ισχυρή Ανοδική' : 'Ισχυρή Καθοδική';
-            if (strength > 50) return slope > 0 ? 'Μέτρια Ανοδική' : 'Μέτρια Καθοδική';
-            if (strength > 10) return slope > 0 ? 'Ασθενής Ανοδική' : 'Ασθενής Καθοδική';
-            return 'Πλευρική';
+            if (strength > 100) return slope > 0 ? t.strongUpward : t.strongDownward;
+            if (strength > 50) return slope > 0 ? t.moderateUpward : t.moderateDownward;
+            if (strength > 10) return slope > 0 ? t.weakUpward : t.weakDownward;
+            return t.sideways;
         };
 
         const calculateVolatilityIndex = (data) => {
@@ -5215,6 +6411,7 @@ const deleteCategory = (category, rowElement) => {
         const generateSmartInsights = () => {
             const insights = [];
             const selectedCategory = document.getElementById('chartCategory').value;
+            const t = translations[currentLanguage];
             
             // Get data for analysis
             let monthlyData = [];
@@ -5249,6 +6446,7 @@ const deleteCategory = (category, rowElement) => {
 
         const analyzeGrowthTrends = (data, category) => {
             const insights = [];
+            const t = translations[currentLanguage];
             const recentMonths = data.slice(-3);
             const previousMonths = data.slice(-6, -3);
             
@@ -5256,36 +6454,39 @@ const deleteCategory = (category, rowElement) => {
             const previousAvg = previousMonths.reduce((a, b) => a + b, 0) / 3;
             const growthRate = previousAvg > 0 ? ((recentAvg - previousAvg) / previousAvg * 100) : 0;
 
+            const categoryText = category ? (currentLanguage === 'el' ? `Η κατηγορία "${category}"` : `Category "${category}"`) : 
+                               (currentLanguage === 'el' ? 'Οι συνολικές πωλήσεις σας' : 'Your total sales');
+
             if (growthRate > 20) {
                 insights.push({
                     icon: '🚀',
-                    title: 'Εκρηκτική Ανάπτυξη',
-                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι συνολικές πωλήσεις σας'} παρουσιάζει εντυπωσιακή ανάπτυξη ${growthRate.toFixed(1)}% τους τελευταίους 3 μήνες!`,
-                    action: '💡 Συνιστάται: Αύξηση αποθέματος και marketing budget για αυτήν την κατηγορία',
+                    title: t.explosiveGrowth,
+                    description: `${categoryText} ${currentLanguage === 'el' ? 'παρουσιάζει εντυπωσιακή ανάπτυξη' : 'shows impressive growth'} ${growthRate.toFixed(1)}% ${currentLanguage === 'el' ? 'τους τελευταίους 3 μήνες!' : 'in the last 3 months!'}`,
+                    action: `💡 ${t.increaseInventory}`,
                     priority: 'high'
                 });
             } else if (growthRate > 10) {
                 insights.push({
                     icon: '📈',
-                    title: 'Θετική Τάση',
-                    description: `Παρατηρείται σταθερή ανάπτυξη ${growthRate.toFixed(1)}% - μια υγιής τάση που αξίζει προσοχή.`,
-                    action: '💡 Συνιστάται: Διατήρηση της τρέχουσας στρατηγικής',
+                    title: t.positivetrend,
+                    description: `${currentLanguage === 'el' ? 'Παρατηρείται σταθερή ανάπτυξη' : 'Steady growth observed'} ${growthRate.toFixed(1)}% - ${currentLanguage === 'el' ? 'μια υγιής τάση που αξίζει προσοχή.' : 'a healthy trend worth attention.'}`,
+                    action: `💡 ${t.maintainStrategy}`,
                     priority: 'medium'
                 });
             } else if (growthRate < -15) {
                 insights.push({
                     icon: '⚠️',
-                    title: 'Απότομη Πτώση',
-                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} έχει μειωθεί κατά ${Math.abs(growthRate).toFixed(1)}% τους τελευταίους μήνες.`,
-                    action: '🎯 Άμεση δράση: Ανάλυση αιτιών και αναθεώρηση στρατηγικής',
+                    title: t.sharpDecline,
+                    description: `${categoryText} ${currentLanguage === 'el' ? 'έχει μειωθεί κατά' : 'has decreased by'} ${Math.abs(growthRate).toFixed(1)}% ${currentLanguage === 'el' ? 'τους τελευταίους μήνες.' : 'in recent months.'}`,
+                    action: `🎯 ${t.immediateAction}`,
                     priority: 'high'
                 });
             } else if (growthRate < -5) {
                 insights.push({
                     icon: '📉',
-                    title: 'Καθοδική Τάση',
-                    description: `Παρατηρείται μείωση ${Math.abs(growthRate).toFixed(1)}% που χρήζει προσοχής.`,
-                    action: '💡 Συνιστάται: Εξέταση νέων στρατηγικών marketing',
+                    title: t.downwardTrend,
+                    description: `${currentLanguage === 'el' ? 'Παρατηρείται μείωση' : 'Decline observed'} ${Math.abs(growthRate).toFixed(1)}% ${currentLanguage === 'el' ? 'που χρήζει προσοχής.' : 'that requires attention.'}`,
+                    action: `💡 ${t.reviewMarketing}`,
                     priority: 'medium'
                 });
             }
@@ -5295,6 +6496,7 @@ const deleteCategory = (category, rowElement) => {
 
         const analyzeSeasonalPatterns = (data, category) => {
             const insights = [];
+            const t = translations[currentLanguage];
             const seasonalityIndex = calculateSeasonalityIndex(data);
             
             // Find best and worst months
@@ -5305,12 +6507,15 @@ const deleteCategory = (category, rowElement) => {
                 if (value < data[worstMonthIndex]) worstMonthIndex = index;
             });
 
+            const categoryText = category ? (currentLanguage === 'el' ? `Η κατηγορία "${category}"` : `Category "${category}"`) : 
+                               (currentLanguage === 'el' ? 'Οι πωλήσεις σας' : 'Your sales');
+
             if (seasonalityIndex > 2) {
                 insights.push({
                     icon: '🌊',
-                    title: 'Ισχυρή Εποχικότητα',
-                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} παρουσιάζει έντονη εποχικότητα. Ο καλύτερος μήνας είναι ${months[bestMonthIndex]} και ο χειρότερος ${months[worstMonthIndex]}.`,
-                    action: '📅 Προγραμματίστε αύξηση αποθέματος πριν τον ${months[bestMonthIndex]}',
+                    title: t.strongSeasonality,
+                    description: `${categoryText} ${currentLanguage === 'el' ? 'παρουσιάζει έντονη εποχικότητα. Ο καλύτερος μήνας είναι' : 'shows strong seasonality. Best month is'} ${months[bestMonthIndex]} ${currentLanguage === 'el' ? 'και ο χειρότερος' : 'and worst is'} ${months[worstMonthIndex]}.`,
+                    action: `📅 ${t.prepareInventory} ${months[bestMonthIndex]}`,
                     priority: 'medium'
                 });
             }
@@ -5318,17 +6523,17 @@ const deleteCategory = (category, rowElement) => {
             if (bestMonthIndex >= 10 || bestMonthIndex <= 1) { // Nov, Dec, Jan, Feb
                 insights.push({
                     icon: '🎄',
-                    title: 'Χειμερινή Ζήτηση',
-                    description: 'Οι καλύτερες επιδόσεις παρατηρούνται κατά τη χειμερινή περίοδο.',
-                    action: '❄️ Ετοιμάστε ειδικές προσφορές για τις γιορτές',
+                    title: t.winterDemand,
+                    description: currentLanguage === 'el' ? 'Οι καλύτερες επιδόσεις παρατηρούνται κατά τη χειμερινή περίοδο.' : 'Best performance observed during winter period.',
+                    action: `❄️ ${t.holidayOffers}`,
                     priority: 'low'
                 });
             } else if (bestMonthIndex >= 5 && bestMonthIndex <= 8) { // Jun-Sep
                 insights.push({
                     icon: '☀️',
-                    title: 'Καλοκαιρινή Άνοδος',
-                    description: 'Οι καλοκαιρινοί μήνες δείχνουν ισχυρή απόδοση.',
-                    action: '🏖️ Εκμεταλλευτείτε τη θερινή περίοδο με στοχευμένες καμπάνιες',
+                    title: t.summerPeak,
+                    description: currentLanguage === 'el' ? 'Οι καλοκαιρινοί μήνες δείχνουν ισχυρή απόδοση.' : 'Summer months show strong performance.',
+                    action: `🏖️ ${t.summerCampaign}`,
                     priority: 'low'
                 });
             }
@@ -5338,25 +6543,30 @@ const deleteCategory = (category, rowElement) => {
 
         const analyzePerformanceIssues = (data, category) => {
             const insights = [];
+            const t = translations[currentLanguage];
             const volatility = calculateVolatilityIndex(data);
             const zeroMonths = data.filter(val => val === 0).length;
+
+            const categoryText = category ? (currentLanguage === 'el' ? `Η κατηγορία "${category}"` : `Category "${category}"`) : 
+                               (currentLanguage === 'el' ? 'Οι πωλήσεις σας' : 'Your sales');
 
             if (volatility > 50) {
                 insights.push({
                     icon: '⚡',
-                    title: 'Υψηλή Αστάθεια',
-                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} παρουσιάζει υψηλή αστάθεια (${volatility}%), που μπορεί να δημιουργήσει προβλήματα πρόβλεψης.`,
-                    action: '🎯 Εξετάστε τους παράγοντες που προκαλούν αυτές τις διακυμάνσεις',
+                    title: t.volatility,
+                    description: `${categoryText} ${currentLanguage === 'el' ? 'παρουσιάζει υψηλή αστάθεια' : 'shows high volatility'} (${volatility}%), ${currentLanguage === 'el' ? 'που μπορεί να δημιουργήσει προβλήματα πρόβλεψης.' : 'which may create forecasting problems.'}`,
+                    action: `🎯 ${t.stabilizeOperations}`,
                     priority: 'medium'
                 });
             }
 
             if (zeroMonths > 3) {
+                const monthsText = currentLanguage === 'el' ? 'μήνες χωρίς καταγεγραμμένες πωλήσεις' : 'months without recorded sales';
                 insights.push({
                     icon: '🚫',
-                    title: 'Μήνες Χωρίς Πωλήσεις',
-                    description: `Υπάρχουν ${zeroMonths} μήνες χωρίς καταγεγραμμένες πωλήσεις.`,
-                    action: '📝 Ελέγξτε αν υπάρχουν λείποντα δεδομένα ή περίοδοι αδράνειας',
+                    title: currentLanguage === 'el' ? 'Μήνες Χωρίς Πωλήσεις' : 'Months Without Sales',
+                    description: `${currentLanguage === 'el' ? 'Υπάρχουν' : 'There are'} ${zeroMonths} ${monthsText}.`,
+                    action: currentLanguage === 'el' ? '📝 Ελέγξτε αν υπάρχουν λείποντα δεδομένα ή περίοδοι αδράνειας' : '📝 Check for missing data or inactive periods',
                     priority: 'medium'
                 });
             }
@@ -5366,17 +6576,23 @@ const deleteCategory = (category, rowElement) => {
 
         const analyzeOpportunities = (data, category) => {
             const insights = [];
+            const t = translations[currentLanguage];
             const total = data.reduce((a, b) => a + b, 0);
             const avg = total / 12;
             const lastThreeMonths = data.slice(-3);
             const lastThreeAvg = lastThreeMonths.reduce((a, b) => a + b, 0) / 3;
 
+            const categoryText = category ? (currentLanguage === 'el' ? `Η κατηγορία "${category}"` : `Category "${category}"`) : 
+                               (currentLanguage === 'el' ? 'Οι πωλήσεις σας' : 'Your sales');
+
             if (lastThreeAvg < avg * 0.8) {
                 insights.push({
                     icon: '💎',
-                    title: 'Ευκαιρία Ανάκαμψης',
-                    description: 'Οι τελευταίες επιδόσεις είναι κάτω από τον ετήσιο μέσο όρο. Υπάρχει δυναμικό για βελτίωση.',
-                    action: '🚀 Εφαρμόστε νέες στρατηγικές για να φτάσετε το κανονικό επίπεδο',
+                    title: currentLanguage === 'el' ? 'Ευκαιρία Ανάκαμψης' : 'Recovery Opportunity',
+                    description: currentLanguage === 'el' ? 
+                        'Οι τελευταίες επιδόσεις είναι κάτω από τον ετήσιο μέσο όρο. Υπάρχει δυναμικό για βελτίωση.' :
+                        'Recent performance is below annual average. There is potential for improvement.',
+                    action: `🚀 ${t.findGrowthOpportunities}`,
                     priority: 'medium'
                 });
             }
@@ -5384,9 +6600,9 @@ const deleteCategory = (category, rowElement) => {
             if (total > 0 && avg > 1000) {
                 insights.push({
                     icon: '🏆',
-                    title: 'Υψηλή Απόδοση',
-                    description: `${category ? `Η κατηγορία "${category}"` : 'Οι πωλήσεις σας'} παρουσιάζει εξαιρετικές επιδόσεις με μέσο όρο ${avg.toLocaleString()}.`,
-                    action: '⭐ Χρησιμοποιήστε αυτήν την επιτυχία ως παράδειγμα για άλλες κατηγορίες',
+                    title: currentLanguage === 'el' ? 'Υψηλή Απόδοση' : 'High Performance',
+                    description: `${categoryText} ${currentLanguage === 'el' ? 'παρουσιάζει εξαιρετικές επιδόσεις με μέσο όρο' : 'shows excellent performance with average'} ${avg.toLocaleString()}.`,
+                    action: `⭐ ${t.capitalizeSuccess}`,
                     priority: 'low'
                 });
             }
@@ -5396,6 +6612,7 @@ const deleteCategory = (category, rowElement) => {
 
         const analyzeCategoryComparison = (categories) => {
             const insights = [];
+            const t = translations[currentLanguage];
             
             if (categories.length > 1) {
                 const categoryTotals = categories.map(cat => {
@@ -5411,9 +6628,11 @@ const deleteCategory = (category, rowElement) => {
                 if (topCategory.total > bottomCategory.total * 3) {
                     insights.push({
                         icon: '⚖️',
-                        title: 'Ανισορροπία Κατηγοριών',
-                        description: `Η κατηγορία "${topCategory.category}" υπερτερεί σημαντικά έναντι των άλλων (${(topCategory.total / bottomCategory.total).toFixed(1)}x περισσότερες πωλήσεις).`,
-                        action: '🎯 Εστιάστε στην ανάπτυξη των υπόλοιπων κατηγοριών για ισορροπία',
+                        title: currentLanguage === 'el' ? 'Ανισορροπία Κατηγοριών' : 'Category Imbalance',
+                        description: currentLanguage === 'el' ? 
+                            `Η κατηγορία "${topCategory.category}" υπερτερεί σημαντικά έναντι των άλλων (${(topCategory.total / bottomCategory.total).toFixed(1)}x περισσότερες πωλήσεις).` :
+                            `Category "${topCategory.category}" significantly outperforms others (${(topCategory.total / bottomCategory.total).toFixed(1)}x more sales).`,
+                        action: `🎯 ${t.diversifyPortfolio}`,
                         priority: 'medium'
                     });
                 }
@@ -5421,9 +6640,11 @@ const deleteCategory = (category, rowElement) => {
                 if (categories.length >= 5) {
                     insights.push({
                         icon: '📊',
-                        title: 'Πολυεπίπεδο Portfolio',
-                        description: `Διαχειρίζεστε ${categories.length} κατηγορίες - ένα υγιές διαφοροποιημένο portfolio.`,
-                        action: '✅ Συνεχίστε τη στρατηγική διαφοροποίησης',
+                        title: t.balancedPortfolio,
+                        description: currentLanguage === 'el' ? 
+                            `Διαχειρίζεστε ${categories.length} κατηγορίες - ένα υγιές διαφοροποιημένο portfolio.` :
+                            `You manage ${categories.length} categories - a healthy diversified portfolio.`,
+                        action: `✅ ${t.maintainBalance}`,
                         priority: 'low'
                     });
                 }
@@ -5434,31 +6655,37 @@ const deleteCategory = (category, rowElement) => {
 
         const renderSmartInsights = (insights) => {
             const grid = document.getElementById('insightsGrid');
+            const t = translations[currentLanguage];
             
             if (insights.length === 0) {
                 grid.innerHTML = `
                     <div class="insight-item low-priority">
                         <div class="insight-title">
                             <span class="insight-icon">📊</span>
-                            Ανάλυση Δεδομένων
+                            ${currentLanguage === 'el' ? 'Ανάλυση Δεδομένων' : 'Data Analysis'}
                         </div>
                         <div class="insight-description">
-                            Προσθέστε περισσότερα δεδομένα για να λαμβάνετε εξατομικευμένες συμβουλές από το AI σύστημα.
+                            ${currentLanguage === 'el' ? 
+                                'Προσθέστε περισσότερα δεδομένα για να λαμβάνετε εξατομικευμένες συμβουλές από το AI σύστημα.' :
+                                'Add more data to receive personalized insights from the AI system.'}
                         </div>
                         <div class="insight-action">
-                            💡 Συμπληρώστε τα μηνιαία δεδομένα πωλήσεων
+                            💡 ${currentLanguage === 'el' ? 'Συμπληρώστε τα μηνιαία δεδομένα πωλήσεων' : 'Complete monthly sales data'}
                         </div>
                     </div>
                 `;
                 return;
             }
 
+            const priorityLabels = {
+                'high': currentLanguage === 'el' ? 'ΕΠΕΙΓΟΝ' : 'URGENT',
+                'medium': currentLanguage === 'el' ? 'ΜΕΤΡΙΟ' : 'MEDIUM', 
+                'low': currentLanguage === 'el' ? 'ΠΛΗΡΟΦ.' : 'INFO'
+            };
+
             grid.innerHTML = insights.map(insight => `
                 <div class="insight-item ${insight.priority}-priority">
-                    <div class="priority-badge ${insight.priority}">${
-                        insight.priority === 'high' ? 'ΕΠΕΙΓΟΝ' : 
-                        insight.priority === 'medium' ? 'ΜΕΤΡΙΟ' : 'ΠΛΗΡΟΦ.'
-                    }</div>
+                    <div class="priority-badge ${insight.priority}">${priorityLabels[insight.priority]}</div>
                     <div class="insight-title">
                         <span class="insight-icon">${insight.icon}</span>
                         ${insight.title}
@@ -5476,6 +6703,7 @@ const deleteCategory = (category, rowElement) => {
         const refreshInsights = () => {
             const loading = document.getElementById('insightsLoading');
             const grid = document.getElementById('insightsGrid');
+            const t = translations[currentLanguage];
             
             // Show loading
             loading.style.display = 'block';
@@ -5490,7 +6718,10 @@ const deleteCategory = (category, rowElement) => {
                 loading.style.display = 'none';
                 grid.style.opacity = '1';
                 
-                showNotification(`🧠 AI ανέλυσε τα δεδομένα και βρήκε ${insights.length} προτάσεις!`, 'success');
+                const successMsg = currentLanguage === 'el' ? 
+                    `🧠 AI ανέλυσε τα δεδομένα και βρήκε ${insights.length} προτάσεις!` :
+                    `🧠 AI analyzed the data and found ${insights.length} insights!`;
+                showNotification(successMsg, 'success');
             }, 1500);
         };
 
@@ -5558,29 +6789,29 @@ const deleteCategory = (category, rowElement) => {
             
             const momentum = ((recentAvg - earlierAvg) / earlierAvg) * 100;
             
-            if (momentum > 10) return 'Ισχυρά Θετική';
-            if (momentum > 5) return 'Θετική';
-            if (momentum > -5) return 'Ουδέτερη';
-            if (momentum > -10) return 'Αρνητική';
-            return 'Ισχυρά Αρνητική';
+            if (momentum > 10) return 'strongPositive';
+            if (momentum > 5) return 'positive';
+            if (momentum > -5) return 'neutral';
+            if (momentum > -10) return 'negative';
+            return 'strongNegative';
         };
 
         const determineTrendDirection = (data) => {
             const slope = calculateLinearTrend(data, 1)[0] - data[data.length - 1];
             
-            if (slope > 100) return 'Ισχυρά Ανοδική';
-            if (slope > 0) return 'Ανοδική';
-            if (slope > -100) return 'Σταθερή';
-            return 'Καθοδική';
+            if (slope > 100) return 'strongUpward';
+            if (slope > 0) return 'upward';
+            if (slope > -100) return 'stable';
+            return 'downward';
         };
 
         const determineRiskLevel = (data) => {
             const volatility = calculateVolatilityIndex(data);
             
-            if (volatility < 15) return 'Χαμηλό';
-            if (volatility < 30) return 'Μέτριο';
-            if (volatility < 50) return 'Υψηλό';
-            return 'Πολύ Υψηλό';
+            if (volatility < 15) return 'low';
+            if (volatility < 30) return 'medium';
+            if (volatility < 50) return 'high';
+            return 'veryHigh';
         };
 
         const calculateRecoveryRate = (data) => {
@@ -5595,45 +6826,53 @@ const deleteCategory = (category, rowElement) => {
         };
 
         const updateAnalyticsPanel = (metrics, data) => {
+            const t = translations[currentLanguage];
+            
             // Update performance metrics
             document.getElementById('qoqGrowth').textContent = `${metrics.qoqGrowth}%`;
             document.getElementById('yoyGrowth').textContent = `${metrics.yoyGrowth}%`;
             document.getElementById('peakPerformance').textContent = metrics.peakPerformance.toLocaleString();
             document.getElementById('consistencyScore').textContent = `${metrics.consistencyScore}%`;
             
-            // Update market analysis
-            document.getElementById('marketMomentum').textContent = metrics.marketMomentum;
-            document.getElementById('trendDirection').textContent = metrics.trendDirection;
-            document.getElementById('riskLevel').textContent = metrics.riskLevel;
+            // Update market analysis with translations
+            document.getElementById('marketMomentum').innerHTML = `<span class="translate">${metrics.marketMomentum}</span>`;
+            document.getElementById('trendDirection').innerHTML = `<span class="translate">${metrics.trendDirection}</span>`;
+            document.getElementById('riskLevel').innerHTML = `<span class="translate">${metrics.riskLevel}</span>`;
             document.getElementById('recoveryRate').textContent = `${metrics.recoveryRate}%`;
             
-            // Update predictive insights
+            // Update predictive insights with translations
             document.getElementById('forecastAccuracy').textContent = '85%'; // Could be calculated based on historical accuracy
-            document.getElementById('nextQuarterOutlook').textContent = determineNextQuarterOutlook(metrics);
-            document.getElementById('seasonalityImpact').textContent = determineSeasonalityImpact(metrics.seasonalityIndex);
-            document.getElementById('modelConfidence').textContent = determineModelConfidence(metrics);
+            document.getElementById('nextQuarterOutlook').innerHTML = `<span class="translate">${determineNextQuarterOutlook(metrics)}</span>`;
+            document.getElementById('seasonalityImpact').innerHTML = `<span class="translate">${determineSeasonalityImpact(metrics.seasonalityIndex)}</span>`;
+            document.getElementById('modelConfidence').innerHTML = `<span class="translate">${determineModelConfidence(metrics)}</span>`;
+            
+            // Update all translated elements after setting new values
+            updateAllTranslatedElements();
+            
+            // Update tooltips with correct language
+            updateTooltips();
         };
 
         const determineNextQuarterOutlook = (metrics) => {
-            if (metrics.marketMomentum.includes('Ισχυρά Θετική')) return 'Πολύ Θετικές';
-            if (metrics.marketMomentum.includes('Θετική')) return 'Θετικές';
-            if (metrics.marketMomentum.includes('Αρνητική')) return 'Προσεκτικές';
-            return 'Ουδέτερες';
+            if (metrics.marketMomentum === 'strongPositive') return 'veryPositive';
+            if (metrics.marketMomentum === 'positive') return 'positive';
+            if (metrics.marketMomentum === 'negative') return 'cautious';
+            return 'neutral2';
         };
 
         const determineSeasonalityImpact = (index) => {
-            if (index > 2.0) return 'Υψηλή';
-            if (index > 1.0) return 'Μέτρια';
-            if (index > 0.5) return 'Χαμηλή';
-            return 'Ελάχιστη';
+            if (index > 2.0) return 'high';
+            if (index > 1.0) return 'medium';
+            if (index > 0.5) return 'low';
+            return 'minimal';
         };
 
         const determineModelConfidence = (metrics) => {
             const score = (metrics.consistencyScore + (100 - metrics.volatilityIndex)) / 2;
-            if (score > 80) return 'Πολύ Υψηλή';
-            if (score > 60) return 'Υψηλή';
-            if (score > 40) return 'Μέτρια';
-            return 'Χαμηλή';
+            if (score > 80) return 'veryHigh2';
+            if (score > 60) return 'high';
+            if (score > 40) return 'medium';
+            return 'low';
         };
 
         // Chart management
@@ -5809,7 +7048,8 @@ const deleteCategory = (category, rowElement) => {
             const ws = XLSX.utils.aoa_to_sheet(ws_data);
             XLSX.utils.book_append_sheet(wb, ws, "Sales");
             XLSX.writeFile(wb, `sales_data_${selectedYear}.xlsx`);
-            showNotification("✅ Εξαγωγή Excel ολοκληρώθηκε!", "success");
+            const t = translations[currentLanguage];
+            showNotification(`✅ ${t.excelExportCompleted}`, "success");
         };
 
         const exportToPDF = () => {
@@ -5844,7 +7084,8 @@ const deleteCategory = (category, rowElement) => {
             });
 
             doc.save(`sales_data_${selectedYear}.pdf`);
-            showNotification("✅ Εξαγωγή PDF ολοκληρώθηκε!", "success");
+            const t = translations[currentLanguage];
+            showNotification(`✅ ${t.pdfExportCompleted}`, "success");
         };
 
         // Comparison and forecast
@@ -5858,7 +7099,10 @@ const deleteCategory = (category, rowElement) => {
             }
 
             if (!salesData[prevYear] || !salesData[prevYear][selectedCategory]) {
-                showNotification(`❌ Δεν βρέθηκαν δεδομένα για την κατηγορία "${selectedCategory}" το ${prevYear}.`, "error");
+                const errorMsg = currentLanguage === 'en' 
+                    ? `❌ ${t.noDataFoundForCategoryYear} "${selectedCategory}" for ${prevYear}.`
+                    : `❌ ${t.noDataFoundForCategoryYear} "${selectedCategory}" το ${prevYear}.`;
+                showNotification(errorMsg, "error");
                 return;
             }
 
@@ -5923,11 +7167,12 @@ const deleteCategory = (category, rowElement) => {
         };
 
         const forecast = () => {
+            const t = translations[currentLanguage];
             const selectedCategory = document.getElementById('chartCategory').value;
             const forecastMonths = parseInt(document.getElementById('forecastPeriod').value);
 
             if (!selectedCategory) {
-                showNotification("⚠️ Παρακαλώ επιλέξτε κατηγορία για πρόβλεψη.", "warning");
+                showNotification(`⚠️ ${t.selectCategoryForForecast}`, "warning");
                 return;
             }
 
@@ -6064,7 +7309,7 @@ const deleteCategory = (category, rowElement) => {
             
             // Show forecast analysis
             showForecastAnalysis(advancedForecast, forecastMonths);
-            showNotification(`🔮 Πρόβλεψη ${forecastMonths} μηνών ολοκληρώθηκε!`, "success");
+            showNotification(`🔮 ${t.forecastCompletedMonths.replace('{months}', forecastMonths)}`, "success");
         };
 
         // Advanced forecasting algorithm
@@ -6255,7 +7500,7 @@ const deleteCategory = (category, rowElement) => {
 
         const downloadChart = () => {
             if (!chart) {
-                showNotification("⚠️ Δεν υπάρχει γράφημα για λήψη.", "warning");
+                showNotification(`⚠️ ${t.noChartToDownload}`, "warning");
                 return;
             }
 
@@ -6263,7 +7508,7 @@ const deleteCategory = (category, rowElement) => {
             imageLink.href = chart.toBase64Image('image/png', 1);
             imageLink.download = `sales_chart_${selectedYear}.png`;
             imageLink.click();
-            showNotification("✅ Το γράφημα κατέβηκε επιτυχώς!", "success");
+            showNotification(`✅ ${t.chartDownloadedSuccessfully}`, "success");
         };
 
         // Initialize sample data
@@ -6329,7 +7574,6 @@ const deleteCategory = (category, rowElement) => {
             document.getElementById('downloadChartBtn').addEventListener('click', downloadChart);
             document.getElementById('calculatorBtn').addEventListener('click', toggleCalculator);
             document.getElementById('shortcutsBtn').addEventListener('click', showKeyboardShortcuts);
-            document.getElementById('languageBtn').addEventListener('click', showLanguageSelector);
             
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 sessionStorage.removeItem('loggedInUser');
@@ -6475,6 +7719,9 @@ function loadFromFirebase() {
             // Initialize language
             updateUILanguage();
             
+            // Initialize language toggle button
+            updateLanguageToggleButton();
+            
             // Set username
             const userDisplay = document.getElementById('userDisplay');
             let username = sessionStorage.getItem('loggedInUser') || translations[currentLanguage].user;
@@ -6496,13 +7743,14 @@ function loadFromFirebase() {
             document.getElementById('toggleAnalyticsBtn').addEventListener('click', () => {
                 const content = document.getElementById('analyticsContent');
                 const btn = document.getElementById('toggleAnalyticsBtn');
+                const t = translations[currentLanguage];
                 
                 if (content.style.display === 'none') {
                     content.style.display = 'block';
-                    btn.textContent = '📊 Απόκρυψη Λεπτομερειών';
+                    btn.textContent = `📊 ${t.hideDetails}`;
                 } else {
                     content.style.display = 'none';
-                    btn.textContent = '📊 Προβολή Λεπτομερειών';
+                    btn.textContent = `📊 ${t.viewDetails}`;
                 }
             });
 
@@ -6510,17 +7758,18 @@ function loadFromFirebase() {
             document.getElementById('toggleInsightsBtn').addEventListener('click', () => {
                 const content = document.getElementById('insightsContent');
                 const btn = document.getElementById('toggleInsightsBtn');
+                const t = translations[currentLanguage];
                 
                 if (content.style.display === 'none') {
                     content.style.display = 'block';
-                    btn.textContent = '📊 Απόκρυψη Λεπτομερειών';
+                    btn.textContent = `📊 ${t.hideDetails}`;
                     // Auto-refresh insights when panel is opened
                     if (!document.getElementById('insightsGrid').innerHTML.trim()) {
                         refreshInsights();
                     }
                 } else {
                     content.style.display = 'none';
-                    btn.textContent = '📊 Προβολή Λεπτομερειών';
+                    btn.textContent = `📊 ${t.viewDetails}`;
                 }
             });
 
@@ -6552,11 +7801,11 @@ function loadFromFirebase() {
 
             // Welcome message
             setTimeout(() => {
-                showNotification("🧠 Προηγμένα Αναλυτικά Στοιχεία ενεργοποιήθηκαν!", "success");
-                showNotification(`🎉 Καλώς ήρθες, ${username.split('@')[0]}!`, "success");
-                showNotification("⌨️ Νέο: Πλήκτρα συντόμευσης! Πάτα H για βοήθεια", "info");
-                showNotification("🚀 Auto-Update System ενεργό!", "info");
-                showNotification("🔄 Live Updates: Κάθε αλλαγή ενημερώνει αυτόματα!", "success");
+                showNotification(`🧠 ${t.advancedAnalyticsActivated}`, "success");
+                showNotification(`🎉 ${t.welcome}, ${username.split('@')[0]}!`, "success");
+                showNotification(`⌨️ ${t.keyboardShortcutsNew}`, "info");
+                showNotification(`🚀 ${t.autoUpdateSystemActive}`, "info");
+                showNotification(`🔄 ${t.liveUpdatesActive}`, "success");
             }, 1000);
             
             // Auto-save κάθε 30 δευτερόλεπτα
@@ -6950,7 +8199,7 @@ function sanitizeKey(email) {
             renderTable();
             updateChart();
             calculateStats();
-            showNotification("🔄 Δεδομένα ανανεώθηκαν!", "success");
+            showNotification(`🔄 ${t.dataRefreshed}`, "success");
         }
 
         function toggleCalculator() {
@@ -6959,7 +8208,7 @@ function sanitizeKey(email) {
                 widget.style.display = 'block';
                 clearCalc();
                 closeActionsDropdown();
-                showNotification("🔢 Αριθμομηχανή ενεργοποιήθηκε!", "success", 1500);
+                showNotification(`🔢 ${translations[currentLanguage].calculatorActivated}`, "success", 1500);
                 makeDraggable(widget);
             } else {
                 widget.style.display = 'none';
@@ -7140,7 +8389,7 @@ function sanitizeKey(email) {
 
         function memoryStore() {
             calcMemory = parseFloat(document.getElementById('calcDisplay').value) || 0;
-            showNotification(`💾 Αποθηκεύτηκε: ${calcMemory}`, "success", 1500);
+            showNotification(`💾 ${t.saved} ${calcMemory}`, "success", 1500);
         }
 
         function memoryRecall() {
@@ -7151,12 +8400,12 @@ function sanitizeKey(email) {
 
         function memoryClear() {
             calcMemory = 0;
-            showNotification("🗑️ Μνήμη καθαρίστηκε", "success", 1500);
+            showNotification(`🗑️ ${t.memoryClearedShortcut}`, "success", 1500);
         }
 
         function memoryAdd() {
             calcMemory += parseFloat(document.getElementById('calcDisplay').value) || 0;
-            showNotification(`➕ Μνήμη: ${calcMemory}`, "success", 1500);
+            showNotification(`➕ ${t.memory} ${calcMemory}`, "success", 1500);
         }
 
         // Keyboard Shortcuts Functions
@@ -7164,7 +8413,7 @@ function sanitizeKey(email) {
             const modal = document.getElementById('shortcutsModal');
             modal.style.display = 'flex';
             closeActionsDropdown();
-            showNotification("⌨️ Πλήκτρα συντόμευσης εμφανίστηκαν!", "success", 1500);
+            showNotification(`⌨️ ${t.keyboardShortcutsShown}`, "success", 1500);
         }
 
         function closeShortcuts() {
@@ -7189,7 +8438,7 @@ function sanitizeKey(email) {
                         e.preventDefault();
                         saveToFirebase();
                         saveToLocalStorage();
-                        showNotification("💾 Δεδομένα αποθηκεύτηκαν!", "success");
+                        showNotification(`💾 ${t.dataSavedShortcut}`, "success");
                         break;
                     case 'd':
                         e.preventDefault();
@@ -7252,7 +8501,7 @@ function sanitizeKey(email) {
                     const chartType = chartTypes[parseInt(e.key) - 1];
                     if (chartType) {
                         document.querySelector(`[data-type="${chartType}"]`).click();
-                        showNotification(`📊 Γράφημα: ${chartType.toUpperCase()}`, "success", 1500);
+                        showNotification(`📊 ${t.chart} ${chartType.toUpperCase()}`, "success", 1500);
                     }
                 }
                 
@@ -7261,7 +8510,7 @@ function sanitizeKey(email) {
                     closeShortcuts();
                     document.getElementById('calculatorWidget').style.display = 'none';
                     closeActionsDropdown();
-                    showNotification("❌ Modals κλείστηκαν", "info", 1000);
+                    showNotification(`❌ ${t.modalsClosed}`, "info", 1000);
                 }
                 
                 // Quick actions
@@ -7339,9 +8588,9 @@ function sanitizeKey(email) {
                     this.showDoubleTapIndicator(e.touches[0].clientX, e.touches[0].clientY);
                     
                     if (element.classList.contains('stat-card')) {
-                        showNotification('Κάρτα στατιστικών ✨', 'info');
+                        showNotification(t.statsCard, 'info');
                     } else if (element.classList.contains('chart-container')) {
-                        showNotification('Εναλλαγή προβολής γραφήματος 📊', 'info');
+                        showNotification(t.chartViewToggle, 'info');
                     }
                 }
             }
@@ -7373,13 +8622,13 @@ function sanitizeKey(email) {
                     this.isOnline = true;
                     this.hideOfflineIndicator();
                     this.syncPendingData();
-                    showNotification('Σύνδεση αποκαταστάθηκε! 🌐', 'success');
+                    showNotification(t.connectionRestored, 'success');
                 });
 
                 window.addEventListener('offline', () => {
                     this.isOnline = false;
                     this.showOfflineIndicator();
-                    showNotification('Λειτουργία εκτός σύνδεσης 📴', 'warning');
+                    showNotification(t.offlineMode, 'warning');
                 });
 
                 // Check initial state
@@ -7421,7 +8670,7 @@ function sanitizeKey(email) {
                     setTimeout(() => {
                         this.pendingData = [];
                         localStorage.removeItem('pendingData');
-                        showNotification(`Συγχρονίστηκαν δεδομένα! 🔄`, 'success');
+                        showNotification(t.dataSynced, 'success');
                     }, 1000);
                 }
             }
@@ -7494,7 +8743,7 @@ function sanitizeKey(email) {
                             const newWorker = registration.installing;
                             newWorker.addEventListener('statechange', () => {
                                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    showNotification('Νέα έκδοση διαθέσιμη! 🔄', 'info', 5000);
+                                    showNotification(t.newVersionAvailable, 'info', 5000);
                                 }
                             });
                         });
@@ -7559,7 +8808,7 @@ function sanitizeKey(email) {
                     deferredPrompt.prompt();
                     deferredPrompt.userChoice.then((choiceResult) => {
                         if (choiceResult.outcome === 'accepted') {
-                            showNotification('Εγκατάσταση ξεκίνησε! 🎉', 'success');
+                            showNotification(t.installationStarted, 'success');
                         }
                         deferredPrompt = null;
                         installBtn.remove();
