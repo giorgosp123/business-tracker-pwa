@@ -631,7 +631,7 @@
                     </div>
                     <div class="chart-buttons-row">
                         <button id="compareBtn">📊 Σύγκριση</button>
-                        <button id="forecastBtn">🔮 Πρόβλεψη</button>
+                        <button id="forecastBtn">🔮 AI Πρόβλεψη</button>
                         <button id="downloadChartBtn">📥 Γράφημα</button>
                     </div>
                     <div class="chart-type-buttons">
@@ -1279,24 +1279,9 @@ const deleteCategory = (category, rowElement) => {
             const sales = salesData[selectedYear][selectedCategory]?.sales || {};
             const actualData = months.map(m => sales[m] || 0);
 
-            // Calculate growth rate
-            let growthRates = [];
-            for (let i = 1; i < actualData.length; i++) {
-                if (actualData[i - 1] > 0) {
-                    let rate = (actualData[i] - actualData[i - 1]) / actualData[i - 1];
-                    growthRates.push(rate);
-                }
-            }
-            const avgGrowth = growthRates.reduce((a, b) => a + b, 0) / growthRates.length || 0.05;
-
-            // Forecast next 3 months
-            let forecastData = actualData.slice();
-            for (let i = 0; i < 3; i++) {
-                const last = forecastData[forecastData.length - 1] || 100;
-                const next = last + last * avgGrowth;
-                forecastData.push(Math.round(next));
-            }
-
+            // Advanced forecasting algorithm
+            const advancedForecast = calculateAdvancedForecast(actualData);
+            
             const forecastLabels = [...months, "Ιαν (πρόβλ.)", "Φεβ (πρόβλ.)", "Μαρ (πρόβλ.)"];
 
             if (chart) chart.destroy();
@@ -1310,7 +1295,7 @@ const deleteCategory = (category, rowElement) => {
                     datasets: [
                         {
                             label: `${selectedCategory} (${selectedYear})`,
-                            data: forecastData,
+                            data: [...actualData, null, null, null],
                             borderColor: '#667eea',
                             backgroundColor: currentChartType === 'line' ? '#667eea33' : '#667eea',
                             fill: currentChartType === 'line',
@@ -1320,8 +1305,8 @@ const deleteCategory = (category, rowElement) => {
                             pointHoverRadius: 6
                         },
                         {
-                            label: "Πρόβλεψη",
-                            data: forecastData.map((v, i) => i < 12 ? null : v),
+                            label: "Πρόβλεψη Τάσης",
+                            data: [...Array(12).fill(null), ...advancedForecast.trend],
                             borderColor: '#f093fb',
                             backgroundColor: currentChartType === 'line' ? '#f093fb33' : '#f093fb',
                             borderDash: [5, 5],
@@ -1330,25 +1315,268 @@ const deleteCategory = (category, rowElement) => {
                             borderWidth: 2,
                             pointRadius: 4,
                             pointHoverRadius: 6
+                        },
+                        {
+                            label: "Πρόβλεψη Εποχικότητας",
+                            data: [...Array(12).fill(null), ...advancedForecast.seasonal],
+                            borderColor: '#43e97b',
+                            backgroundColor: currentChartType === 'line' ? '#43e97b33' : '#43e97b',
+                            borderDash: [10, 5],
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: "Βέλτιστη Πρόβλεψη",
+                            data: [...Array(12).fill(null), ...advancedForecast.optimized],
+                            borderColor: '#ffecd2',
+                            backgroundColor: currentChartType === 'line' ? '#ffecd233' : '#ffecd2',
+                            borderDash: [2, 2],
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8
                         }
                     ]
                 },
-options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            labels: {
-                color: isDark ? '#ecf0f1' : '#2c3e50',
-                font: { size: 12, weight: '600' },
-                usePointStyle: true,      // <-- προσθέτεις αυτή τη γραμμή
-                pointStyle: 'circle'      // <-- και αυτή τη γραμμή
-            }
-        }
-    }
-}
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: isDark ? '#ecf0f1' : '#2c3e50',
+                                font: { size: 12, weight: '600' },
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(44, 62, 80, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                            titleColor: isDark ? '#ecf0f1' : '#2c3e50',
+                            bodyColor: isDark ? '#ecf0f1' : '#2c3e50',
+                            borderColor: isDark ? '#4facfe' : '#667eea',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            displayColors: true,
+                            callbacks: {
+                                label: function(context) {
+                                    if (context.parsed.y === null) return null;
+                                    let confidence = '';
+                                    if (context.datasetIndex >= 1) {
+                                        confidence = ` (${advancedForecast.confidence}% εμπιστοσύνη)`;
+                                    }
+                                    return `${context.dataset.label}: ${context.parsed.y.toLocaleString()}${confidence}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: isDark ? '#bdc3c7' : '#7f8c8d'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                color: isDark ? '#bdc3c7' : '#7f8c8d',
+                                callback: function(value) {
+                                    return value.toLocaleString();
+                                }
+                            },
+                            beginAtZero: true
+                        }
+                    }
+                }
             });
-            showNotification("✅ Πρόβλεψη ολοκληρώθηκε!", "success");
+            
+            // Show forecast analysis
+            showForecastAnalysis(advancedForecast);
+            showNotification("🔮 Προηγμένη πρόβλεψη ολοκληρώθηκε!", "success");
+        };
+
+        // Advanced forecasting algorithm
+        const calculateAdvancedForecast = (data) => {
+            // 1. Linear Trend Analysis
+            const trendForecast = calculateLinearTrend(data);
+            
+            // 2. Seasonal Pattern Analysis
+            const seasonalForecast = calculateSeasonalPattern(data);
+            
+            // 3. Moving Average with Exponential Smoothing
+            const smoothedForecast = calculateExponentialSmoothing(data);
+            
+            // 4. Combine methods with weights
+            const optimizedForecast = combineForecasts(trendForecast, seasonalForecast, smoothedForecast);
+            
+            // 5. Calculate confidence level
+            const confidence = calculateConfidence(data, optimizedForecast);
+            
+            return {
+                trend: trendForecast,
+                seasonal: seasonalForecast,
+                smoothed: smoothedForecast,
+                optimized: optimizedForecast,
+                confidence: confidence
+            };
+        };
+
+        const calculateLinearTrend = (data) => {
+            const n = data.length;
+            const x = Array.from({length: n}, (_, i) => i + 1);
+            const y = data;
+            
+            // Linear regression: y = ax + b
+            const sumX = x.reduce((a, b) => a + b, 0);
+            const sumY = y.reduce((a, b) => a + b, 0);
+            const sumXY = x.reduce((sum, xi, i) => sum + xi * y[i], 0);
+            const sumXX = x.reduce((sum, xi) => sum + xi * xi, 0);
+            
+            const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
+            const intercept = (sumY - slope * sumX) / n;
+            
+            // Forecast next 3 months
+            return [
+                Math.max(0, Math.round(slope * (n + 1) + intercept)),
+                Math.max(0, Math.round(slope * (n + 2) + intercept)),
+                Math.max(0, Math.round(slope * (n + 3) + intercept))
+            ];
+        };
+
+        const calculateSeasonalPattern = (data) => {
+            // Find seasonal patterns (quarterly patterns)
+            const quarters = [
+                [0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10, 11] // Q1, Q2, Q3, Q4
+            ];
+            
+            const quarterlyAvgs = quarters.map(quarter => {
+                const sum = quarter.reduce((total, monthIndex) => total + (data[monthIndex] || 0), 0);
+                return sum / quarter.length;
+            });
+            
+            // Next quarter is Q1, so use Q1 pattern with growth
+            const avgGrowth = calculateAverageGrowth(data);
+            const basePattern = quarterlyAvgs[0]; // Q1 pattern
+            
+            return [
+                Math.round(basePattern * (1 + avgGrowth)),
+                Math.round(basePattern * (1 + avgGrowth * 1.1)),
+                Math.round(basePattern * (1 + avgGrowth * 1.2))
+            ];
+        };
+
+        const calculateExponentialSmoothing = (data) => {
+            const alpha = 0.3; // Smoothing factor
+            let smoothed = data[0];
+            
+            for (let i = 1; i < data.length; i++) {
+                smoothed = alpha * data[i] + (1 - alpha) * smoothed;
+            }
+            
+            const avgGrowth = calculateAverageGrowth(data);
+            
+            return [
+                Math.round(smoothed * (1 + avgGrowth)),
+                Math.round(smoothed * (1 + avgGrowth * 1.1)),
+                Math.round(smoothed * (1 + avgGrowth * 1.2))
+            ];
+        };
+
+        const calculateAverageGrowth = (data) => {
+            let growthRates = [];
+            for (let i = 1; i < data.length; i++) {
+                if (data[i - 1] > 0) {
+                    growthRates.push((data[i] - data[i - 1]) / data[i - 1]);
+                }
+            }
+            return growthRates.length > 0 ? growthRates.reduce((a, b) => a + b, 0) / growthRates.length : 0.05;
+        };
+
+        const combineForecasts = (trend, seasonal, smoothed) => {
+            // Weighted combination: 40% trend, 30% seasonal, 30% smoothed
+            const weights = [0.4, 0.3, 0.3];
+            
+            return [0, 1, 2].map(i => 
+                Math.round(
+                    trend[i] * weights[0] + 
+                    seasonal[i] * weights[1] + 
+                    smoothed[i] * weights[2]
+                )
+            );
+        };
+
+        const calculateConfidence = (historicalData, forecast) => {
+            // Calculate prediction accuracy based on historical variance
+            const mean = historicalData.reduce((a, b) => a + b, 0) / historicalData.length;
+            const variance = historicalData.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / historicalData.length;
+            const stdDev = Math.sqrt(variance);
+            
+            // Lower variance = higher confidence
+            const confidenceScore = Math.max(60, Math.min(95, 90 - (stdDev / mean) * 100));
+            return Math.round(confidenceScore);
+        };
+
+        const showForecastAnalysis = (forecast) => {
+            // Update stats with forecast insights
+            const forecastTotal = forecast.optimized.reduce((a, b) => a + b, 0);
+            const avgForecast = Math.round(forecastTotal / 3);
+            
+            // Temporary update of stats to show forecast
+            const tempStats = document.createElement('div');
+            tempStats.innerHTML = `
+                <div style="
+                    position: fixed; 
+                    top: 50%; 
+                    left: 50%; 
+                    transform: translate(-50%, -50%);
+                    background: ${document.body.classList.contains('dark-mode') ? 'rgba(44, 62, 80, 0.95)' : 'rgba(255, 255, 255, 0.95)'};
+                    backdrop-filter: blur(20px);
+                    border-radius: 16px;
+                    padding: 20px;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    border: 1px solid rgba(255,255,255,0.2);
+                    max-width: 90vw;
+                    text-align: center;
+                ">
+                    <h3 style="margin-bottom: 15px; color: #667eea;">🔮 Ανάλυση Πρόβλεψης</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
+                        <div><strong>Πρόβλεψη Q1:</strong> ${forecast.optimized.reduce((a, b) => a + b, 0).toLocaleString()}</div>
+                        <div><strong>Μέσος Όρος:</strong> ${avgForecast.toLocaleString()}</div>
+                        <div><strong>Εμπιστοσύνη:</strong> ${forecast.confidence}%</div>
+                        <div><strong>Τάση:</strong> ${forecast.optimized[2] > forecast.optimized[0] ? '📈 Ανοδική' : '📉 Καθοδική'}</div>
+                    </div>
+                    <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 15px;">
+                        Η πρόβλεψη συνδυάζει ανάλυση τάσης, εποχικά μοτίβα και εκθετική εξομάλυνση
+                    </div>
+                    <button onclick="this.parentElement.parentElement.remove()" style="
+                        background: linear-gradient(45deg, #667eea, #764ba2);
+                        color: white;
+                        border: none;
+                        padding: 8px 16px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                    ">Κλείσιμο</button>
+                </div>
+            `;
+            
+            document.body.appendChild(tempStats);
+            
+            // Auto-close after 8 seconds
+            setTimeout(() => {
+                if (tempStats.parentElement) {
+                    tempStats.remove();
+                }
+            }, 8000);
         };
 
         const downloadChart = () => {
