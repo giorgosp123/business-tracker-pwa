@@ -1,0 +1,1539 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+
+    
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+<link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+<link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Business Tracker">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Stock Manager Pro - Mobile</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ecf0f1;
+        }
+
+        /* Mobile-first container */
+        .container {
+            width: 100%;
+            max-width: 100vw;
+            margin: 0;
+            padding: 10px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(20px);
+            min-height: 100vh;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        body.dark-mode .container {
+            background: rgba(44, 62, 80, 0.95);
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Mobile header */
+        #userArea {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+            backdrop-filter: blur(10px);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info img {
+            height: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
+        .user-buttons {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        /* Mobile-optimized buttons */
+        button {
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            touch-action: manipulation;
+            min-height: 44px; /* iOS minimum touch target */
+        }
+
+        button:hover, button:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(103, 126, 234, 0.3);
+        }
+
+        body.dark-mode button {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        /* Main title */
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: clamp(1.5rem, 4vw, 2rem);
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode h2 {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Mobile category input section */
+        .category-input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 16px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            flex: 1;
+            min-width: 120px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            background: rgba(255,255,255,0.1);
+            color: inherit;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(103, 126, 234, 0.1);
+        }
+
+        body.dark-mode input, body.dark-mode select {
+            background: rgba(52, 73, 94, 0.8);
+            color: #ecf0f1;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* Error message */
+        #categoryMessage {
+            color: #e74c3c;
+            font-weight: 500;
+            font-size: 14px;
+            text-align: center;
+            padding: 8px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            display: none;
+        }
+
+        /* Mobile table container */
+        .table-container {
+            margin-bottom: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .table-container {
+            background: rgba(52, 73, 94, 0.8);
+        }
+
+        /* Responsive table */
+        .table-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px; /* Minimum width to prevent cramping */
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.2);
+            font-size: 12px;
+            white-space: nowrap;
+        }
+
+        th {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        body.dark-mode th {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+        }
+
+        td.editable:hover, td.category-name:hover {
+            background-color: rgba(103, 126, 234, 0.1);
+            cursor: pointer;
+        }
+
+        body.dark-mode td.editable:hover, body.dark-mode td.category-name:hover {
+            background-color: rgba(79, 172, 254, 0.1);
+        }
+
+
+      
+.delete-btn {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    min-height: 32px;
+}
+.delete-btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+        /* Chart container - mobile optimized */
+        .chart-container {
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        body.dark-mode .chart-container {
+            background: rgba(52, 73, 94, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .chart-header {
+            margin-bottom: 20px;
+        }
+
+        .chart-title {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        body.dark-mode .chart-title {
+            color: #ecf0f1;
+        }
+
+        /* Mobile chart controls */
+        .chart-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chart-select-row {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chart-buttons-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .chart-type-buttons {
+            display: flex;
+            background: rgba(103, 126, 234, 0.1);
+            border-radius: 12px;
+            padding: 4px;
+            gap: 4px;
+            grid-column: 1 / -1;
+        }
+
+        .chart-type-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            background: rgba(103, 126, 234, 0.08);
+            color: #667eea;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        .chart-type-btn.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 4px 12px rgba(103, 126, 234, 0.5);
+        }
+
+        body.dark-mode .chart-type-btn {
+            background: rgba(79, 172, 254, 0.08);
+            color: #4facfe;
+        }
+
+        body.dark-mode .chart-type-btn.active {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: #fff;
+        }
+
+        /* Chart wrapper */
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        /* Stats cards - mobile grid */
+        .chart-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, rgba(103, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 12px;
+            padding: 15px 10px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        body.dark-mode .stat-card {
+            background: linear-gradient(135deg, rgba(79, 172, 254, 0.1), rgba(0, 242, 254, 0.1));
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-value {
+            font-size: clamp(1.2rem, 3vw, 1.5rem);
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        body.dark-mode .stat-value {
+            color: #4facfe;
+        }
+
+        .stat-label {
+            font-size: 0.8rem;
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        body.dark-mode .stat-label {
+            color: #bdc3c7;
+        }
+
+        /* Loading spinner */
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(103, 126, 234, 0.3);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Notification - mobile positioned */
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 10px;
+            right: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: all 0.5s ease;
+            z-index: 9999;
+            text-align: center;
+        }
+
+        .notification.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .notification.error {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .notification.warning {
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+        }
+
+        /* Tablet adjustments */
+        @media (min-width: 768px) {
+            .container {
+                max-width: 1200px;
+                margin: 20px auto;
+                padding: 40px;
+                border-radius: 24px;
+            }
+
+            #userArea {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .user-buttons {
+                display: flex;
+                gap: 15px;
+            }
+
+            .category-input-section {
+                text-align: center;
+                padding: 20px;
+            }
+
+            .input-row {
+                justify-content: center;
+                flex-wrap: nowrap;
+            }
+
+            input, select {
+                max-width: 200px;
+            }
+
+            .chart-controls {
+                flex-direction: row;
+                align-items: center;
+                flex-wrap: wrap;
+            }
+
+            .chart-select-row {
+                flex: 1;
+            }
+
+            .chart-buttons-row {
+                display: flex;
+                gap: 10px;
+            }
+
+            .chart-type-buttons {
+                grid-column: unset;
+            }
+
+            .chart-wrapper {
+                height: 400px;
+            }
+
+            .chart-stats {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+
+            .notification {
+                top: 30px;
+                left: auto;
+                right: 30px;
+                max-width: 400px;
+            }
+
+            th, td {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+
+        /* Hide number input arrows */
+        input[type=number]::-webkit-outer-spin-button,
+        input[type=number]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type=number] {
+            appearance: textfield;
+            -moz-appearance: textfield;
+        }
+
+        /* Touch improvements */
+        .fade-out {
+            opacity: 0;
+            transform: translateX(-100px);
+            transition: all 0.5s ease;
+        }
+
+        /* Scrollbar styling for mobile */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(103, 126, 234, 0.5);
+            border-radius: 3px;
+        }
+
+        /* iOS safe areas */
+        @supports (padding: max(0px)) {
+            .container {
+                padding-left: max(10px, env(safe-area-inset-left));
+                padding-right: max(10px, env(safe-area-inset-right));
+                padding-top: max(10px, env(safe-area-inset-top));
+                padding-bottom: max(10px, env(safe-area-inset-bottom));
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div id="userArea">
+            <div class="user-info">
+              <div class="user-info">
+    <img src="logo.png" alt="My Logo" style="height:40px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+    <span>Καλώς ήρθες, <b id="userDisplay">Χρήστης</b></span>
+</div>
+
+            </div>
+            <div class="user-buttons">
+                <button id="exportExcelBtn">📥 Excel</button>
+                <button id="exportPdfBtn">📥 PDF</button>
+                <button id="darkModeBtn">🌙/☀️</button>
+                <button id="logoutBtn">Έξοδος</button>
+            </div>
+        </div>
+
+        <h2>Κέντρο Στατιστικών</h2>
+
+        <div class="category-input-section">
+            <div id="categoryMessage"></div>
+            <div class="input-row">
+                <input type="text" id="categoryName" placeholder="Όνομα Κατηγορίας">
+                <select id="yearSelect"></select>
+                <button id="addCategoryBtn">Προσθήκη</button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="table-wrapper" id="tableContainer"></div>
+        </div>
+
+        <div class="chart-container">
+            <div class="chart-header">
+                <div class="chart-title">📊 Αναλυτικά Στοιχεία Πωλήσεων</div>
+                <div class="chart-controls">
+                    <div class="chart-select-row">
+                        <select id="chartCategory">
+                            <option value="">Όλες οι Κατηγορίες</option>
+                        </select>
+                    </div>
+                    <div class="chart-buttons-row">
+                        <button id="compareBtn">📊 Σύγκριση</button>
+                        <button id="forecastBtn">🔮 Πρόβλεψη</button>
+                        <button id="downloadChartBtn">📥 Γράφημα</button>
+                    </div>
+                    <div class="chart-type-buttons">
+                        <button class="chart-type-btn active" data-type="line">Γραμμή</button>
+                        <button class="chart-type-btn" data-type="bar">Στήλες</button>
+                        <button class="chart-type-btn" data-type="doughnut">Κύκλος</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-wrapper">
+                <canvas id="salesChart"></canvas>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+            </div>
+            
+            <div class="chart-stats" id="chartStats">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalSales">0</div>
+                    <div class="stat-label">Συνολικές Πωλήσεις</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="avgSales">0</div>
+                    <div class="stat-label">Μέσος Όρος</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="bestMonth">-</div>
+                    <div class="stat-label">Καλύτερος Μήνας</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="growthRate">0%</div>
+                    <div class="stat-label">Ρυθμός Ανάπτυξης</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        // Initialize data storage
+        const salesData = { [new Date().getFullYear()]: {} };
+        let selectedYear = new Date().getFullYear();
+        let chart;
+        let currentChartType = 'line';
+        const months = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
+        const modernColors = [
+            '#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe',
+            '#43e97b', '#38f9d7', '#ffecd2', '#fcb69f', '#a8edea', '#fed6e3'
+        ];
+
+        // Utility functions
+        const saveToLocalStorage = () => {
+            localStorage.setItem('salesData', JSON.stringify(salesData));
+        };
+
+        const showLoading = () => {
+            document.getElementById('loadingSpinner').style.display = 'block';
+        };
+
+        const hideLoading = () => {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        };
+
+        const showNotification = (message, type = 'info', duration = 3000) => {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        };
+
+        // Dark mode toggle
+        const toggleDarkMode = () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            updateChart();
+        };
+
+        // Category management
+        const addCategory = () => {
+            const catInput = document.getElementById('categoryName');
+            const category = catInput.value.trim();
+            
+            if (!category) {
+                showNotification("⚠️ Παρακαλώ εισάγετε έγκυρο όνομα κατηγορίας.", "warning");
+                return;
+            }
+            
+            if (salesData[selectedYear][category]) {
+                const msg = document.getElementById('categoryMessage');
+                msg.textContent = "⚠️ Η κατηγορία υπάρχει ήδη.";
+                msg.style.display = 'block';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                }, 3000);
+                return;
+            }
+
+            salesData[selectedYear][category] = { sales: {} };
+            catInput.value = "";
+            saveToFirebase();
+            renderTable();
+            populateCategoryDropdown();
+            updateChart();
+            showNotification("✅ Κατηγορία προστέθηκε επιτυχώς!", "success");
+        };
+const deleteCategory = (category, rowElement) => {
+    // Χωρίς confirm pop-up
+    delete salesData[selectedYear][category];
+    saveToFirebase();
+    rowElement.classList.add('fade-out');
+    setTimeout(() => {
+        rowElement.remove();
+        populateCategoryDropdown();
+        updateChart();
+        showNotification("✅ Κατηγορία διαγράφηκε!", "success");
+    }, 500);
+};
+
+        // Table rendering
+        const renderTable = () => {
+            const container = document.getElementById('tableContainer');
+            let html = `<table><tr><th>Κατηγορία</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Σύνολο</th><th>Ενέργειες</th></tr>`;
+            
+            Object.keys(salesData[selectedYear]).forEach(cat => {
+                let total = 0;
+                html += `<tr><td class="category-name">${cat}</td>`;
+                months.forEach(m => {
+                    const val = salesData[selectedYear][cat].sales[m] || 0;
+                    total += val;
+                    html += `<td class="editable">${val.toLocaleString()}</td>`;
+                });
+                html += `<td><strong>${total.toLocaleString()}</strong></td>`;
+                html += `<td><button class="delete-btn" onclick="deleteCategory('${cat}', this.closest('tr'))">🗑️</button></td></tr>`;
+            });
+            html += `</table>`;
+            container.innerHTML = html;
+
+            // Add event listeners for editing
+            document.querySelectorAll('.editable').forEach(cell => {
+                cell.addEventListener('click', () => {
+                    const [category, month] = getCellContext(cell);
+                    editCell(cell, category, month);
+                });
+            });
+
+            document.querySelectorAll('.category-name').forEach(cell => {
+                cell.addEventListener('click', () => {
+                    editCategoryName(cell);
+                });
+            });
+        };
+
+        const getCellContext = (cell) => {
+            const row = cell.parentElement;
+            const category = row.firstChild.textContent.trim();
+            const monthIndex = Array.from(row.children).indexOf(cell) - 1;
+            return [category, months[monthIndex]];
+        };
+
+        const editCell = (cell, category, month) => {
+            if (cell.querySelector('input')) return;
+            
+            const currentValue = salesData[selectedYear][category].sales[month] || 0;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentValue;
+            input.style.width = '100%';
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            input.style.color = 'inherit';
+            input.style.textAlign = 'center';
+            input.style.fontSize = '12px';
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveCellValue(cell, input, category, month);
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                saveCellValue(cell, input, category, month);
+            });
+            
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        };
+
+        const saveCellValue = (cell, input, category, month) => {
+            const newValue = parseFloat(input.value);
+            salesData[selectedYear][category].sales[month] = isNaN(newValue) ? 0 : newValue;
+            saveToFirebase();
+            cell.textContent = (isNaN(newValue) ? 0 : newValue).toLocaleString();
+
+            // Update total
+            const row = cell.parentElement;
+            let total = 0;
+            months.forEach((m) => {
+                const val = salesData[selectedYear][category].sales[m] || 0;
+                total += val;
+            });
+            row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
+            updateChart();
+        };
+
+        const editCategoryName = (cell) => {
+            const oldName = cell.textContent.trim();
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = oldName;
+            input.style.width = '100%';
+            input.style.border = 'none';
+            input.style.background = 'transparent';
+            input.style.color = 'inherit';
+            input.style.textAlign = 'center';
+            input.style.fontSize = '12px';
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    saveCategoryName(cell, input, oldName);
+                }
+            });
+            
+            input.addEventListener('blur', () => {
+                saveCategoryName(cell, input, oldName);
+            });
+            
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        };
+
+        const saveCategoryName = (cell, input, oldName) => {
+            const newName = input.value.trim();
+            if (newName && newName !== oldName && !salesData[selectedYear][newName]) {
+                salesData[selectedYear][newName] = salesData[selectedYear][oldName];
+                delete salesData[selectedYear][oldName];
+                saveToFirebase();
+                renderTable();
+                populateCategoryDropdown();
+                updateChart();
+                showNotification("✅ Όνομα κατηγορίας ενημερώθηκε!", "success");
+            } else {
+                cell.textContent = oldName;
+            }
+        };
+
+        // Dropdown population
+        const populateCategoryDropdown = () => {
+            const dropdown = document.getElementById('chartCategory');
+            const currentValue = dropdown.value;
+            dropdown.innerHTML = '<option value="">Όλες οι Κατηγορίες</option>';
+            Object.keys(salesData[selectedYear]).forEach(cat => {
+                const option = document.createElement('option');
+                option.value = cat;
+                option.textContent = cat;
+                dropdown.appendChild(option);
+            });
+            dropdown.value = currentValue;
+        };
+
+        const populateYearDropdown = () => {
+            const yearSelect = document.getElementById('yearSelect');
+            const currentYear = new Date().getFullYear();
+            yearSelect.innerHTML = '';
+            
+            for (let y = currentYear - 2; y <= currentYear + 5; y++) {
+                const option = document.createElement('option');
+                option.value = y;
+                option.textContent = y;
+                yearSelect.appendChild(option);
+            }
+            
+            yearSelect.value = selectedYear;
+            yearSelect.addEventListener('change', (e) => {
+                selectedYear = parseInt(e.target.value);
+                if (!salesData[selectedYear]) salesData[selectedYear] = {};
+                renderTable();
+                populateCategoryDropdown();
+                updateChart();
+            });
+        };
+
+        // Statistics calculation
+        const calculateStats = () => {
+            const selectedCategory = document.getElementById('chartCategory').value;
+            let totalSales = 0;
+            let monthlyTotals = [];
+            let bestMonth = '';
+            let bestValue = 0;
+
+            if (selectedCategory) {
+                months.forEach(month => {
+                    const value = salesData[selectedYear][selectedCategory]?.sales[month] || 0;
+                    totalSales += value;
+                    monthlyTotals.push(value);
+                    if (value > bestValue) {
+                        bestValue = value;
+                        bestMonth = month;
+                    }
+                });
+            } else {
+                months.forEach(month => {
+                    let monthTotal = 0;
+                    Object.keys(salesData[selectedYear]).forEach(cat => {
+                        monthTotal += salesData[selectedYear][cat].sales[month] || 0;
+                    });
+                    totalSales += monthTotal;
+                    monthlyTotals.push(monthTotal);
+                    if (monthTotal > bestValue) {
+                        bestValue = monthTotal;
+                        bestMonth = month;
+                    }
+                });
+            }
+
+            const avgSales = totalSales / 12;
+            const growthRate = monthlyTotals.length > 1 ? 
+                ((monthlyTotals[monthlyTotals.length - 1] - monthlyTotals[0]) / monthlyTotals[0] * 100) : 0;
+
+            document.getElementById('totalSales').textContent = totalSales.toLocaleString();
+            document.getElementById('avgSales').textContent = Math.round(avgSales).toLocaleString();
+            document.getElementById('bestMonth').textContent = bestMonth || '-';
+            document.getElementById('growthRate').textContent = `${growthRate.toFixed(1)}%`;
+        };
+
+        // Chart management
+        const updateChart = () => {
+            showLoading();
+            
+            setTimeout(() => {
+                const ctxElement = document.getElementById('salesChart');
+                if (chart) chart.destroy();
+                
+                const ctx = ctxElement.getContext('2d');
+                const selectedCategory = document.getElementById('chartCategory').value;
+                const isDark = document.body.classList.contains('dark-mode');
+                
+                let datasets = [];
+                let labels = months;
+                
+                if (currentChartType === 'doughnut') {
+                    const categoryTotals = {};
+                    Object.keys(salesData[selectedYear]).forEach(cat => {
+                        categoryTotals[cat] = months.reduce((sum, month) => {
+                            return sum + (salesData[selectedYear][cat].sales[month] || 0);
+                        }, 0);
+                    });
+                    
+                    labels = Object.keys(categoryTotals);
+                    datasets = [{
+                        data: Object.values(categoryTotals),
+                        backgroundColor: modernColors.slice(0, labels.length),
+                        borderWidth: 2,
+                        borderColor: isDark ? '#2c3e50' : '#ffffff',
+                        hoverOffset: 10
+                    }];
+                } else {
+                    if (selectedCategory) {
+                        datasets = [{
+                            label: selectedCategory,
+                            data: months.map(m => salesData[selectedYear][selectedCategory]?.sales[m] || 0),
+                            borderColor: modernColors[0],
+                            backgroundColor: currentChartType === 'line' ? 
+                                `${modernColors[0]}20` : modernColors[0],
+                            fill: currentChartType === 'line',
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }];
+                    } else {
+                        datasets = Object.keys(salesData[selectedYear]).map((cat, i) => ({
+                            label: cat,
+                            data: months.map(m => salesData[selectedYear][cat].sales[m] || 0),
+                            borderColor: modernColors[i % modernColors.length],
+                            backgroundColor: currentChartType === 'line' ? 
+                                `${modernColors[i % modernColors.length]}20` : modernColors[i % modernColors.length],
+                            fill: currentChartType === 'line',
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointBackgroundColor: '#ffffff',
+                            pointBorderWidth: 2
+                        }));
+                    }
+                }
+
+                const chartConfig = {
+                    type: currentChartType,
+                    data: { labels, datasets },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 800,
+                            easing: 'easeOutQuart'
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    color: isDark ? '#ecf0f1' : '#2c3e50',
+                                    usePointStyle: true,
+                                    pointStyle: 'circle',
+                                    padding: 15,
+                                    font: {
+                                        size: 12,
+                                        weight: '600'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: isDark ? 'rgba(44, 62, 80, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                titleColor: isDark ? '#ecf0f1' : '#2c3e50',
+                                bodyColor: isDark ? '#ecf0f1' : '#2c3e50',
+                                borderColor: isDark ? '#4facfe' : '#667eea',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                displayColors: true,
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: ${context.parsed.y?.toLocaleString() || context.parsed}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: currentChartType !== 'doughnut' ? {
+                            x: {
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                    borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                },
+                                ticks: {
+                                    color: isDark ? '#bdc3c7' : '#7f8c8d',
+                                    font: {
+                                        size: 10,
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                    borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                },
+                                ticks: {
+                                    color: isDark ? '#bdc3c7' : '#7f8c8d',
+                                    font: {
+                                        size: 10,
+                                        weight: '500'
+                                    },
+                                    callback: function(value) {
+                                        return value.toLocaleString();
+                                    }
+                                },
+                                beginAtZero: true
+                            }
+                        } : {},
+                        interaction: {
+                            intersect: false,
+                            mode: 'index'
+                        }
+                    }
+                };
+
+                chart = new Chart(ctx, chartConfig);
+                calculateStats();
+                hideLoading();
+            }, 300);
+        };
+
+        // Export functions
+        const exportToExcel = () => {
+            const ws_data = [];
+            const header = ['Κατηγορία', ...months, 'Σύνολο'];
+            ws_data.push(header);
+
+            Object.keys(salesData[selectedYear]).forEach(cat => {
+                const row = [];
+                let total = 0;
+                row.push(cat);
+                months.forEach(month => {
+                    const val = salesData[selectedYear][cat].sales[month] || 0;
+                    row.push(val);
+                    total += val;
+                });
+                row.push(total);
+                ws_data.push(row);
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            XLSX.utils.book_append_sheet(wb, ws, "Sales");
+            XLSX.writeFile(wb, `sales_data_${selectedYear}.xlsx`);
+            showNotification("✅ Εξαγωγή Excel ολοκληρώθηκε!", "success");
+        };
+
+        const exportToPDF = () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            doc.setFontSize(16);
+            doc.text(`Πίνακας Πωλήσεων ${selectedYear}`, 14, 20);
+
+            const tableData = [];
+            const header = ['Κατηγορία', ...months, 'Σύνολο'];
+
+            Object.keys(salesData[selectedYear]).forEach(cat => {
+                const row = [];
+                let total = 0;
+                row.push(cat);
+                months.forEach(month => {
+                    const val = salesData[selectedYear][cat].sales[month] || 0;
+                    row.push(val);
+                    total += val;
+                });
+                row.push(total);
+                tableData.push(row);
+            });
+
+            doc.autoTable({
+                head: [header],
+                body: tableData,
+                startY: 30,
+                styles: { fontSize: 7 },
+                headStyles: { fillColor: [103, 126, 234] }
+            });
+
+            doc.save(`sales_data_${selectedYear}.pdf`);
+            showNotification("✅ Εξαγωγή PDF ολοκληρώθηκε!", "success");
+        };
+
+        // Comparison and forecast
+        const compareWithPreviousYear = () => {
+            const selectedCategory = document.getElementById('chartCategory').value;
+            const prevYear = selectedYear - 1;
+
+            if (!selectedCategory) {
+                showNotification("⚠️ Παρακαλώ επιλέξτε κατηγορία για σύγκριση.", "warning");
+                return;
+            }
+
+            if (!salesData[prevYear] || !salesData[prevYear][selectedCategory]) {
+                showNotification(`❌ Δεν βρέθηκαν δεδομένα για την κατηγορία "${selectedCategory}" το ${prevYear}.`, "error");
+                return;
+            }
+
+            showLoading();
+
+            setTimeout(() => {
+                const currentData = months.map(m => salesData[selectedYear][selectedCategory]?.sales[m] || 0);
+                const previousData = months.map(m => salesData[prevYear][selectedCategory]?.sales[m] || 0);
+
+                if (chart) chart.destroy();
+                
+                const ctx = document.getElementById('salesChart').getContext('2d');
+                const isDark = document.body.classList.contains('dark-mode');
+
+                chart = new Chart(ctx, {
+                    type: currentChartType,
+                    data: {
+                        labels: months,
+                        datasets: [
+                            {
+                                label: `${selectedCategory} ${selectedYear}`,
+                                data: currentData,
+                                borderColor: '#667eea',
+                                backgroundColor: currentChartType === 'line' ? '#667eea33' : '#667eea',
+                                fill: currentChartType === 'line',
+                                tension: 0.4,
+                                borderWidth: 2,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            },
+                            {
+                                label: `${selectedCategory} ${prevYear}`,
+                                data: previousData,
+                                borderColor: '#f093fb',
+                                backgroundColor: currentChartType === 'line' ? '#f093fb33' : '#f093fb',
+                                fill: currentChartType === 'line',
+                                tension: 0.4,
+                                borderWidth: 2,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                      plugins: {
+    legend: {
+        labels: {
+            color: isDark ? '#ecf0f1' : '#2c3e50',
+            font: { size: 12, weight: '600' },
+            usePointStyle: true,      // <-- προσθέτεις αυτή τη γραμμή
+            pointStyle: 'circle'      // <-- και αυτή τη γραμμή
+        }
+    }
+}
+                    }
+                });
+                hideLoading();
+                showNotification("✅ Σύγκριση ολοκληρώθηκε!", "success");
+            }, 300);
+        };
+
+        const forecast = () => {
+            const selectedCategory = document.getElementById('chartCategory').value;
+
+            if (!selectedCategory) {
+                showNotification("⚠️ Παρακαλώ επιλέξτε κατηγορία για πρόβλεψη.", "warning");
+                return;
+            }
+
+            const sales = salesData[selectedYear][selectedCategory]?.sales || {};
+            const actualData = months.map(m => sales[m] || 0);
+
+            // Calculate growth rate
+            let growthRates = [];
+            for (let i = 1; i < actualData.length; i++) {
+                if (actualData[i - 1] > 0) {
+                    let rate = (actualData[i] - actualData[i - 1]) / actualData[i - 1];
+                    growthRates.push(rate);
+                }
+            }
+            const avgGrowth = growthRates.reduce((a, b) => a + b, 0) / growthRates.length || 0.05;
+
+            // Forecast next 3 months
+            let forecastData = actualData.slice();
+            for (let i = 0; i < 3; i++) {
+                const last = forecastData[forecastData.length - 1] || 100;
+                const next = last + last * avgGrowth;
+                forecastData.push(Math.round(next));
+            }
+
+            const forecastLabels = [...months, "Ιαν (πρόβλ.)", "Φεβ (πρόβλ.)", "Μαρ (πρόβλ.)"];
+
+            if (chart) chart.destroy();
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            const isDark = document.body.classList.contains('dark-mode');
+
+            chart = new Chart(ctx, {
+                type: currentChartType,
+                data: {
+                    labels: forecastLabels,
+                    datasets: [
+                        {
+                            label: `${selectedCategory} (${selectedYear})`,
+                            data: forecastData,
+                            borderColor: '#667eea',
+                            backgroundColor: currentChartType === 'line' ? '#667eea33' : '#667eea',
+                            fill: currentChartType === 'line',
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        },
+                        {
+                            label: "Πρόβλεψη",
+                            data: forecastData.map((v, i) => i < 12 ? null : v),
+                            borderColor: '#f093fb',
+                            backgroundColor: currentChartType === 'line' ? '#f093fb33' : '#f093fb',
+                            borderDash: [5, 5],
+                            fill: false,
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6
+                        }
+                    ]
+                },
+options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: {
+            labels: {
+                color: isDark ? '#ecf0f1' : '#2c3e50',
+                font: { size: 12, weight: '600' },
+                usePointStyle: true,      // <-- προσθέτεις αυτή τη γραμμή
+                pointStyle: 'circle'      // <-- και αυτή τη γραμμή
+            }
+        }
+    }
+}
+            });
+            showNotification("✅ Πρόβλεψη ολοκληρώθηκε!", "success");
+        };
+
+        const downloadChart = () => {
+            if (!chart) {
+                showNotification("⚠️ Δεν υπάρχει γράφημα για λήψη.", "warning");
+                return;
+            }
+
+            const imageLink = document.createElement('a');
+            imageLink.href = chart.toBase64Image('image/png', 1);
+            imageLink.download = `sales_chart_${selectedYear}.png`;
+            imageLink.click();
+            showNotification("✅ Το γράφημα κατέβηκε επιτυχώς!", "success");
+        };
+
+        // Initialize sample data
+        const initializeSampleData = () => {
+            if (Object.keys(salesData[selectedYear]).length === 0) {
+                salesData[selectedYear] = {
+                    'Προϊόντα Α': {
+                        sales: {
+                            'Ιαν': 1200, 'Φεβ': 1350, 'Μαρ': 1100, 'Απρ': 1480,
+                            'Μάι': 1650, 'Ιουν': 1750, 'Ιουλ': 1900, 'Αυγ': 1820,
+                            'Σεπ': 1600, 'Οκτ': 1720, 'Νοε': 1850, 'Δεκ': 2100
+                        }
+                    },
+                    'Υπηρεσίες Β': {
+                        sales: {
+                            'Ιαν': 800, 'Φεβ': 920, 'Μαρ': 850, 'Απρ': 1050,
+                            'Μάι': 1150, 'Ιουν': 1200, 'Ιουλ': 1300, 'Αυγ': 1250,
+                            'Σεπ': 1100, 'Οκτ': 1180, 'Νοε': 1320, 'Δεκ': 1450
+                        }
+                    }
+                };
+                saveToFirebase();
+            }
+        };
+
+        // Event listeners setup
+        const setupEventListeners = () => {
+            // Chart type buttons
+            document.querySelectorAll('.chart-type-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    document.querySelectorAll('.chart-type-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentChartType = e.target.dataset.type;
+                    updateChart();
+                });
+            });
+
+            // Main buttons
+            document.getElementById('darkModeBtn').addEventListener('click', toggleDarkMode);
+            document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
+            document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+            document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
+            document.getElementById('compareBtn').addEventListener('click', compareWithPreviousYear);
+            document.getElementById('forecastBtn').addEventListener('click', forecast);
+            document.getElementById('downloadChartBtn').addEventListener('click', downloadChart);
+            
+            document.getElementById('logoutBtn').addEventListener('click', () => {
+                sessionStorage.removeItem('loggedInUser');
+                window.location.href = 'index.html';
+            });
+
+            // Category input enter key
+            document.getElementById('categoryName').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') addCategory();
+            });
+
+            // Chart category change
+            document.getElementById('chartCategory').addEventListener('change', updateChart);
+
+            // Touch improvements for mobile
+            document.addEventListener('touchstart', function() {}, {passive: true});
+            document.addEventListener('touchmove', function() {}, {passive: true});
+        };
+
+        // Apply saved dark mode
+        const applySavedDarkMode = () => {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            if (darkMode) {
+                document.body.classList.add('dark-mode');
+            }
+        };
+
+        
+function loadFromFirebase() {
+    const rawEmail = sessionStorage.getItem('loggedInUser');
+    const username = sanitizeKey(rawEmail);
+    if (!username) return;
+    firebase.database().ref('salesData/' + username).once('value').then(snapshot => {
+        const data = snapshot.val();
+        if (data) {
+            Object.keys(data).forEach(year => {
+                salesData[year] = data[year];
+            });
+            // Ενημέρωσε το selectedYear αν δεν υπάρχει
+         if (!salesData[selectedYear]) {
+    selectedYear = Object.keys(salesData).sort().pop(); // τελευταίο διαθέσιμο έτος
+}
+            populateYearDropdown();
+            renderTable();
+            populateCategoryDropdown();
+            updateChart();
+        } else {
+            initializeSampleData();
+            populateYearDropdown();
+            renderTable();
+            populateCategoryDropdown();
+            updateChart();
+        }
+    });
+}
+        // Initialize application
+        document.addEventListener('DOMContentLoaded', () => {
+            // Set username
+            const userDisplay = document.getElementById('userDisplay');
+            const username = sessionStorage.getItem('loggedInUser') || 'Χρήστης';
+            userDisplay.textContent = username;
+
+            // Initialize functionality
+            applySavedDarkMode();
+            //initializeSampleData();
+            //populateYearDropdown();
+            //renderTable();
+            //populateCategoryDropdown();
+            setupEventListeners();
+            //updateChart();
+            loadFromFirebase();
+            console.log('Loaded salesData:', salesData);
+console.log('Selected year:', selectedYear);
+
+            // Service Worker registration
+            if ("serviceWorker" in navigator) {
+                navigator.serviceWorker.register("service-worker.js")
+                    .then(() => console.log("✅ Service Worker εγγράφηκε επιτυχώς"))
+                    .catch(error => console.error("❌ Σφάλμα Service Worker:", error));
+            }
+
+            // Welcome message
+            setTimeout(() => {
+                showNotification(`🎉 Καλώς ήρθες, ${username}!`, "success");
+            }, 1000);
+        });
+
+        // Responsive chart resize
+        window.addEventListener('resize', () => {
+            if (chart) {
+                setTimeout(() => {
+                    chart.resize();
+                }, 100);
+            }
+        });
+
+        // Global error handling
+        window.addEventListener('error', (e) => {
+            console.error('An error occurred:', e.error);
+            hideLoading();
+            showNotification("❌ Παρουσιάστηκε σφάλμα. Δοκιμάστε ξανά.", "error");
+        });
+
+        function saveToFirebase() {
+    const rawEmail = sessionStorage.getItem('loggedInUser');
+const username = sanitizeKey(rawEmail);
+    if (!username) return;
+    firebase.database().ref('salesData/' + username).set(salesData);
+}
+// filepath: [dashboard.html](http://_vscodecontentref_/0)
+function sanitizeKey(email) {
+    // Αντικαθιστά . # $ [ ] με _
+    return email.replace(/[.#$\[\]]/g, '_');
+}
+        // Make functions globally available
+        window.deleteCategory = deleteCategory;
+    </script>
+    <!-- ...existing code... -->
+    <!-- Firebase App (core) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <!-- Firebase Auth -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <!-- Firebase Database -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+    <script>
+      // Your web app's Firebase configuration
+     const firebaseConfig = {
+  apiKey: "AIzaSyAijCPbtrRW440GrPpcFtcNwN3gRpnZlLc",
+  authDomain: "i-managment.firebaseapp.com",
+  databaseURL: "https://i-managment-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "i-managment",
+  storageBucket: "i-managment.firebasestorage.app",
+  messagingSenderId: "413163256377",
+  appId: "1:413163256377:web:4c8624b3b9d8243d7aebe8"
+};
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.database().ref('.info/connected').on('value', function(snap) {
+    if (snap.val() === true) {
+        console.log('✅ Συνδέθηκε στο Firebase Database');
+    } else {
+        console.log('❌ Δεν συνδέθηκε στο Firebase Database');
+    }
+});
+    </script>
+</body>
+</html>
