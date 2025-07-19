@@ -1733,10 +1733,395 @@
             transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease !important;
         }
 
-        /* Desktop theme grid improvements */
+        /* Goals & Targets Panel */
+        .goals-panel {
+            margin: 20px 0;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(41, 128, 185, 0.08));
+            border-radius: 20px;
+            border: 1px solid rgba(52, 152, 219, 0.2);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+
+        body.dark-mode .goals-panel {
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(41, 128, 185, 0.08));
+            border: 1px solid rgba(52, 152, 219, 0.15);
+        }
+
+        .goals-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(52, 152, 219, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .goals-header h3 {
+            margin: 0;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-weight: 600;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-goals-btn {
+            padding: 8px 16px;
+            font-size: 12px;
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+            color: #2980b9;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+            min-height: 36px;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-goals-btn:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        body.dark-mode .toggle-goals-btn {
+            background: linear-gradient(45deg, rgba(52, 152, 219, 0.1), rgba(41, 128, 185, 0.1));
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
+        body.dark-mode .toggle-goals-btn:hover {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .goals-content {
+            padding: 20px;
+        }
+
+        .goal-input-section {
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+
+        body.dark-mode .goal-input-section {
+            background: rgba(52, 73, 94, 0.7);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .goal-input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        .goal-input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .goal-input-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #3498db;
+        }
+
+        body.dark-mode .goal-input-group label {
+            color: #3498db;
+        }
+
+        .goal-input {
+            padding: 10px 12px;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.9);
+            color: #2c3e50;
+            font-size: 13px;
+            font-weight: 500;
+            min-height: 38px;
+        }
+
+        .goal-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        body.dark-mode .goal-input {
+            background: rgba(52, 73, 94, 0.9);
+            color: #ecf0f1;
+            border: 2px solid rgba(52, 152, 219, 0.3);
+        }
+
+        body.dark-mode .goal-input:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+
+        .add-goal-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 38px;
+            transition: all 0.3s ease;
+        }
+
+        .add-goal-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        /* Goals tooltips */
+        .goal-item {
+            background: rgba(255,255,255,0.8);
+            border-radius: 12px;
+            padding: 15px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            border-left: 4px solid #3498db;
+            position: relative;
+            overflow: hidden;
+            cursor: help;
+        }
+
+        .goal-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(52, 152, 219, 0.15);
+        }
+
+        .goal-item::before {
+            content: "🎯 Πατήστε για περισσότερες πληροφορίες σχετικά με αυτόν τον στόχο και πώς υπολογίζεται η πρόοδος.";
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(52, 152, 219, 0.95);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.3;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-align: center;
+            margin-bottom: 5px;
+        }
+
+        .goal-item:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        body.dark-mode .goal-item::before {
+            background: rgba(52, 152, 219, 0.95);
+        }
+
+        /* Mobile goal tooltips */
+        @media (max-width: 768px) {
+            .goal-item::before {
+                position: fixed;
+                bottom: 40px;
+                left: 20px;
+                right: 20px;
+                border-radius: 8px;
+                font-size: 12px;
+                padding: 12px 16px;
+            }
+        }
+
+        body.dark-mode .goal-item {
+            background: rgba(52, 73, 94, 0.8);
+            border-left: 4px solid #3498db;
+        }
+
+        .goal-header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .goal-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2980b9;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        body.dark-mode .goal-title {
+            color: #3498db;
+        }
+
+        .goal-status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .goal-status.achieved {
+            background: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+        }
+
+        .goal-status.in-progress {
+            background: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+        }
+
+        .goal-status.at-risk {
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+
+        .goal-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 12px;
+        }
+
+        .goal-target {
+            color: #7f8c8d;
+            font-weight: 500;
+        }
+
+        body.dark-mode .goal-target {
+            color: #bdc3c7;
+        }
+
+        .goal-current {
+            color: #2c3e50;
+            font-weight: 600;
+            background: rgba(52, 152, 219, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        body.dark-mode .goal-current {
+            color: #ecf0f1;
+            background: rgba(52, 152, 219, 0.15);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(52, 152, 219, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill.achieved {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+        }
+
+        .progress-fill.at-risk {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: #7f8c8d;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        body.dark-mode .progress-text {
+            color: #bdc3c7;
+        }
+
+        .goal-actions {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .goal-action-btn {
+            background: rgba(52, 152, 219, 0.1);
+            border: none;
+            color: #3498db;
+            border-radius: 6px;
+            padding: 4px 8px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .goal-action-btn:hover {
+            background: rgba(52, 152, 219, 0.2);
+            transform: scale(1.1);
+        }
+
+        .goal-action-btn.delete {
+            color: #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+        }
+
+        .goal-action-btn.delete:hover {
+            background: rgba(231, 76, 60, 0.2);
+        }
+
+        /* Mobile adjustments for goals */
+        @media (max-width: 768px) {
+            .goal-input-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goal-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+
+        /* Desktop goals grid */
         @media (min-width: 768px) {
-            .theme-grid {
-                grid-template-columns: repeat(4, 1fr);
+            .goals-grid {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 20px;
             }
         }
@@ -1766,6 +2151,7 @@
             <div class="user-buttons">
                 <button id="exportExcelBtn">📥 Excel</button>
                 <button id="exportPdfBtn">📥 PDF</button>
+                <button id="goalsBtn">🎯 Στόχοι</button>
                 <button id="themeBtn">🎨 Θέματα</button>
                 <button id="darkModeBtn">🌙/☀️</button>
                 <button id="logoutBtn">Έξοδος</button>
@@ -1863,6 +2249,49 @@
                 <div class="stat-card" data-tooltip="⚡ Μετρά πόσο ασταθείς είναι οι πωλήσεις. Υψηλή αστάθεια = απρόβλεπτες αλλαγές, Χαμηλή = σταθερές πωλήσεις.">
                     <div class="stat-value" id="volatilityIndex">0%</div>
                     <div class="stat-label">⚡ Αστάθεια</div>
+                </div>
+            </div>
+            
+            <!-- Goals & Targets Panel -->
+            <div class="goals-panel" id="goalsPanel" style="display: none;">
+                <div class="goals-header">
+                    <h3>🎯 Στόχοι & Επιδόσεις</h3>
+                    <button class="toggle-goals-btn" id="toggleGoalsBtn">📈 Διαχείριση Στόχων</button>
+                </div>
+                <div class="goals-content" id="goalsContent">
+                    <div class="goal-input-section">
+                        <div class="goal-input-row">
+                            <div class="goal-input-group">
+                                <label for="goalCategory">📊 Κατηγορία:</label>
+                                <select id="goalCategory" class="goal-input">
+                                    <option value="">Όλες οι Κατηγορίες</option>
+                                </select>
+                            </div>
+                            <div class="goal-input-group">
+                                <label for="goalTarget">🎯 Στόχος:</label>
+                                <input type="number" id="goalTarget" class="goal-input" placeholder="π.χ. 50000" min="0">
+                            </div>
+                            <div class="goal-input-group">
+                                <label for="goalPeriod">📅 Περίοδος:</label>
+                                <select id="goalPeriod" class="goal-input">
+                                    <option value="monthly">Μηνιαίος</option>
+                                    <option value="quarterly">Τριμηνιαίος</option>
+                                    <option value="yearly">Ετήσιος</option>
+                                </select>
+                            </div>
+                            <button class="add-goal-btn" id="addGoalBtn">➕ Προσθήκη</button>
+                        </div>
+                    </div>
+                    
+                    <div class="goals-grid" id="goalsGrid">
+                        <!-- Goals will be populated here -->
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 15px; display: none;" id="noGoalsMessage">
+                        <div style="color: #7f8c8d; font-style: italic; font-size: 14px;">
+                            🎯 Δεν έχετε ορίσει στόχους ακόμα. Προσθέστε τον πρώτο σας στόχο!
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -2116,6 +2545,190 @@
             }
         };
         
+        // Goals & Targets management
+        let goalsData = JSON.parse(localStorage.getItem('goalsData')) || [];
+        
+        const addGoal = () => {
+            const category = document.getElementById('goalCategory').value;
+            const target = parseFloat(document.getElementById('goalTarget').value);
+            const period = document.getElementById('goalPeriod').value;
+            
+            if (!target || target <= 0) {
+                showNotification("⚠️ Παρακαλώ εισάγετε έγκυρο στόχο.", "warning");
+                return;
+            }
+            
+            const goalName = category || 'Όλες οι Κατηγορίες';
+            const periodText = {
+                'monthly': 'Μηνιαίος',
+                'quarterly': 'Τριμηνιαίος', 
+                'yearly': 'Ετήσιος'
+            }[period];
+            
+            const newGoal = {
+                id: Date.now(),
+                category: category,
+                categoryName: goalName,
+                target: target,
+                period: period,
+                periodText: periodText,
+                created: new Date().toISOString()
+            };
+            
+            goalsData.push(newGoal);
+            localStorage.setItem('goalsData', JSON.stringify(goalsData));
+            
+            // Clear inputs
+            document.getElementById('goalTarget').value = '';
+            
+            renderGoals();
+            showNotification(`🎯 Στόχος "${goalName} - ${target.toLocaleString()}" προστέθηκε!`, "success");
+        };
+        
+        const deleteGoal = (goalId) => {
+            goalsData = goalsData.filter(goal => goal.id !== goalId);
+            localStorage.setItem('goalsData', JSON.stringify(goalsData));
+            renderGoals();
+            showNotification("🗑️ Στόχος διαγράφηκε!", "success");
+        };
+        
+        const calculateGoalProgress = (goal) => {
+            const currentDate = new Date();
+            let current = 0;
+            
+            if (goal.period === 'monthly') {
+                const currentMonth = months[currentDate.getMonth()];
+                if (goal.category) {
+                    current = salesData[selectedYear][goal.category]?.sales[currentMonth] || 0;
+                } else {
+                    // Sum all categories for current month
+                    Object.keys(salesData[selectedYear]).forEach(cat => {
+                        current += salesData[selectedYear][cat].sales[currentMonth] || 0;
+                    });
+                }
+            } else if (goal.period === 'quarterly') {
+                const quarter = Math.floor(currentDate.getMonth() / 3);
+                const quarterMonths = [
+                    ['Ιαν', 'Φεβ', 'Μαρ'],
+                    ['Απρ', 'Μάι', 'Ιουν'],
+                    ['Ιουλ', 'Αυγ', 'Σεπ'],
+                    ['Οκτ', 'Νοε', 'Δεκ']
+                ][quarter];
+                
+                if (goal.category) {
+                    quarterMonths.forEach(month => {
+                        current += salesData[selectedYear][goal.category]?.sales[month] || 0;
+                    });
+                } else {
+                    Object.keys(salesData[selectedYear]).forEach(cat => {
+                        quarterMonths.forEach(month => {
+                            current += salesData[selectedYear][cat].sales[month] || 0;
+                        });
+                    });
+                }
+            } else { // yearly
+                if (goal.category) {
+                    months.forEach(month => {
+                        current += salesData[selectedYear][goal.category]?.sales[month] || 0;
+                    });
+                } else {
+                    Object.keys(salesData[selectedYear]).forEach(cat => {
+                        months.forEach(month => {
+                            current += salesData[selectedYear][cat].sales[month] || 0;
+                        });
+                    });
+                }
+            }
+            
+            const percentage = (current / goal.target * 100);
+            let status = 'in-progress';
+            if (percentage >= 100) status = 'achieved';
+            else if (percentage < 50) status = 'at-risk';
+            
+            return { current, percentage: Math.min(percentage, 100), status };
+        };
+        
+        const renderGoals = () => {
+            const container = document.getElementById('goalsGrid');
+            const noGoalsMsg = document.getElementById('noGoalsMessage');
+            
+            if (goalsData.length === 0) {
+                container.innerHTML = '';
+                noGoalsMsg.style.display = 'block';
+                return;
+            }
+            
+            noGoalsMsg.style.display = 'none';
+            
+            let html = '';
+            goalsData.forEach(goal => {
+                const progress = calculateGoalProgress(goal);
+                const statusText = {
+                    'achieved': 'Επιτεύχθηκε',
+                    'in-progress': 'Σε Εξέλιξη',
+                    'at-risk': 'Κίνδυνος'
+                }[progress.status];
+                
+                const statusIcon = {
+                    'achieved': '✅',
+                    'in-progress': '⏳',
+                    'at-risk': '⚠️'
+                }[progress.status];
+                
+                html += `
+                    <div class="goal-item">
+                        <div class="goal-actions">
+                            <button class="goal-action-btn delete" onclick="deleteGoal(${goal.id})" title="Διαγραφή στόχου">🗑️</button>
+                        </div>
+                        <div class="goal-header-row">
+                            <div class="goal-title">
+                                ${statusIcon} ${goal.categoryName} - ${goal.periodText}
+                            </div>
+                            <div class="goal-status ${progress.status}">${statusText}</div>
+                        </div>
+                        <div class="goal-details">
+                            <div class="goal-target">Στόχος: ${goal.target.toLocaleString()}€</div>
+                            <div class="goal-current">Τρέχον: ${progress.current.toLocaleString()}€</div>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${progress.status}" style="width: ${progress.percentage}%"></div>
+                        </div>
+                        <div class="progress-text">${progress.percentage.toFixed(1)}% του στόχου</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        };
+        
+        const toggleGoalsPanel = () => {
+            const panel = document.getElementById('goalsPanel');
+            const isVisible = panel.style.display !== 'none';
+            
+            if (isVisible) {
+                panel.style.display = 'none';
+                showNotification("🎯 Πάνελ στόχων κρύφτηκε", "info", 1500);
+            } else {
+                panel.style.display = 'block';
+                panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                populateGoalCategoryDropdown();
+                renderGoals();
+                showNotification("🎯 Ορίστε τους στόχους σας!", "info", 2000);
+            }
+        };
+        
+        const populateGoalCategoryDropdown = () => {
+            const select = document.getElementById('goalCategory');
+            select.innerHTML = '<option value="">Όλες οι Κατηγορίες</option>';
+            
+            Object.keys(salesData[selectedYear]).forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option);
+            });
+        };
+
         const resetTheme = () => {
             applyTheme('default');
         };
@@ -3929,12 +4542,25 @@ function sanitizeKey(email) {
 }
         // Make functions globally available
         window.deleteCategory = deleteCategory;
+        window.deleteGoal = deleteGoal;
         
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
             // Initialize theme from localStorage
             const savedTheme = localStorage.getItem('selectedTheme') || 'default';
             applyTheme(savedTheme);
+            
+            // Goals & Targets event listeners
+            document.getElementById('goalsBtn').addEventListener('click', toggleGoalsPanel);
+            document.getElementById('toggleGoalsBtn').addEventListener('click', toggleGoalsPanel);
+            document.getElementById('addGoalBtn').addEventListener('click', addGoal);
+            
+            // Enter key for goal input
+            document.getElementById('goalTarget').addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    addGoal();
+                }
+            });
             
             // Theme selector event listeners
             document.getElementById('themeBtn').addEventListener('click', toggleThemePanel);
