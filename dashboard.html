@@ -628,6 +628,12 @@
                         <select id="chartCategory">
                             <option value="">Όλες οι Κατηγορίες</option>
                         </select>
+                        <select id="forecastPeriod">
+                            <option value="3">3 Μήνες</option>
+                            <option value="6">6 Μήνες</option>
+                            <option value="12">1 Χρόνο</option>
+                            <option value="24">2 Χρόνια</option>
+                        </select>
                     </div>
                     <div class="chart-buttons-row">
                         <button id="compareBtn">📊 Σύγκριση</button>
@@ -1270,6 +1276,7 @@ const deleteCategory = (category, rowElement) => {
 
         const forecast = () => {
             const selectedCategory = document.getElementById('chartCategory').value;
+            const forecastMonths = parseInt(document.getElementById('forecastPeriod').value);
 
             if (!selectedCategory) {
                 showNotification("⚠️ Παρακαλώ επιλέξτε κατηγορία για πρόβλεψη.", "warning");
@@ -1280,9 +1287,16 @@ const deleteCategory = (category, rowElement) => {
             const actualData = months.map(m => sales[m] || 0);
 
             // Advanced forecasting algorithm
-            const advancedForecast = calculateAdvancedForecast(actualData);
+            const advancedForecast = calculateAdvancedForecast(actualData, forecastMonths);
             
-            const forecastLabels = [...months, "Ιαν (πρόβλ.)", "Φεβ (πρόβλ.)", "Μαρ (πρόβλ.)"];
+            // Generate forecast labels dynamically
+            const forecastLabels = [...months];
+            for (let i = 1; i <= forecastMonths; i++) {
+                const futureMonth = new Date(selectedYear + 1, i - 1);
+                const monthName = futureMonth.toLocaleDateString('el-GR', { month: 'short' });
+                const year = futureMonth.getFullYear();
+                forecastLabels.push(`${monthName} ${year === selectedYear + 1 ? '(πρόβλ.)' : `(${year})`}`);
+            }
 
             if (chart) chart.destroy();
             const ctx = document.getElementById('salesChart').getContext('2d');
@@ -1295,7 +1309,7 @@ const deleteCategory = (category, rowElement) => {
                     datasets: [
                         {
                             label: `${selectedCategory} (${selectedYear})`,
-                            data: [...actualData, null, null, null],
+                            data: [...actualData, ...Array(forecastMonths).fill(null)],
                             borderColor: '#667eea',
                             backgroundColor: currentChartType === 'line' ? '#667eea33' : '#667eea',
                             fill: currentChartType === 'line',
@@ -1380,7 +1394,8 @@ const deleteCategory = (category, rowElement) => {
                                 color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)'
                             },
                             ticks: {
-                                color: isDark ? '#bdc3c7' : '#7f8c8d'
+                                color: isDark ? '#bdc3c7' : '#7f8c8d',
+                                maxTicksLimit: forecastMonths > 12 ? 20 : 15
                             }
                         },
                         y: {
@@ -1400,26 +1415,26 @@ const deleteCategory = (category, rowElement) => {
             });
             
             // Show forecast analysis
-            showForecastAnalysis(advancedForecast);
-            showNotification("🔮 Προηγμένη πρόβλεψη ολοκληρώθηκε!", "success");
+            showForecastAnalysis(advancedForecast, forecastMonths);
+            showNotification(`🔮 Πρόβλεψη ${forecastMonths} μηνών ολοκληρώθηκε!`, "success");
         };
 
         // Advanced forecasting algorithm
-        const calculateAdvancedForecast = (data) => {
+        const calculateAdvancedForecast = (data, forecastMonths = 3) => {
             // 1. Linear Trend Analysis
-            const trendForecast = calculateLinearTrend(data);
+            const trendForecast = calculateLinearTrend(data, forecastMonths);
             
             // 2. Seasonal Pattern Analysis
-            const seasonalForecast = calculateSeasonalPattern(data);
+            const seasonalForecast = calculateSeasonalPattern(data, forecastMonths);
             
             // 3. Moving Average with Exponential Smoothing
-            const smoothedForecast = calculateExponentialSmoothing(data);
+            const smoothedForecast = calculateExponentialSmoothing(data, forecastMonths);
             
             // 4. Combine methods with weights
             const optimizedForecast = combineForecasts(trendForecast, seasonalForecast, smoothedForecast);
             
-            // 5. Calculate confidence level
-            const confidence = calculateConfidence(data, optimizedForecast);
+            // 5. Calculate confidence level (decreases with longer forecasts)
+            const confidence = calculateConfidence(data, optimizedForecast, forecastMonths);
             
             return {
                 trend: trendForecast,
@@ -1430,7 +1445,7 @@ const deleteCategory = (category, rowElement) => {
             };
         };
 
-        const calculateLinearTrend = (data) => {
+        const calculateLinearTrend = (data, forecastMonths) => {
             const n = data.length;
             const x = Array.from({length: n}, (_, i) => i + 1);
             const y = data;
@@ -1444,37 +1459,32 @@ const deleteCategory = (category, rowElement) => {
             const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
             const intercept = (sumY - slope * sumX) / n;
             
-            // Forecast next 3 months
-            return [
-                Math.max(0, Math.round(slope * (n + 1) + intercept)),
-                Math.max(0, Math.round(slope * (n + 2) + intercept)),
-                Math.max(0, Math.round(slope * (n + 3) + intercept))
-            ];
+            // Forecast for the requested number of months
+            const forecast = [];
+            for (let i = 1; i <= forecastMonths; i++) {
+                forecast.push(Math.max(0, Math.round(slope * (n + i) + intercept)));
+            }
+            return forecast;
         };
 
-        const calculateSeasonalPattern = (data) => {
-            // Find seasonal patterns (quarterly patterns)
-            const quarters = [
-                [0, 1, 2], [3, 4, 5], [6, 7, 8], [9, 10, 11] // Q1, Q2, Q3, Q4
-            ];
-            
-            const quarterlyAvgs = quarters.map(quarter => {
-                const sum = quarter.reduce((total, monthIndex) => total + (data[monthIndex] || 0), 0);
-                return sum / quarter.length;
-            });
-            
-            // Next quarter is Q1, so use Q1 pattern with growth
+        const calculateSeasonalPattern = (data, forecastMonths) => {
+            const forecast = [];
             const avgGrowth = calculateAverageGrowth(data);
-            const basePattern = quarterlyAvgs[0]; // Q1 pattern
             
-            return [
-                Math.round(basePattern * (1 + avgGrowth)),
-                Math.round(basePattern * (1 + avgGrowth * 1.1)),
-                Math.round(basePattern * (1 + avgGrowth * 1.2))
-            ];
+            for (let i = 0; i < forecastMonths; i++) {
+                // Use seasonal pattern based on month of year
+                const futureMonthIndex = i % 12;
+                const seasonalMultiplier = 1 + Math.sin((futureMonthIndex * Math.PI) / 6) * 0.2; // Seasonal variation
+                const baseValue = data[futureMonthIndex] || (data.reduce((a, b) => a + b, 0) / data.length);
+                const growthFactor = 1 + (avgGrowth * (1 + i * 0.1));
+                
+                forecast.push(Math.round(baseValue * seasonalMultiplier * growthFactor));
+            }
+            
+            return forecast;
         };
 
-        const calculateExponentialSmoothing = (data) => {
+        const calculateExponentialSmoothing = (data, forecastMonths) => {
             const alpha = 0.3; // Smoothing factor
             let smoothed = data[0];
             
@@ -1483,12 +1493,14 @@ const deleteCategory = (category, rowElement) => {
             }
             
             const avgGrowth = calculateAverageGrowth(data);
+            const forecast = [];
             
-            return [
-                Math.round(smoothed * (1 + avgGrowth)),
-                Math.round(smoothed * (1 + avgGrowth * 1.1)),
-                Math.round(smoothed * (1 + avgGrowth * 1.2))
-            ];
+            for (let i = 1; i <= forecastMonths; i++) {
+                const growthFactor = 1 + (avgGrowth * i * 0.1);
+                forecast.push(Math.round(smoothed * growthFactor));
+            }
+            
+            return forecast;
         };
 
         const calculateAverageGrowth = (data) => {
@@ -1504,8 +1516,9 @@ const deleteCategory = (category, rowElement) => {
         const combineForecasts = (trend, seasonal, smoothed) => {
             // Weighted combination: 40% trend, 30% seasonal, 30% smoothed
             const weights = [0.4, 0.3, 0.3];
+            const forecastLength = trend.length;
             
-            return [0, 1, 2].map(i => 
+            return Array.from({length: forecastLength}, (_, i) => 
                 Math.round(
                     trend[i] * weights[0] + 
                     seasonal[i] * weights[1] + 
@@ -1514,21 +1527,29 @@ const deleteCategory = (category, rowElement) => {
             );
         };
 
-        const calculateConfidence = (historicalData, forecast) => {
+        const calculateConfidence = (historicalData, forecast, forecastMonths) => {
             // Calculate prediction accuracy based on historical variance
             const mean = historicalData.reduce((a, b) => a + b, 0) / historicalData.length;
             const variance = historicalData.reduce((sum, val) => sum + Math.pow(val - mean, 2), 0) / historicalData.length;
             const stdDev = Math.sqrt(variance);
             
-            // Lower variance = higher confidence
-            const confidenceScore = Math.max(60, Math.min(95, 90 - (stdDev / mean) * 100));
-            return Math.round(confidenceScore);
+            // Lower variance = higher confidence, longer forecast = lower confidence
+            const baseConfidence = Math.max(60, Math.min(95, 90 - (stdDev / mean) * 100));
+            const timeDecay = Math.max(0.3, 1 - (forecastMonths - 3) * 0.05); // Confidence decreases with time
+            
+            return Math.round(baseConfidence * timeDecay);
         };
 
-        const showForecastAnalysis = (forecast) => {
+        const showForecastAnalysis = (forecast, forecastMonths) => {
             // Update stats with forecast insights
             const forecastTotal = forecast.optimized.reduce((a, b) => a + b, 0);
-            const avgForecast = Math.round(forecastTotal / 3);
+            const avgForecast = Math.round(forecastTotal / forecastMonths);
+            
+            // Determine period description
+            const periodDesc = forecastMonths <= 3 ? `Q1 ${selectedYear + 1}` : 
+                              forecastMonths <= 6 ? `H1 ${selectedYear + 1}` :
+                              forecastMonths <= 12 ? `${selectedYear + 1}` :
+                              `${selectedYear + 1}-${selectedYear + 2}`;
             
             // Temporary update of stats to show forecast
             const tempStats = document.createElement('div');
@@ -1548,15 +1569,18 @@ const deleteCategory = (category, rowElement) => {
                     max-width: 90vw;
                     text-align: center;
                 ">
-                    <h3 style="margin-bottom: 15px; color: #667eea;">🔮 Ανάλυση Πρόβλεψης</h3>
+                    <h3 style="margin-bottom: 15px; color: #667eea;">🔮 Ανάλυση Πρόβλεψης ${forecastMonths} Μηνών</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
-                        <div><strong>Πρόβλεψη Q1:</strong> ${forecast.optimized.reduce((a, b) => a + b, 0).toLocaleString()}</div>
-                        <div><strong>Μέσος Όρος:</strong> ${avgForecast.toLocaleString()}</div>
+                        <div><strong>Περίοδος:</strong> ${periodDesc}</div>
+                        <div><strong>Συνολική Πρόβλεψη:</strong> ${forecastTotal.toLocaleString()}</div>
+                        <div><strong>Μέσος Όρος/Μήνα:</strong> ${avgForecast.toLocaleString()}</div>
                         <div><strong>Εμπιστοσύνη:</strong> ${forecast.confidence}%</div>
-                        <div><strong>Τάση:</strong> ${forecast.optimized[2] > forecast.optimized[0] ? '📈 Ανοδική' : '📉 Καθοδική'}</div>
+                        <div><strong>Τάση:</strong> ${forecast.optimized[forecast.optimized.length-1] > forecast.optimized[0] ? '📈 Ανοδική' : '📉 Καθοδική'}</div>
+                        <div><strong>Μέγιστη Τιμή:</strong> ${Math.max(...forecast.optimized).toLocaleString()}</div>
                     </div>
                     <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 15px;">
-                        Η πρόβλεψη συνδυάζει ανάλυση τάσης, εποχικά μοτίβα και εκθετική εξομάλυνση
+                        Η πρόβλεψη συνδυάζει ανάλυση τάσης, εποχικά μοτίβα και εκθετική εξομάλυνση<br>
+                        <em>Σημείωση: Μεγαλύτερες περίοδοι έχουν μικρότερη ακρίβεια</em>
                     </div>
                     <button onclick="this.parentElement.parentElement.remove()" style="
                         background: linear-gradient(45deg, #667eea, #764ba2);
@@ -1571,12 +1595,13 @@ const deleteCategory = (category, rowElement) => {
             
             document.body.appendChild(tempStats);
             
-            // Auto-close after 8 seconds
+            // Auto-close after longer time for longer forecasts
+            const closeTime = Math.min(15000, 8000 + forecastMonths * 100);
             setTimeout(() => {
                 if (tempStats.parentElement) {
                     tempStats.remove();
                 }
-            }, 8000);
+            }, closeTime);
         };
 
         const downloadChart = () => {
