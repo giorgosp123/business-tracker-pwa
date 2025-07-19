@@ -224,32 +224,67 @@
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
         }
 
         body.dark-mode .table-container {
             background: rgba(52, 73, 94, 0.8);
         }
 
-        /* Responsive table */
+        /* Mobile-optimized table scroll */
         .table-wrapper {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+            position: relative;
+            max-height: 60vh;
+            overflow-y: auto;
         }
 
+        /* Scroll indicators for mobile */
+        .table-wrapper::before {
+            content: "← Σύρετε για περισσότερα";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(103, 126, 234, 0.8);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 500;
+            z-index: 5;
+            pointer-events: none;
+            opacity: 0.8;
+            animation: fadeInOut 3s ease-in-out infinite;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 0.3; }
+        }
+
+        body.dark-mode .table-wrapper::before {
+            background: rgba(79, 172, 254, 0.8);
+        }
+
+        /* Enhanced table styling for mobile */
         table {
             width: 100%;
-            min-width: 600px; /* Minimum width to prevent cramping */
+            min-width: 800px; /* Increased for better readability */
             border-collapse: collapse;
+            font-size: 13px;
         }
 
         th, td {
-            padding: 8px 6px;
+            padding: 12px 8px;
             text-align: center;
             border: 1px solid rgba(255,255,255,0.2);
-            font-size: 12px;
             white-space: nowrap;
+            position: relative;
         }
 
+        /* Sticky header that works on mobile */
         th {
             background: linear-gradient(45deg, #667eea, #764ba2);
             color: white;
@@ -257,20 +292,123 @@
             position: sticky;
             top: 0;
             z-index: 10;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         body.dark-mode th {
             background: linear-gradient(45deg, #4facfe, #00f2fe);
         }
 
-        td.editable:hover, td.category-name:hover {
-            background-color: rgba(103, 126, 234, 0.1);
+        /* Enhanced mobile touch targets */
+        td.editable, td.category-name {
             cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 80px;
+            touch-action: manipulation;
         }
 
-        body.dark-mode td.editable:hover, body.dark-mode td.category-name:hover {
-            background-color: rgba(79, 172, 254, 0.1);
+        td.editable:hover, td.category-name:hover,
+        td.editable:active, td.category-name:active {
+            background-color: rgba(103, 126, 234, 0.15);
+            transform: scale(1.02);
+            box-shadow: 0 2px 8px rgba(103, 126, 234, 0.2);
         }
+
+        body.dark-mode td.editable:hover, 
+        body.dark-mode td.category-name:hover,
+        body.dark-mode td.editable:active, 
+        body.dark-mode td.category-name:active {
+            background-color: rgba(79, 172, 254, 0.15);
+            box-shadow: 0 2px 8px rgba(79, 172, 254, 0.2);
+        }
+
+        /* Mobile-friendly edit indicators */
+        td.editable::after {
+            content: "✏️";
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        td.editable:hover::after,
+        td.editable:active::after {
+            opacity: 0.6;
+        }
+
+        td.category-name::after {
+            content: "📝";
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            font-size: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        td.category-name:hover::after,
+        td.category-name:active::after {
+            opacity: 0.6;
+        }
+
+        /* Better total column styling */
+        td:nth-last-child(2) {
+            background: rgba(103, 126, 234, 0.05);
+            font-weight: 600;
+            border-left: 2px solid rgba(103, 126, 234, 0.3);
+        }
+
+        body.dark-mode td:nth-last-child(2) {
+            background: rgba(79, 172, 254, 0.05);
+            border-left: 2px solid rgba(79, 172, 254, 0.3);
+        }
+
+        /* Enhanced delete button for mobile */
+        .delete-btn {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+            border: none;
+            color: white;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 36px;
+            min-width: 36px;
+            touch-action: manipulation;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover,
+        .delete-btn:active {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+        }
+
+        .delete-btn:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
+        }
+
+        /* Mobile table help text */
+        .table-help {
+            padding: 10px 15px;
+            background: rgba(103, 126, 234, 0.1);
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 11px;
+            color: #7f8c8d;
+            text-align: center;
+            font-style: italic;
+        }
+
+        body.dark-mode .table-help {
+            background: rgba(79, 172, 254, 0.1);
+            color: #bdc3c7;
+        }
+
+        /* Enhanced delete button for mobile */
 
 
       
@@ -279,15 +417,25 @@
     border: none;
     color: white;
     border-radius: 8px;
-    padding: 6px 12px;
+    padding: 8px 12px;
     font-size: 12px;
     font-weight: 600;
     cursor: pointer;
-    min-height: 32px;
+    min-height: 36px;
+    min-width: 36px;
+    touch-action: manipulation;
+    transition: all 0.2s ease;
 }
+
+.delete-btn:hover,
+.delete-btn:active {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
 .delete-btn:focus {
     outline: none;
-    box-shadow: none;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.2);
 }
 
         /* Chart container - mobile optimized */
@@ -714,8 +862,18 @@
             }
 
             th, td {
-                padding: 12px;
+                padding: 14px 10px;
                 font-size: 14px;
+            }
+            
+            /* Desktop table improvements */
+            .table-wrapper::before {
+                display: none;
+            }
+            
+            .table-help {
+                font-size: 12px;
+                padding: 12px 20px;
             }
         }
 
@@ -1054,6 +1212,10 @@ const deleteCategory = (category, rowElement) => {
                 html += `<td><button class="delete-btn" onclick="deleteCategory('${cat}', this.closest('tr'))">🗑️</button></td></tr>`;
             });
             html += `</table>`;
+            
+            // Add mobile help text
+            html += `<div class="table-help">💡 Πατήστε στα κελιά για επεξεργασία • Σύρετε οριζόντια για περισσότερες στήλες</div>`;
+            
             container.innerHTML = html;
 
             // Add event listeners for editing
@@ -1062,13 +1224,48 @@ const deleteCategory = (category, rowElement) => {
                     const [category, month] = getCellContext(cell);
                     editCell(cell, category, month);
                 });
+                
+                // Add touch feedback
+                cell.addEventListener('touchstart', () => {
+                    cell.style.transform = 'scale(0.98)';
+                });
+                
+                cell.addEventListener('touchend', () => {
+                    setTimeout(() => {
+                        cell.style.transform = 'scale(1)';
+                    }, 150);
+                });
             });
 
             document.querySelectorAll('.category-name').forEach(cell => {
                 cell.addEventListener('click', () => {
                     editCategoryName(cell);
                 });
+                
+                // Add touch feedback
+                cell.addEventListener('touchstart', () => {
+                    cell.style.transform = 'scale(0.98)';
+                });
+                
+                cell.addEventListener('touchend', () => {
+                    setTimeout(() => {
+                        cell.style.transform = 'scale(1)';
+                    }, 150);
+                });
             });
+            
+            // Add scroll hint animation on mobile
+            if (window.innerWidth < 768) {
+                const tableWrapper = document.querySelector('.table-wrapper');
+                setTimeout(() => {
+                    if (tableWrapper.scrollWidth > tableWrapper.clientWidth) {
+                        tableWrapper.scrollTo({ left: 50, behavior: 'smooth' });
+                        setTimeout(() => {
+                            tableWrapper.scrollTo({ left: 0, behavior: 'smooth' });
+                        }, 1000);
+                    }
+                }, 500);
+            }
         };
 
         const getCellContext = (cell) => {
@@ -1081,21 +1278,38 @@ const deleteCategory = (category, rowElement) => {
         const editCell = (cell, category, month) => {
             if (cell.querySelector('input')) return;
             
+            // Add visual feedback for mobile
+            cell.style.background = 'rgba(103, 126, 234, 0.2)';
+            cell.style.transform = 'scale(1.05)';
+            
             const currentValue = salesData[selectedYear][category].sales[month] || 0;
             const input = document.createElement('input');
             input.type = 'number';
             input.value = currentValue;
             input.style.width = '100%';
-            input.style.border = 'none';
-            input.style.background = 'transparent';
-            input.style.color = 'inherit';
+            input.style.border = '2px solid #667eea';
+            input.style.background = 'white';
+            input.style.color = '#2c3e50';
             input.style.textAlign = 'center';
-            input.style.fontSize = '12px';
+            input.style.fontSize = '14px';
+            input.style.padding = '8px 4px';
+            input.style.borderRadius = '6px';
+            input.style.fontWeight = '600';
+            
+            // Mobile-specific input attributes
+            input.setAttribute('inputmode', 'numeric');
+            input.setAttribute('pattern', '[0-9]*');
             
             input.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     saveCellValue(cell, input, category, month);
+                }
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cell.textContent = (currentValue || 0).toLocaleString();
+                    cell.style.background = '';
+                    cell.style.transform = '';
                 }
             });
             
@@ -1107,6 +1321,13 @@ const deleteCategory = (category, rowElement) => {
             cell.appendChild(input);
             input.focus();
             input.select();
+            
+            // Add mobile keyboard optimization
+            if (/Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                setTimeout(() => {
+                    input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
         };
 
         const saveCellValue = (cell, input, category, month) => {
@@ -1118,6 +1339,16 @@ const deleteCategory = (category, rowElement) => {
             saveToLocalStorage();
             
             cell.textContent = (isNaN(newValue) ? 0 : newValue).toLocaleString();
+            
+            // Reset visual feedback
+            cell.style.background = '';
+            cell.style.transform = '';
+            
+            // Add success animation
+            cell.style.background = 'rgba(46, 204, 113, 0.3)';
+            setTimeout(() => {
+                cell.style.background = '';
+            }, 800);
 
             // Update total
             const row = cell.parentElement;
@@ -1128,6 +1359,9 @@ const deleteCategory = (category, rowElement) => {
             });
             row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
             updateChart();
+            
+            // Mobile success feedback
+            showNotification("✅ Τιμή ενημερώθηκε!", "success", 1500);
         };
 
         const editCategoryName = (cell) => {
