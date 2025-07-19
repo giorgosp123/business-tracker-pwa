@@ -688,6 +688,7 @@
             margin-top: 20px;
         }
 
+        /* Tooltips for stat cards */
         .stat-card {
             background: linear-gradient(135deg, rgba(103, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
             border-radius: 12px;
@@ -696,10 +697,97 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255,255,255,0.2);
             transition: transform 0.3s ease;
+            position: relative;
+            cursor: help;
         }
 
         .stat-card:hover {
             transform: translateY(-3px);
+        }
+
+        .stat-card::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.4;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            max-width: 250px;
+            white-space: normal;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-card::after {
+            content: '';
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: rgba(0, 0, 0, 0.9);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1001;
+            margin-bottom: -6px;
+        }
+
+        .stat-card:hover::before,
+        .stat-card:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-8px);
+        }
+
+        body.dark-mode .stat-card::before {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .stat-card::after {
+            border-top-color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Mobile tooltip adjustments */
+        @media (max-width: 768px) {
+            .stat-card::before {
+                position: fixed;
+                bottom: 80px;
+                left: 20px;
+                right: 20px;
+                transform: none;
+                max-width: none;
+                text-align: center;
+                border-radius: 12px;
+                font-size: 13px;
+                padding: 15px 20px;
+            }
+
+            .stat-card::after {
+                display: none;
+            }
+
+            .stat-card:hover::before {
+                transform: none;
+            }
+        }
+
+        /* Theme transition effects */
+        * {
+            transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease !important;
         }
 
         body.dark-mode .stat-card {
@@ -844,16 +932,65 @@
             border-bottom: 1px solid rgba(79, 172, 254, 0.2);
         }
 
+        /* Tooltips for metric rows in analytics */
         .metric-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 5px 0;
             border-bottom: 1px solid rgba(255,255,255,0.1);
+            position: relative;
+            cursor: help;
         }
 
         .metric-row:last-child {
             border-bottom: none;
+        }
+
+        .metric-row::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            line-height: 1.3;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            text-align: left;
+            white-space: normal;
+            margin-bottom: 5px;
+        }
+
+        .metric-row:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        body.dark-mode .metric-row::before {
+            background: rgba(255, 255, 255, 0.95);
+            color: #2c3e50;
+        }
+
+        /* Mobile metric tooltips */
+        @media (max-width: 768px) {
+            .metric-row::before {
+                position: fixed;
+                bottom: 60px;
+                left: 20px;
+                right: 20px;
+                text-align: center;
+                border-radius: 8px;
+                font-size: 12px;
+                padding: 12px 16px;
+            }
         }
 
         .metric-label {
@@ -1695,35 +1832,35 @@
             </div>
             
             <div class="chart-stats" id="chartStats">
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="💰 Άθροισμα όλων των πωλήσεων για την επιλεγμένη περίοδο. Δείχνει τη συνολική απόδοση της επιχείρησης.">
                     <div class="stat-value" id="totalSales">0</div>
                     <div class="stat-label">Συνολικές Πωλήσεις</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="📊 Μέσος όρος πωλήσεων ανά μήνα. Βοηθά στον υπολογισμό της μηνιαίας απόδοσης και στη σύγκριση με στόχους.">
                     <div class="stat-value" id="avgSales">0</div>
                     <div class="stat-label">Μέσος Όρος</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="🏆 Ο μήνας με τις υψηλότερες πωλήσεις. Χρήσιμο για τον εντοπισμό εποχικών τάσεων και peak περιόδων.">
                     <div class="stat-value" id="bestMonth">-</div>
                     <div class="stat-label">Καλύτερος Μήνας</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="📈 Ποσοστιαία αλλαγή πωλήσεων σε σχέση με την προηγούμενη περίοδο. Θετικό = ανάπτυξη, Αρνητικό = μείωση.">
                     <div class="stat-value" id="growthRate">0%</div>
                     <div class="stat-label">Ρυθμός Ανάπτυξης</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="💹 Βαθμολογία που δείχνει πόσο αποδοτική είναι η επιχείρηση. Υπολογίζεται από την ανάπτυξη και τη σταθερότητα.">
                     <div class="stat-value" id="roiScore">0%</div>
                     <div class="stat-label">📈 Βαθμός Απόδοσης</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="🌊 Μετρά πόσο επηρεάζονται οι πωλήσεις από εποχικές αλλαγές. Υψηλή τιμή = μεγάλη εποχική διακύμανση.">
                     <div class="stat-value" id="seasonalityIndex">0.0</div>
                     <div class="stat-label">🌊 Εποχικότητα</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="📊 Δείχνει πόσο ισχυρή είναι η τάση ανάπτυξης ή μείωσης. Υψηλή = σταθερή τάση, Χαμηλή = ασταθής απόδοση.">
                     <div class="stat-value" id="trendStrength">-</div>
                     <div class="stat-label">📊 Ισχύς Τάσης</div>
                 </div>
-                <div class="stat-card">
+                <div class="stat-card" data-tooltip="⚡ Μετρά πόσο ασταθείς είναι οι πωλήσεις. Υψηλή αστάθεια = απρόβλεπτες αλλαγές, Χαμηλή = σταθερές πωλήσεις.">
                     <div class="stat-value" id="volatilityIndex">0%</div>
                     <div class="stat-label">⚡ Αστάθεια</div>
                 </div>
@@ -1814,19 +1951,19 @@
                     <div class="analytics-grid">
                         <div class="analytics-card">
                             <div class="analytics-title">📊 Μετρικές Απόδοσης</div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="📈 Ποσοστιαία αλλαγή πωλήσεων σε σχέση με το προηγούμενο τρίμηνο. Δείχνει βραχυπρόθεσμη τάση.">
                                 <span class="metric-label">Τριμηνιαία Ανάπτυξη:</span>
                                 <span class="metric-value" id="qoqGrowth">0%</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="📅 Ποσοστιαία αλλαγή πωλήσεων σε σχέση με την ίδια περίοδο του προηγούμενου έτους. Δείχνει μακροπρόθεσμη τάση.">
                                 <span class="metric-label">Ετήσια Ανάπτυξη:</span>
                                 <span class="metric-value" id="yoyGrowth">0%</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="🏆 Η καλύτερη μηνιαία απόδοση που έχει καταγραφεί. Χρήσιμο για τον καθορισμό ρεαλιστικών στόχων.">
                                 <span class="metric-label">Μέγιστη Απόδοση:</span>
                                 <span class="metric-value" id="peakPerformance">-</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="🎯 Πόσο σταθερές είναι οι πωλήσεις μας. Υψηλός βαθμός = προβλέψιμη απόδοση, Χαμηλός = ασταθής.">
                                 <span class="metric-label">Βαθμός Συνέπειας:</span>
                                 <span class="metric-value" id="consistencyScore">0%</span>
                             </div>
@@ -1834,19 +1971,19 @@
                         
                         <div class="analytics-card">
                             <div class="analytics-title">🎯 Ανάλυση Αγοράς</div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="🚀 Η γενική κατεύθυνση της αγοράς. Θετική = ανοδική τάση, Αρνητική = καθοδική τάση, Ουδέτερη = σταθερή.">
                                 <span class="metric-label">Δυναμική Αγοράς:</span>
                                 <span class="metric-value" id="marketMomentum">Ουδέτερη</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="📊 Η γενική κατεύθυνση των πωλήσεων. Ανοδική = αύξηση, Καθοδική = μείωση, Σταθερή = χωρίς αλλαγή.">
                                 <span class="metric-label">Κατεύθυνση Τάσης:</span>
                                 <span class="metric-value" id="trendDirection">Σταθερή</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="⚠️ Αξιολόγηση κινδύνου βάσει αστάθειας πωλήσεων. Υψηλό = μεγάλος κίνδυνος, Χαμηλό = ασφαλής.">
                                 <span class="metric-label">Επίπεδο Κινδύνου:</span>
                                 <span class="metric-value" id="riskLevel">Μέτριο</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="💪 Πόσο γρήγορα ανακάμπτει η επιχείρηση από δύσκολες περιόδους. Υψηλός = γρήγορη ανάκαμψη.">
                                 <span class="metric-label">Ρυθμός Ανάκαμψης:</span>
                                 <span class="metric-value" id="recoveryRate">0%</span>
                             </div>
@@ -1854,19 +1991,19 @@
                         
                         <div class="analytics-card">
                             <div class="analytics-title">🔮 Προβλεπτικές Εκτιμήσεις</div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="🎯 Πόσο ακριβείς είναι οι προβλέψεις του AI μοντέλου μας. Υψηλή ακρίβεια = αξιόπιστες προβλέψεις.">
                                 <span class="metric-label">Ακρίβεια Πρόβλεψης:</span>
                                 <span class="metric-value" id="forecastAccuracy">85%</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="📅 Πώς αναμένουμε να πάει η επιχείρηση τους επόμενους 3 μήνες. Βασίζεται στα τρέχοντα δεδομένα.">
                                 <span class="metric-label">Προοπτικές Τριμήνου:</span>
                                 <span class="metric-value" id="nextQuarterOutlook">Θετικές</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="🌦️ Πόσο επηρεάζουν οι εποχές τις πωλήσεις. Υψηλή = μεγάλη διακύμανση ανά εποχή.">
                                 <span class="metric-label">Επίδραση Εποχικότητας:</span>
                                 <span class="metric-value" id="seasonalityImpact">Μέτρια</span>
                             </div>
-                            <div class="metric-row">
+                            <div class="metric-row" data-tooltip="🤖 Πόσο σίγουρο είναι το AI για τις προβλέψεις του. Υψηλή εμπιστοσύνη = αξιόπιστα αποτελέσματα.">
                                 <span class="metric-label">Εμπιστοσύνη Μοντέλου:</span>
                                 <span class="metric-value" id="modelConfidence">Υψηλή</span>
                             </div>
