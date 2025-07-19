@@ -368,6 +368,14 @@
             background: linear-gradient(135deg, #607D8B 0%, #78909C 100%);
         }
 
+        #languageBtn {
+            background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+        }
+
+        #languageBtn:hover {
+            background: linear-gradient(135deg, #2196F3 0%, #64B5F6 100%);
+        }
+
         #logoutBtn {
             background: linear-gradient(135deg, #D32F2F 0%, #F44336 100%);
         }
@@ -1611,7 +1619,7 @@
             }
             
             /* Ensure all header buttons are uniform */
-            #darkModeBtn, #logoutBtn {
+            #darkModeBtn, #logoutBtn, #languageBtn {
                 padding: 10px 12px !important;
                 font-size: 12px !important;
                 min-height: 40px !important;
@@ -3494,6 +3502,10 @@
                             <span class="dropdown-icon">🎨</span>
                             <span>Αλλαγή Θέματος</span>
                         </div>
+                        <div class="dropdown-item" onclick="document.getElementById('languageBtn').click()">
+                            <span class="dropdown-icon">🌐</span>
+                            <span>Αλλαγή Γλώσσας</span>
+                        </div>
                         <div class="dropdown-item" onclick="toggleCalculator()">
                             <span class="dropdown-icon">🔢</span>
                             <span>Αριθμομηχανή</span>
@@ -3508,6 +3520,7 @@
                 <button id="exportPdfBtn" style="display: none;">📥 PDF</button>
                 <button id="goalsBtn" style="display: none;">🎯 Στόχοι</button>
                 <button id="themeBtn" style="display: none;">🎨 Θέματα</button>
+                <button id="languageBtn" style="display: none;">🌐 Γλώσσα</button>
                 <button id="calculatorBtn" style="display: none;">🔢 Αριθμομηχανή</button>
                 <button id="shortcutsBtn" style="display: none;">⌨️ Συντομεύσεις</button>
                 <button id="darkModeBtn">🌙/☀️</button>
@@ -3532,7 +3545,7 @@
 
         <div class="chart-container">
             <div class="chart-header">
-                <div class="chart-title">📊 Αναλυτικά Στοιχεία Πωλήσεων</div>
+                <div class="chart-title" id="chartTitle">📊 Αναλυτικά Στοιχεία Πωλήσεων</div>
                 <div class="chart-controls">
                     <div class="chart-select-row">
                         <div class="chart-select-container">
@@ -3562,9 +3575,9 @@
                         <button id="downloadChartBtn">📥 Γράφημα</button>
                     </div>
                     <div class="chart-type-buttons">
-                        <button class="chart-type-btn active" data-type="line">Γραμμή</button>
-                        <button class="chart-type-btn" data-type="bar">Στήλες</button>
-                        <button class="chart-type-btn" data-type="doughnut">Κύκλος</button>
+                        <button class="chart-type-btn active" data-type="line" id="lineChartBtn">Γραμμή</button>
+                        <button class="chart-type-btn" data-type="bar" id="barChartBtn">Στήλες</button>
+                        <button class="chart-type-btn" data-type="doughnut" id="doughnutChartBtn">Κύκλος</button>
                     </div>
                 </div>
             </div>
@@ -3577,35 +3590,35 @@
             <div class="chart-stats" id="chartStats">
                 <div class="stat-card" data-tooltip="💰 Άθροισμα όλων των πωλήσεων για την επιλεγμένη περίοδο. Δείχνει τη συνολική απόδοση της επιχείρησης.">
                     <div class="stat-value" id="totalSales">0</div>
-                    <div class="stat-label">Συνολικές Πωλήσεις</div>
+                    <div class="stat-label" id="totalSalesLabel">Συνολικές Πωλήσεις</div>
                 </div>
                 <div class="stat-card" data-tooltip="📊 Μέσος όρος πωλήσεων ανά μήνα. Βοηθά στον υπολογισμό της μηνιαίας απόδοσης και στη σύγκριση με στόχους.">
                     <div class="stat-value" id="avgSales">0</div>
-                    <div class="stat-label">Μέσος Όρος</div>
+                    <div class="stat-label" id="avgSalesLabel">Μέσος Όρος</div>
                 </div>
                 <div class="stat-card" data-tooltip="🏆 Ο μήνας με τις υψηλότερες πωλήσεις. Χρήσιμο για τον εντοπισμό εποχικών τάσεων και peak περιόδων.">
                     <div class="stat-value" id="bestMonth">-</div>
-                    <div class="stat-label">Καλύτερος Μήνας</div>
+                    <div class="stat-label" id="bestMonthLabel">Καλύτερος Μήνας</div>
                 </div>
                 <div class="stat-card" data-tooltip="📈 Ποσοστιαία αλλαγή πωλήσεων σε σχέση με την προηγούμενη περίοδο. Θετικό = ανάπτυξη, Αρνητικό = μείωση.">
                     <div class="stat-value" id="growthRate">0%</div>
-                    <div class="stat-label">Ρυθμός Ανάπτυξης</div>
+                    <div class="stat-label" id="growthRateLabel">Ρυθμός Ανάπτυξης</div>
                 </div>
                 <div class="stat-card" data-tooltip="💹 Βαθμολογία που δείχνει πόσο αποδοτική είναι η επιχείρηση. Υπολογίζεται από την ανάπτυξη και τη σταθερότητα.">
                     <div class="stat-value" id="roiScore">0%</div>
-                    <div class="stat-label">📈 Βαθμός Απόδοσης</div>
+                    <div class="stat-label" id="performanceLabel">📈 Βαθμός Απόδοσης</div>
                 </div>
                 <div class="stat-card" data-tooltip="🌊 Μετρά πόσο επηρεάζονται οι πωλήσεις από εποχικές αλλαγές. Υψηλή τιμή = μεγάλη εποχική διακύμανση.">
                     <div class="stat-value" id="seasonalityIndex">0.0</div>
-                    <div class="stat-label">🌊 Εποχικότητα</div>
+                    <div class="stat-label" id="seasonalityLabel">🌊 Εποχικότητα</div>
                 </div>
                 <div class="stat-card" data-tooltip="📊 Δείχνει πόσο ισχυρή είναι η τάση ανάπτυξης ή μείωσης. Υψηλή = σταθερή τάση, Χαμηλή = ασταθής απόδοση.">
                     <div class="stat-value" id="trendStrength">-</div>
-                    <div class="stat-label">📊 Ισχύς Τάσης</div>
+                    <div class="stat-label" id="trendStrengthLabel">📊 Ισχύς Τάσης</div>
                 </div>
                 <div class="stat-card" data-tooltip="⚡ Μετρά πόσο ασταθείς είναι οι πωλήσεις. Υψηλή αστάθεια = απρόβλεπτες αλλαγές, Χαμηλή = σταθερές πωλήσεις.">
                     <div class="stat-value" id="volatilityIndex">0%</div>
-                    <div class="stat-label">⚡ Αστάθεια</div>
+                    <div class="stat-label" id="volatilityLabel">⚡ Αστάθεια</div>
                 </div>
             </div>
             
@@ -3954,7 +3967,218 @@
         let selectedYear = new Date().getFullYear();
         let chart;
         let currentChartType = 'line';
-        const months = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
+        let currentLanguage = localStorage.getItem('language') || 'el'; // Default to Greek
+        
+        // Language translations
+        const translations = {
+            el: {
+                // UI Elements
+                welcome: 'Καλώς ήρθες',
+                user: 'Χρήστης',
+                actions: 'Ενέργειες',
+                exportExcel: 'Εξαγωγή Excel',
+                exportPdf: 'Εξαγωγή PDF',
+                goalsTargets: 'Στόχοι & Targets',
+                changeTheme: 'Αλλαγή Θέματος',
+                changeLanguage: 'Αλλαγή Γλώσσας',
+                calculator: 'Αριθμομηχανή',
+                shortcuts: 'Πλήκτρα Συντόμευσης',
+                logout: 'Έξοδος',
+                statisticsCenter: 'Κέντρο Στατιστικών',
+                categoryName: 'Όνομα Κατηγορίας',
+                add: 'Προσθήκη',
+                
+                // Months
+                months: ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"],
+                
+                // Table headers
+                category: 'Κατηγορία',
+                total: 'Σύνολο',
+                actions_table: 'Ενέργειες',
+                
+                // Messages
+                categoryExists: 'Η κατηγορία υπάρχει ήδη!',
+                categoryAdded: 'Η κατηγορία προστέθηκε επιτυχώς!',
+                categoryDeleted: 'Η κατηγορία διαγράφηκε!',
+                dataExported: 'Τα δεδομένα εξήχθησαν επιτυχώς!',
+                
+                // Chart
+                salesChart: 'Γραφικό Πωλήσεων',
+                selectCategory: 'Επιλέξτε κατηγορία',
+                allCategories: 'Όλες οι Κατηγορίες',
+                chartLine: 'Γραμμικό',
+                chartBar: 'Ραβδογράφημα',
+                chartDoughnut: 'Κυκλικό',
+                comparison: 'Σύγκριση',
+                forecast: 'AI Πρόβλεψη',
+                downloadChart: 'Γράφημα',
+                
+                // Notifications
+                selectCategoryComparison: 'Παρακαλώ επιλέξτε κατηγορία για σύγκριση.',
+                comparisonCompleted: 'Σύγκριση ολοκληρώθηκε!',
+                
+                // Forecast popup
+                forecastAnalysis: 'Ανάλυση Πρόβλεψης',
+                months_period: 'Μηνών',
+                period: 'Περίοδος',
+                totalForecast: 'Συνολική Πρόβλεψη',
+                avgPerMonth: 'Μέσος Όρος/Μήνα',
+                confidence: 'Εμπιστοσύνη',
+                trend: 'Τάση',
+                trendUp: 'Ανοδική',
+                trendDown: 'Καθοδική',
+                maxValue: 'Μέγιστη Τιμή',
+                forecastNote: 'Η πρόβλεψη συνδυάζει ανάλυση τάσης, εποχικά μοτίβα και εκθετική εξομάλυνση',
+                forecastDisclaimer: 'Σημείωση: Μεγαλύτερες περίοδοι έχουν μικρότερη ακρίβεια',
+                close: 'Κλείσιμο',
+                
+                // Tooltips
+                totalSalesTooltip: 'Άθροισμα όλων των πωλήσεων για την επιλεγμένη περίοδο. Δείχνει τη συνολική απόδοση της επιχείρησης.',
+                avgSalesTooltip: 'Μέσος όρος πωλήσεων ανά μήνα. Βοηθά στον υπολογισμό της μηνιαίας απόδοσης και στη σύγκριση με στόχους.',
+                bestMonthTooltip: 'Ο μήνας με τις υψηλότερες πωλήσεις. Χρήσιμο για τον εντοπισμό εποχικών τάσεων και peak περιόδων.',
+                growthTooltip: 'Ποσοστιαία αλλαγή πωλήσεων σε σχέση με την προηγούμενη περίοδο. Θετικό = ανάπτυξη, Αρνητικό = μείωση.',
+                performanceTooltip: 'Βαθμολογία που δείχνει πόσο αποδοτική είναι η επιχείρηση. Υπολογίζεται από την ανάπτυξη και τη σταθερότητα.',
+                seasonalityTooltip: 'Μετρά πόσο επηρεάζονται οι πωλήσεις από εποχικές αλλαγές. Υψηλή τιμή = μεγάλη εποχική διακύμανση.',
+                trendStrengthTooltip: 'Δείχνει πόσο ισχυρή είναι η τάση ανάπτυξης ή μείωσης. Υψηλή = σταθερή τάση, Χαμηλή = ασταθής απόδοση.',
+                volatilityTooltip: 'Μετρά πόσο ασταθείς είναι οι πωλήσεις. Υψηλή αστάθεια = απρόβλεπτες αλλαγές, Χαμηλή = σταθερές πωλήσεις.',
+                
+                // Forecast periods
+                forecastShortTerm: 'Βραχυπρόθεσμη (3 μήνες) - Υψηλή ακρίβεια',
+                forecastMediumTerm: 'Μεσοπρόθεσμη (6 μήνες) - Καλή ακρίβεια',
+                forecastLongTerm: 'Ετήσια πρόβλεψη (12 μήνες) - Μέτρια ακρίβεια',
+                forecastExtended: 'Μακροπρόθεσμη (2 χρόνια) - Εκτιμητική',
+                forecastPeriodLabel: 'Περίοδος Πρόβλεψης:',
+                forecastTooltip: 'Επιλέξτε πόσους μήνες στο μέλλον θέλετε να προβλέψετε τις πωλήσεις',
+                forecastAccuracyNote: 'Μικρότερες περίοδοι = μεγαλύτερη ακρίβεια πρόβλεψης',
+                categorySelectionLabel: 'Επιλογή Κατηγορίας:',
+                
+                // Forecast chart labels
+                trendForecastLabel: 'Πρόβλεψη Τάσης',
+                seasonalForecastLabel: 'Πρόβλεψη Εποχικότητας',
+                optimizedForecastLabel: 'Βέλτιστη Πρόβλεψη',
+                
+                // Stat card labels
+                totalSalesLabel: 'Συνολικές Πωλήσεις',
+                avgSalesLabel: 'Μέσος Όρος',
+                bestMonthLabel: 'Καλύτερος Μήνας',
+                growthRateLabel: 'Ρυθμός Ανάπτυξης',
+                performanceLabel: 'Βαθμός Απόδοσης',
+                seasonalityLabel: 'Εποχικότητα',
+                trendStrengthLabel: 'Ισχύς Τάσης',
+                volatilityLabel: 'Αστάθεια',
+                
+                // Language selection
+                selectLanguage: 'Επιλέξτε Γλώσσα',
+                languageChanged: 'Η γλώσσα άλλαξε επιτυχώς!'
+            },
+            en: {
+                // UI Elements
+                welcome: 'Welcome',
+                user: 'User',
+                actions: 'Actions',
+                exportExcel: 'Export Excel',
+                exportPdf: 'Export PDF',
+                goalsTargets: 'Goals & Targets',
+                changeTheme: 'Change Theme',
+                changeLanguage: 'Change Language',
+                calculator: 'Calculator',
+                shortcuts: 'Keyboard Shortcuts',
+                logout: 'Logout',
+                statisticsCenter: 'Statistics Center',
+                categoryName: 'Category Name',
+                add: 'Add',
+                
+                // Months
+                months: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                
+                // Table headers
+                category: 'Category',
+                total: 'Total',
+                actions_table: 'Actions',
+                
+                // Messages
+                categoryExists: 'Category already exists!',
+                categoryAdded: 'Category added successfully!',
+                categoryDeleted: 'Category deleted!',
+                dataExported: 'Data exported successfully!',
+                
+                // Chart
+                salesChart: 'Sales Chart',
+                selectCategory: 'Select category',
+                allCategories: 'All Categories',
+                chartLine: 'Line Chart',
+                chartBar: 'Bar Chart',
+                chartDoughnut: 'Doughnut Chart',
+                comparison: 'Comparison',
+                forecast: 'AI Forecast',
+                downloadChart: 'Chart',
+                
+                // Notifications
+                selectCategoryComparison: 'Please select a category for comparison.',
+                comparisonCompleted: 'Comparison completed!',
+                
+                // Forecast popup
+                forecastAnalysis: 'Forecast Analysis',
+                months_period: 'Months',
+                period: 'Period',
+                totalForecast: 'Total Forecast',
+                avgPerMonth: 'Average/Month',
+                confidence: 'Confidence',
+                trend: 'Trend',
+                trendUp: 'Upward',
+                trendDown: 'Downward',
+                maxValue: 'Maximum Value',
+                forecastNote: 'Forecast combines trend analysis, seasonal patterns and exponential smoothing',
+                forecastDisclaimer: 'Note: Longer periods have lower accuracy',
+                close: 'Close',
+                
+                // Tooltips
+                totalSalesTooltip: 'Sum of all sales for the selected period. Shows total business performance.',
+                avgSalesTooltip: 'Average sales per month. Helps calculate monthly performance and compare with targets.',
+                bestMonthTooltip: 'Month with highest sales. Useful for identifying seasonal trends and peak periods.',
+                growthTooltip: 'Percentage change in sales compared to previous period. Positive = growth, Negative = decline.',
+                performanceTooltip: 'Score showing how efficient the business is. Calculated from growth and stability.',
+                seasonalityTooltip: 'Measures how much sales are affected by seasonal changes. High value = large seasonal variation.',
+                trendStrengthTooltip: 'Shows how strong the growth or decline trend is. High = steady trend, Low = unstable performance.',
+                volatilityTooltip: 'Measures how unstable sales are. High volatility = unpredictable changes, Low = stable sales.',
+                
+                // Forecast periods
+                forecastShortTerm: 'Short-term (3 months) - High accuracy',
+                forecastMediumTerm: 'Medium-term (6 months) - Good accuracy',
+                forecastLongTerm: 'Annual forecast (12 months) - Moderate accuracy',
+                forecastExtended: 'Long-term (2 years) - Estimated',
+                forecastPeriodLabel: 'Forecast Period:',
+                forecastTooltip: 'Select how many months in the future you want to predict sales',
+                forecastAccuracyNote: 'Shorter periods = higher forecast accuracy',
+                categorySelectionLabel: 'Category Selection:',
+                
+                // Forecast chart labels
+                trendForecastLabel: 'Trend Forecast',
+                seasonalForecastLabel: 'Seasonal Forecast',
+                optimizedForecastLabel: 'Optimized Forecast',
+                
+                // Stat card labels
+                totalSalesLabel: 'Total Sales',
+                avgSalesLabel: 'Average',
+                bestMonthLabel: 'Best Month',
+                growthRateLabel: 'Growth Rate',
+                performanceLabel: 'Performance Score',
+                seasonalityLabel: 'Seasonality',
+                trendStrengthLabel: 'Trend Strength',
+                volatilityLabel: 'Volatility',
+                
+                // Language selection
+                selectLanguage: 'Select Language',
+                languageChanged: 'Language changed successfully!'
+            }
+        };
+        
+        // Static month keys for data storage (never change these)
+        const monthKeys = ['Ιαν', 'Φεβ', 'Μαρ', 'Απρ', 'Μάι', 'Ιουν', 'Ιουλ', 'Αυγ', 'Σεπ', 'Οκτ', 'Νοε', 'Δεκ'];
+        
+        // Dynamic month labels for display (changes with language)
+        let months = translations[currentLanguage].months;
+        
         const modernColors = [
             '#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe', '#00f2fe',
             '#43e97b', '#38f9d7', '#ffecd2', '#fcb69f', '#a8edea', '#fed6e3'
@@ -3964,6 +4188,264 @@
         const saveToLocalStorage = () => {
             localStorage.setItem('salesData', JSON.stringify(salesData));
             console.log('✅ Data saved to localStorage');
+        };
+
+        const updateTooltips = () => {
+            const t = translations[currentLanguage];
+            
+            // Stats card tooltips
+            const statCards = document.querySelectorAll('.stat-card');
+            if (statCards.length >= 8) {
+                statCards[0].setAttribute('data-tooltip', `💰 ${t.totalSalesTooltip}`);
+                statCards[1].setAttribute('data-tooltip', `📊 ${t.avgSalesTooltip}`);
+                statCards[2].setAttribute('data-tooltip', `🏆 ${t.bestMonthTooltip}`);
+                statCards[3].setAttribute('data-tooltip', `📈 ${t.growthTooltip}`);
+                statCards[4].setAttribute('data-tooltip', `💹 ${t.performanceTooltip}`);
+                statCards[5].setAttribute('data-tooltip', `🌊 ${t.seasonalityTooltip}`);
+                statCards[6].setAttribute('data-tooltip', `📊 ${t.trendStrengthTooltip}`);
+                statCards[7].setAttribute('data-tooltip', `⚡ ${t.volatilityTooltip}`);
+            }
+        };
+
+        const updateStatLabels = () => {
+            const t = translations[currentLanguage];
+            
+            // Update stat card labels
+            const totalSalesLabel = document.getElementById('totalSalesLabel');
+            if (totalSalesLabel) totalSalesLabel.textContent = t.totalSalesLabel;
+            
+            const avgSalesLabel = document.getElementById('avgSalesLabel');
+            if (avgSalesLabel) avgSalesLabel.textContent = t.avgSalesLabel;
+            
+            const bestMonthLabel = document.getElementById('bestMonthLabel');
+            if (bestMonthLabel) bestMonthLabel.textContent = t.bestMonthLabel;
+            
+            const growthRateLabel = document.getElementById('growthRateLabel');
+            if (growthRateLabel) growthRateLabel.textContent = t.growthRateLabel;
+            
+            const performanceLabel = document.getElementById('performanceLabel');
+            if (performanceLabel) performanceLabel.textContent = `📈 ${t.performanceLabel}`;
+            
+            const seasonalityLabel = document.getElementById('seasonalityLabel');
+            if (seasonalityLabel) seasonalityLabel.textContent = `🌊 ${t.seasonalityLabel}`;
+            
+            const trendStrengthLabel = document.getElementById('trendStrengthLabel');
+            if (trendStrengthLabel) trendStrengthLabel.textContent = `📊 ${t.trendStrengthLabel}`;
+            
+            const volatilityLabel = document.getElementById('volatilityLabel');
+            if (volatilityLabel) volatilityLabel.textContent = `⚡ ${t.volatilityLabel}`;
+        };
+
+        const updateForecastPeriodDropdown = () => {
+            const t = translations[currentLanguage];
+            const forecastSelect = document.getElementById('forecastPeriod');
+            const forecastLabel = document.querySelector('label[for="forecastPeriod"]');
+            const categoryLabel = document.querySelector('label[for="chartCategory"]');
+            const forecastNote = forecastSelect?.nextElementSibling;
+            
+            if (forecastSelect) {
+                const currentValue = forecastSelect.value || '3';
+                forecastSelect.innerHTML = `
+                    <option value="3">📅 ${t.forecastShortTerm} 🎯</option>
+                    <option value="6">📊 ${t.forecastMediumTerm} ✅</option>
+                    <option value="12">📈 ${t.forecastLongTerm} ⚖️</option>
+                    <option value="24">🚀 ${t.forecastExtended} 🔍</option>
+                `;
+                forecastSelect.value = currentValue;
+                forecastSelect.title = t.forecastTooltip;
+            }
+            
+            if (forecastLabel) {
+                forecastLabel.innerHTML = `🔮 ${t.forecastPeriodLabel}`;
+            }
+            
+            if (categoryLabel) {
+                categoryLabel.innerHTML = `📊 ${t.categorySelectionLabel}`;
+            }
+            
+            if (forecastNote && forecastNote.tagName === 'SMALL') {
+                forecastNote.textContent = `💡 ${t.forecastAccuracyNote}`;
+            }
+        };
+
+        // Language functions
+        const changeLanguage = (lang) => {
+            currentLanguage = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang;
+            updateUILanguage();
+            // Update display months without affecting data storage
+            months = translations[currentLanguage].months;
+            if (chart) {
+                updateChart();
+            }
+            showNotification(translations[currentLanguage].languageChanged, 'success');
+        };
+
+        const updateUILanguage = () => {
+            const t = translations[currentLanguage];
+            
+            // Update text content
+            document.querySelector('.user-info span').innerHTML = `${t.welcome}, <b id="userDisplay">${t.user}</b>`;
+            document.querySelector('#actionsDropdownBtn').innerHTML = `⚙️ ${t.actions} <span class="dropdown-arrow">▼</span>`;
+            document.querySelector('h2').textContent = t.statisticsCenter;
+            document.querySelector('#categoryName').placeholder = t.categoryName;
+            document.querySelector('#addCategoryBtn').textContent = t.add;
+            document.querySelector('#chartTitle').textContent = `📊 ${t.salesChart}`;
+            
+            // Update dropdown items
+            const dropdownItems = document.querySelectorAll('.dropdown-item span:last-child');
+            dropdownItems[0].textContent = t.exportExcel;
+            dropdownItems[1].textContent = t.exportPdf;
+            dropdownItems[2].textContent = t.goalsTargets;
+            dropdownItems[3].textContent = t.changeTheme;
+            dropdownItems[4].textContent = t.changeLanguage;
+            dropdownItems[5].textContent = t.calculator;
+            if (dropdownItems[6]) dropdownItems[6].textContent = t.shortcuts;
+            
+            // Update chart type buttons
+            const lineBtn = document.getElementById('lineChartBtn');
+            if (lineBtn) lineBtn.textContent = t.chartLine;
+            
+            const barBtn = document.getElementById('barChartBtn');
+            if (barBtn) barBtn.textContent = t.chartBar;
+            
+            const doughnutBtn = document.getElementById('doughnutChartBtn');
+            if (doughnutBtn) doughnutBtn.textContent = t.chartDoughnut;
+            
+            // Update chart control buttons
+            const compareBtn = document.getElementById('compareBtn');
+            if (compareBtn) compareBtn.textContent = `📊 ${t.comparison}`;
+            
+            const forecastBtn = document.getElementById('forecastBtn');
+            if (forecastBtn) forecastBtn.textContent = `🔮 ${t.forecast}`;
+            
+            const downloadBtn = document.getElementById('downloadChartBtn');
+            if (downloadBtn) downloadBtn.textContent = `📥 ${t.downloadChart}`;
+            
+            // Update tooltips
+            updateTooltips();
+            
+            // Update stat labels
+            updateStatLabels();
+            
+            // Update forecast period dropdown
+            updateForecastPeriodDropdown();
+            
+            // Update table if it exists
+            renderTable();
+            
+            // Update category dropdown
+            populateCategoryDropdown();
+        };
+
+        const updateTableHeaders = () => {
+            const table = document.querySelector('table');
+            if (table) {
+                const headers = table.querySelectorAll('th');
+                if (headers.length > 0) {
+                    const t = translations[currentLanguage];
+                    headers[0].textContent = t.category;
+                    // Update month headers
+                    for (let i = 1; i <= 12; i++) {
+                        if (headers[i]) headers[i].textContent = t.months[i-1];
+                    }
+                    if (headers[13]) headers[13].textContent = t.total;
+                    if (headers[14]) headers[14].textContent = t.actions_table;
+                }
+            }
+        };
+
+        const showLanguageSelector = () => {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0,0,0,0.7);
+                z-index: 10000;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+            
+            const content = document.createElement('div');
+            content.style.cssText = `
+                background: white;
+                border-radius: 16px;
+                padding: 30px;
+                max-width: 400px;
+                width: 90%;
+                text-align: center;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            `;
+            
+            if (document.body.classList.contains('dark-mode')) {
+                content.style.background = '#2c3e50';
+                content.style.color = '#ecf0f1';
+            }
+            
+            content.innerHTML = `
+                <h3 style="margin-bottom: 20px; color: #667eea;">${translations[currentLanguage].selectLanguage}</h3>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <button onclick="selectLanguage('el')" style="
+                        padding: 15px 25px;
+                        border: 2px solid ${currentLanguage === 'el' ? '#667eea' : 'rgba(0,0,0,0.2)'};
+                        background: ${currentLanguage === 'el' ? '#667eea' : 'white'};
+                        color: ${currentLanguage === 'el' ? 'white' : '#2c3e50'};
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        min-width: 120px;
+                    ">🇬🇷 Ελληνικά</button>
+                    <button onclick="selectLanguage('en')" style="
+                        padding: 15px 25px;
+                        border: 2px solid ${currentLanguage === 'en' ? '#667eea' : 'rgba(0,0,0,0.2)'};
+                        background: ${currentLanguage === 'en' ? '#667eea' : 'white'};
+                        color: ${currentLanguage === 'en' ? 'white' : '#2c3e50'};
+                        border-radius: 12px;
+                        cursor: pointer;
+                        font-weight: 600;
+                        transition: all 0.3s ease;
+                        min-width: 120px;
+                    ">🇺🇸 English</button>
+                </div>
+                <button onclick="closeLanguageSelector()" style="
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    background: #e74c3c;
+                    color: white;
+                    border: none;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 600;
+                ">✕ Close</button>
+            `;
+            
+            modal.appendChild(content);
+            document.body.appendChild(modal);
+            
+            // Add global functions for the modal
+            window.selectLanguage = (lang) => {
+                changeLanguage(lang);
+                closeLanguageSelector();
+            };
+            
+            window.closeLanguageSelector = () => {
+                document.body.removeChild(modal);
+                delete window.selectLanguage;
+                delete window.closeLanguageSelector;
+            };
+            
+            // Close on outside click
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeLanguageSelector();
+                }
+            });
         };
 
         const showLoading = () => {
@@ -4240,15 +4722,19 @@
         const addCategory = () => {
             const catInput = document.getElementById('categoryName');
             const category = catInput.value.trim();
+            const t = translations[currentLanguage];
             
             if (!category) {
-                showNotification("⚠️ Παρακαλώ εισάγετε έγκυρο όνομα κατηγορίας.", "warning");
+                const warningMsg = currentLanguage === 'el' ? 
+                    "⚠️ Παρακαλώ εισάγετε έγκυρο όνομα κατηγορίας." :
+                    "⚠️ Please enter a valid category name.";
+                showNotification(warningMsg, "warning");
                 return;
             }
             
             if (salesData[selectedYear][category]) {
                 const msg = document.getElementById('categoryMessage');
-                msg.textContent = "⚠️ Η κατηγορία υπάρχει ήδη.";
+                msg.textContent = `⚠️ ${t.categoryExists}`;
                 msg.style.display = 'block';
                 setTimeout(() => {
                     msg.style.display = 'none';
@@ -4266,9 +4752,11 @@
             renderTable();
             populateCategoryDropdown();
             updateChart();
-            showNotification("✅ Κατηγορία προστέθηκε επιτυχώς!", "success");
+            showNotification(`✅ ${t.categoryAdded}`, "success");
         };
 const deleteCategory = (category, rowElement) => {
+    const t = translations[currentLanguage];
+    
     // Add haptic feedback and visual indicator
     if (navigator.vibrate) {
         navigator.vibrate([50, 30, 50]); // Short vibration pattern
@@ -4278,7 +4766,10 @@ const deleteCategory = (category, rowElement) => {
     rowElement.classList.add('fade-out');
     
     // Show immediate feedback
-    showNotification("🗑️ Διαγραφή κατηγορίας...", "warning", 1000);
+    const deletingMsg = currentLanguage === 'el' ? 
+        "🗑️ Διαγραφή κατηγορίας..." :
+        "🗑️ Deleting category...";
+    showNotification(deletingMsg, "warning", 1000);
     
     // Delete data after animation starts
     setTimeout(() => {
@@ -4294,22 +4785,23 @@ const deleteCategory = (category, rowElement) => {
         rowElement.remove();
         populateCategoryDropdown();
         updateChart();
-        showNotification("✅ Κατηγορία διαγράφηκε επιτυχώς!", "success");
+        showNotification(`✅ ${t.categoryDeleted}`, "success");
     }, 600);
 };
 
         // Table rendering
         const renderTable = () => {
             const container = document.getElementById('tableContainer');
-            let html = `<table><tr><th>Κατηγορία</th>${months.map(m => `<th>${m}</th>`).join('')}<th>Σύνολο</th><th>Ενέργειες</th></tr>`;
+            const t = translations[currentLanguage];
+            let html = `<table><tr><th>${t.category}</th>${t.months.map(m => `<th>${m}</th>`).join('')}<th>${t.total}</th><th>${t.actions_table}</th></tr>`;
             
             Object.keys(salesData[selectedYear]).forEach(cat => {
                 let total = 0;
                 html += `<tr><td class="category-name">${cat}</td>`;
-                months.forEach(m => {
-                    const val = salesData[selectedYear][cat].sales[m] || 0;
+                monthKeys.forEach((monthKey, index) => {
+                    const val = salesData[selectedYear][cat].sales[monthKey] || 0;
                     total += val;
-                    html += `<td class="editable">${val.toLocaleString()}</td>`;
+                    html += `<td class="editable" data-month="${monthKey}">${val.toLocaleString()}</td>`;
                 });
                 html += `<td><strong>${total.toLocaleString()}</strong></td>`;
                 html += `<td><button class="delete-btn" onclick="deleteCategory('${cat}', this.closest('tr'))">🗑️</button></td></tr>`;
@@ -4317,7 +4809,10 @@ const deleteCategory = (category, rowElement) => {
             html += `</table>`;
             
             // Add mobile help text
-            html += `<div class="table-help">💡 Πατήστε στα κελιά για επεξεργασία • Σύρετε οριζόντια για περισσότερες στήλες</div>`;
+            const helpText = currentLanguage === 'el' ? 
+                '💡 Πατήστε στα κελιά για επεξεργασία • Σύρετε οριζόντια για περισσότερες στήλες' :
+                '💡 Tap cells to edit • Swipe horizontally for more columns';
+            html += `<div class="table-help">${helpText}</div>`;
             
             container.innerHTML = html;
 
@@ -4374,8 +4869,8 @@ const deleteCategory = (category, rowElement) => {
         const getCellContext = (cell) => {
             const row = cell.parentElement;
             const category = row.firstChild.textContent.trim();
-            const monthIndex = Array.from(row.children).indexOf(cell) - 1;
-            return [category, months[monthIndex]];
+            const monthKey = cell.getAttribute('data-month');
+            return [category, monthKey];
         };
 
         const editCell = (cell, category, month) => {
@@ -4456,8 +4951,8 @@ const deleteCategory = (category, rowElement) => {
             // Update total
             const row = cell.parentElement;
             let total = 0;
-            months.forEach((m) => {
-                const val = salesData[selectedYear][category].sales[m] || 0;
+            monthKeys.forEach((monthKey) => {
+                const val = salesData[selectedYear][category].sales[monthKey] || 0;
                 total += val;
             });
             row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
@@ -4519,7 +5014,8 @@ const deleteCategory = (category, rowElement) => {
         const populateCategoryDropdown = () => {
             const dropdown = document.getElementById('chartCategory');
             const currentValue = dropdown.value;
-            dropdown.innerHTML = '<option value="">🏢 Όλες οι Κατηγορίες</option>';
+            const t = translations[currentLanguage];
+            dropdown.innerHTML = `<option value="">🏢 ${t.allCategories}</option>`;
             Object.keys(salesData[selectedYear]).forEach(cat => {
                 const option = document.createElement('option');
                 option.value = cat;
@@ -4558,28 +5054,31 @@ const deleteCategory = (category, rowElement) => {
             let monthlyTotals = [];
             let bestMonth = '';
             let bestValue = 0;
+            let bestMonthIndex = 0;
 
             if (selectedCategory) {
-                months.forEach(month => {
-                    const value = salesData[selectedYear][selectedCategory]?.sales[month] || 0;
+                monthKeys.forEach((monthKey, index) => {
+                    const value = salesData[selectedYear][selectedCategory]?.sales[monthKey] || 0;
                     totalSales += value;
                     monthlyTotals.push(value);
                     if (value > bestValue) {
                         bestValue = value;
-                        bestMonth = month;
+                        bestMonth = months[index]; // Use display name for bestMonth
+                        bestMonthIndex = index;
                     }
                 });
             } else {
-                months.forEach(month => {
+                monthKeys.forEach((monthKey, index) => {
                     let monthTotal = 0;
                     Object.keys(salesData[selectedYear]).forEach(cat => {
-                        monthTotal += salesData[selectedYear][cat].sales[month] || 0;
+                        monthTotal += salesData[selectedYear][cat].sales[monthKey] || 0;
                     });
                     totalSales += monthTotal;
                     monthlyTotals.push(monthTotal);
                     if (monthTotal > bestValue) {
                         bestValue = monthTotal;
-                        bestMonth = month;
+                        bestMonth = months[index]; // Use display name for bestMonth
+                        bestMonthIndex = index;
                     }
                 });
             }
@@ -4722,14 +5221,14 @@ const deleteCategory = (category, rowElement) => {
             let categories = Object.keys(salesData[selectedYear]);
             
             if (selectedCategory && salesData[selectedYear][selectedCategory]) {
-                months.forEach(month => {
-                    monthlyData.push(salesData[selectedYear][selectedCategory].sales[month] || 0);
+                monthKeys.forEach(monthKey => {
+                    monthlyData.push(salesData[selectedYear][selectedCategory].sales[monthKey] || 0);
                 });
             } else {
-                months.forEach(month => {
+                monthKeys.forEach(monthKey => {
                     let monthTotal = 0;
                     categories.forEach(cat => {
-                        monthTotal += salesData[selectedYear][cat].sales[month] || 0;
+                        monthTotal += salesData[selectedYear][cat].sales[monthKey] || 0;
                     });
                     monthlyData.push(monthTotal);
                 });
@@ -4900,8 +5399,8 @@ const deleteCategory = (category, rowElement) => {
             
             if (categories.length > 1) {
                 const categoryTotals = categories.map(cat => {
-                    const total = months.reduce((sum, month) => {
-                        return sum + (salesData[selectedYear][cat].sales[month] || 0);
+                    const total = monthKeys.reduce((sum, monthKey) => {
+                        return sum + (salesData[selectedYear][cat].sales[monthKey] || 0);
                     }, 0);
                     return { category: cat, total };
                 }).sort((a, b) => b.total - a.total);
@@ -5034,8 +5533,8 @@ const deleteCategory = (category, rowElement) => {
             let prevTotal = 0;
             
             Object.keys(salesData[prevYear]).forEach(cat => {
-                months.forEach(month => {
-                    prevTotal += salesData[prevYear][cat]?.sales[month] || 0;
+                monthKeys.forEach(monthKey => {
+                    prevTotal += salesData[prevYear][cat]?.sales[monthKey] || 0;
                 });
             });
             
@@ -5150,13 +5649,13 @@ const deleteCategory = (category, rowElement) => {
                 const isDark = document.body.classList.contains('dark-mode');
                 
                 let datasets = [];
-                let labels = months;
+                let labels = translations[currentLanguage].months;
                 
                 if (currentChartType === 'doughnut') {
                     const categoryTotals = {};
                     Object.keys(salesData[selectedYear]).forEach(cat => {
-                        categoryTotals[cat] = months.reduce((sum, month) => {
-                            return sum + (salesData[selectedYear][cat].sales[month] || 0);
+                        categoryTotals[cat] = monthKeys.reduce((sum, monthKey) => {
+                            return sum + (salesData[selectedYear][cat].sales[monthKey] || 0);
                         }, 0);
                     });
                     
@@ -5172,7 +5671,7 @@ const deleteCategory = (category, rowElement) => {
                     if (selectedCategory) {
                         datasets = [{
                             label: selectedCategory,
-                            data: months.map(m => salesData[selectedYear][selectedCategory]?.sales[m] || 0),
+                            data: monthKeys.map(monthKey => salesData[selectedYear][selectedCategory]?.sales[monthKey] || 0),
                             borderColor: modernColors[0],
                             backgroundColor: currentChartType === 'line' ? 
                                 `${modernColors[0]}20` : modernColors[0],
@@ -5187,7 +5686,7 @@ const deleteCategory = (category, rowElement) => {
                     } else {
                         datasets = Object.keys(salesData[selectedYear]).map((cat, i) => ({
                             label: cat,
-                            data: months.map(m => salesData[selectedYear][cat].sales[m] || 0),
+                            data: monthKeys.map(monthKey => salesData[selectedYear][cat].sales[monthKey] || 0),
                             borderColor: modernColors[i % modernColors.length],
                             backgroundColor: currentChartType === 'line' ? 
                                 `${modernColors[i % modernColors.length]}20` : modernColors[i % modernColors.length],
@@ -5297,8 +5796,8 @@ const deleteCategory = (category, rowElement) => {
                 const row = [];
                 let total = 0;
                 row.push(cat);
-                months.forEach(month => {
-                    const val = salesData[selectedYear][cat].sales[month] || 0;
+                monthKeys.forEach(monthKey => {
+                    const val = salesData[selectedYear][cat].sales[monthKey] || 0;
                     row.push(val);
                     total += val;
                 });
@@ -5327,8 +5826,8 @@ const deleteCategory = (category, rowElement) => {
                 const row = [];
                 let total = 0;
                 row.push(cat);
-                months.forEach(month => {
-                    const val = salesData[selectedYear][cat].sales[month] || 0;
+                monthKeys.forEach(monthKey => {
+                    const val = salesData[selectedYear][cat].sales[monthKey] || 0;
                     row.push(val);
                     total += val;
                 });
@@ -5354,7 +5853,7 @@ const deleteCategory = (category, rowElement) => {
             const prevYear = selectedYear - 1;
 
             if (!selectedCategory) {
-                showNotification("⚠️ Παρακαλώ επιλέξτε κατηγορία για σύγκριση.", "warning");
+                showNotification(`⚠️ ${translations[currentLanguage].selectCategoryComparison}`, "warning");
                 return;
             }
 
@@ -5366,8 +5865,8 @@ const deleteCategory = (category, rowElement) => {
             showLoading();
 
             setTimeout(() => {
-                const currentData = months.map(m => salesData[selectedYear][selectedCategory]?.sales[m] || 0);
-                const previousData = months.map(m => salesData[prevYear][selectedCategory]?.sales[m] || 0);
+                const currentData = monthKeys.map(monthKey => salesData[selectedYear][selectedCategory]?.sales[monthKey] || 0);
+                const previousData = monthKeys.map(monthKey => salesData[prevYear][selectedCategory]?.sales[monthKey] || 0);
 
                 if (chart) chart.destroy();
                 
@@ -5419,7 +5918,7 @@ const deleteCategory = (category, rowElement) => {
                     }
                 });
                 hideLoading();
-                showNotification("✅ Σύγκριση ολοκληρώθηκε!", "success");
+                showNotification(`✅ ${translations[currentLanguage].comparisonCompleted}`, "success");
             }, 300);
         };
 
@@ -5433,7 +5932,7 @@ const deleteCategory = (category, rowElement) => {
             }
 
             const sales = salesData[selectedYear][selectedCategory]?.sales || {};
-            const actualData = months.map(m => sales[m] || 0);
+            const actualData = monthKeys.map(monthKey => sales[monthKey] || 0);
 
             // Advanced forecasting algorithm
             const advancedForecast = calculateAdvancedForecast(actualData, forecastMonths);
@@ -5468,7 +5967,7 @@ const deleteCategory = (category, rowElement) => {
                             pointHoverRadius: 6
                         },
                         {
-                            label: "Πρόβλεψη Τάσης",
+                            label: translations[currentLanguage].trendForecastLabel,
                             data: [...Array(12).fill(null), ...advancedForecast.trend],
                             borderColor: '#f093fb',
                             backgroundColor: currentChartType === 'line' ? '#f093fb33' : '#f093fb',
@@ -5480,7 +5979,7 @@ const deleteCategory = (category, rowElement) => {
                             pointHoverRadius: 6
                         },
                         {
-                            label: "Πρόβλεψη Εποχικότητας",
+                            label: translations[currentLanguage].seasonalForecastLabel,
                             data: [...Array(12).fill(null), ...advancedForecast.seasonal],
                             borderColor: '#43e97b',
                             backgroundColor: currentChartType === 'line' ? '#43e97b33' : '#43e97b',
@@ -5492,7 +5991,7 @@ const deleteCategory = (category, rowElement) => {
                             pointHoverRadius: 6
                         },
                         {
-                            label: "Βέλτιστη Πρόβλεψη",
+                            label: translations[currentLanguage].optimizedForecastLabel,
                             data: [...Array(12).fill(null), ...advancedForecast.optimized],
                             borderColor: '#ffecd2',
                             backgroundColor: currentChartType === 'line' ? '#ffecd233' : '#ffecd2',
@@ -5693,6 +6192,7 @@ const deleteCategory = (category, rowElement) => {
             // Update stats with forecast insights
             const forecastTotal = forecast.optimized.reduce((a, b) => a + b, 0);
             const avgForecast = Math.round(forecastTotal / forecastMonths);
+            const t = translations[currentLanguage];
             
             // Determine period description
             const periodDesc = forecastMonths <= 3 ? `Q1 ${selectedYear + 1}` : 
@@ -5718,18 +6218,18 @@ const deleteCategory = (category, rowElement) => {
                     max-width: 90vw;
                     text-align: center;
                 ">
-                    <h3 style="margin-bottom: 15px; color: #667eea;">🔮 Ανάλυση Πρόβλεψης ${forecastMonths} Μηνών</h3>
+                    <h3 style="margin-bottom: 15px; color: #667eea;">🔮 ${t.forecastAnalysis} ${forecastMonths} ${t.months_period}</h3>
                     <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
-                        <div><strong>Περίοδος:</strong> ${periodDesc}</div>
-                        <div><strong>Συνολική Πρόβλεψη:</strong> ${forecastTotal.toLocaleString()}</div>
-                        <div><strong>Μέσος Όρος/Μήνα:</strong> ${avgForecast.toLocaleString()}</div>
-                        <div><strong>Εμπιστοσύνη:</strong> ${forecast.confidence}%</div>
-                        <div><strong>Τάση:</strong> ${forecast.optimized[forecast.optimized.length-1] > forecast.optimized[0] ? '📈 Ανοδική' : '📉 Καθοδική'}</div>
-                        <div><strong>Μέγιστη Τιμή:</strong> ${Math.max(...forecast.optimized).toLocaleString()}</div>
+                        <div><strong>${t.period}:</strong> ${periodDesc}</div>
+                        <div><strong>${t.totalForecast}:</strong> ${forecastTotal.toLocaleString()}</div>
+                        <div><strong>${t.avgPerMonth}:</strong> ${avgForecast.toLocaleString()}</div>
+                        <div><strong>${t.confidence}:</strong> ${forecast.confidence}%</div>
+                        <div><strong>${t.trend}:</strong> ${forecast.optimized[forecast.optimized.length-1] > forecast.optimized[0] ? `📈 ${t.trendUp}` : `📉 ${t.trendDown}`}</div>
+                        <div><strong>${t.maxValue}:</strong> ${Math.max(...forecast.optimized).toLocaleString()}</div>
                     </div>
                     <div style="font-size: 12px; color: #7f8c8d; margin-bottom: 15px;">
-                        Η πρόβλεψη συνδυάζει ανάλυση τάσης, εποχικά μοτίβα και εκθετική εξομάλυνση<br>
-                        <em>Σημείωση: Μεγαλύτερες περίοδοι έχουν μικρότερη ακρίβεια</em>
+                        ${t.forecastNote}<br>
+                        <em>${t.forecastDisclaimer}</em>
                     </div>
                     <button onclick="this.parentElement.parentElement.remove()" style="
                         background: linear-gradient(45deg, #667eea, #764ba2);
@@ -5738,7 +6238,7 @@ const deleteCategory = (category, rowElement) => {
                         padding: 8px 16px;
                         border-radius: 8px;
                         cursor: pointer;
-                    ">Κλείσιμο</button>
+                    ">${t.close}</button>
                 </div>
             `;
             
@@ -5792,6 +6292,21 @@ const deleteCategory = (category, rowElement) => {
             }
         };
 
+        // Ensure data consistency with month keys
+        const validateDataConsistency = () => {
+            Object.keys(salesData).forEach(year => {
+                Object.keys(salesData[year]).forEach(category => {
+                    const sales = salesData[year][category].sales;
+                    // Ensure all month keys exist
+                    monthKeys.forEach(monthKey => {
+                        if (!(monthKey in sales)) {
+                            sales[monthKey] = 0;
+                        }
+                    });
+                });
+            });
+        };
+
         // Event listeners setup
         const setupEventListeners = () => {
             // Chart type buttons
@@ -5814,6 +6329,7 @@ const deleteCategory = (category, rowElement) => {
             document.getElementById('downloadChartBtn').addEventListener('click', downloadChart);
             document.getElementById('calculatorBtn').addEventListener('click', toggleCalculator);
             document.getElementById('shortcutsBtn').addEventListener('click', showKeyboardShortcuts);
+            document.getElementById('languageBtn').addEventListener('click', showLanguageSelector);
             
             document.getElementById('logoutBtn').addEventListener('click', () => {
                 sessionStorage.removeItem('loggedInUser');
@@ -5914,6 +6430,8 @@ function loadFromFirebase() {
             Object.keys(data).forEach(year => {
                 salesData[year] = data[year];
             });
+            // Ensure data consistency with month keys
+            validateDataConsistency();
             // Ενημέρωσε το selectedYear αν δεν υπάρχει
             if (!salesData[selectedYear]) {
                 selectedYear = Object.keys(salesData).sort().pop(); // τελευταίο διαθέσιμο έτος
@@ -5939,6 +6457,8 @@ function loadFromFirebase() {
             Object.keys(parsedData).forEach(year => {
                 salesData[year] = parsedData[year];
             });
+            // Ensure data consistency with month keys
+            validateDataConsistency();
         } else {
             initializeSampleData();
         }
@@ -5952,17 +6472,20 @@ function loadFromFirebase() {
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Application starting...');
             
+            // Initialize language
+            updateUILanguage();
+            
             // Set username
             const userDisplay = document.getElementById('userDisplay');
-            let username = sessionStorage.getItem('loggedInUser') || 'Χρήστης';
+            let username = sessionStorage.getItem('loggedInUser') || translations[currentLanguage].user;
             
             // Αν δεν υπάρχει username, δημιούργησε ένα default
-            if (!username || username === 'Χρήστης') {
+            if (!username || username === translations[currentLanguage].user) {
                 username = 'default_user@example.com';
                 sessionStorage.setItem('loggedInUser', username);
             }
             
-            userDisplay.textContent = username.split('@')[0] || 'Χρήστης';
+            userDisplay.textContent = username.split('@')[0] || translations[currentLanguage].user;
             console.log('Username set to:', username);
 
             // Initialize functionality
