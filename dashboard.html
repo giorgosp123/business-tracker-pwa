@@ -1575,8 +1575,10 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                gap: 8px;
+                gap: 6px; /* Smaller gap for better fit */
                 justify-content: flex-end;
+                flex-wrap: nowrap; /* Keep buttons on same line */
+                flex-shrink: 0; /* Don't shrink buttons container */
             }
             
             .user-buttons button {
@@ -1597,6 +1599,9 @@
                 flex: none;
                 white-space: nowrap;
                 gap: 6px !important;
+                min-width: 100px !important; /* Ensure enough space */
+                justify-content: center !important;
+                text-align: center !important;
             }
             
             /* Dropdown arrow smaller */
@@ -1620,8 +1625,8 @@
                 flex-direction: row !important;
                 justify-content: space-between !important;
                 align-items: center !important;
-                gap: 8px !important;
-                padding: 12px 15px !important;
+                gap: 6px !important; /* Smaller gap */
+                padding: 10px 15px !important; /* Slightly less padding */
             }
             
             .user-info {
@@ -1652,11 +1657,14 @@
             }
             
             .dropdown-btn {
-                max-width: 90px; /* Limit dropdown button width */
-                overflow: hidden;
-                text-overflow: ellipsis;
+                min-width: 100px; /* Ensure enough space for text */
+                max-width: 110px; /* Allow more space for Greek text */
+                overflow: visible; /* Don't cut off text */
+                text-overflow: unset; /* Remove text cutting */
                 justify-content: center !important;
                 text-align: center !important;
+                white-space: nowrap !important; /* Keep text on one line */
+                flex-shrink: 0; /* Don't shrink the button */
             }
             
             /* Enhanced table mobile experience */
