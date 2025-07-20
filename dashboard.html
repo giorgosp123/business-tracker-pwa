@@ -1065,10 +1065,18 @@
             transition: transform 0.3s ease;
             position: relative;
             cursor: help;
+            /* Enhanced mobile interaction */
+            -webkit-tap-highlight-color: rgba(103, 126, 234, 0.2);
+            user-select: none;
         }
 
         .stat-card:hover {
             transform: translateY(-3px);
+        }
+
+        /* Enhanced mobile tap behavior */
+        .stat-card:active {
+            transform: translateY(-1px) scale(0.98);
         }
 
         .stat-card::before {
@@ -1093,6 +1101,7 @@
             white-space: normal;
             text-align: left;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
         }
 
         .stat-card::after {
@@ -1118,9 +1127,21 @@
         }
 
         body.dark-mode .stat-card::before {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             color: #2c3e50;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Dark mode mobile tooltips */
+        @media (max-width: 768px) {
+            body.dark-mode .stat-card::before {
+                background: rgba(255, 255, 255, 0.98) !important;
+                color: #2c3e50 !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
+                backdrop-filter: blur(15px) !important;
+            }
         }
 
         body.dark-mode .stat-card::after {
@@ -1131,15 +1152,22 @@
         @media (max-width: 768px) {
             .stat-card::before {
                 position: fixed;
-                bottom: 80px;
-                left: 20px;
-                right: 20px;
+                bottom: 120px; /* Increased distance from bottom */
+                left: 15px;
+                right: 15px;
                 transform: none;
                 max-width: none;
                 text-align: center;
                 border-radius: 12px;
-                font-size: 13px;
-                padding: 15px 20px;
+                font-size: 14px;
+                padding: 16px 20px;
+                z-index: 10000;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                line-height: 1.4;
+                font-weight: 500;
             }
 
             .stat-card::after {
@@ -1148,6 +1176,47 @@
 
             .stat-card:hover::before {
                 transform: none;
+            }
+            
+            /* Ensure tooltips appear on tap for mobile */
+            .stat-card:active::before {
+                opacity: 1;
+                visibility: visible;
+                animation: tooltipPulse 0.3s ease-out;
+            }
+            
+            /* Enhanced mobile tooltip visibility */
+            .stat-card.tooltip-active::before {
+                opacity: 1 !important;
+                visibility: visible !important;
+                animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            }
+            
+            @keyframes tooltipSlideIn {
+                0% { 
+                    opacity: 0;
+                    transform: translateY(20px) scale(0.8);
+                }
+                100% { 
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+            
+            /* Auto-hide tooltip after 4 seconds on mobile */
+            .stat-card.tooltip-active {
+                animation: hideTooltipAfterDelay 4s ease-in-out forwards;
+            }
+            
+            @keyframes hideTooltipAfterDelay {
+                0%, 85% { }
+                100% { }
+            }
+            
+            @keyframes tooltipPulse {
+                0% { transform: scale(0.95); opacity: 0; }
+                50% { transform: scale(1.02); }
+                100% { transform: scale(1); opacity: 1; }
             }
         }
 
@@ -9348,6 +9417,66 @@ function sanitizeKey(email) {
         
         // Event Listeners
         document.addEventListener('DOMContentLoaded', () => {
+            // Mobile tooltip handling for stat cards
+            if (window.innerWidth <= 768) {
+                // Enhanced mobile tooltip functionality
+                const statCards = document.querySelectorAll('.stat-card');
+                
+                statCards.forEach(card => {
+                    // Touch event handling for mobile tooltips
+                    card.addEventListener('touchstart', function(e) {
+                        e.preventDefault();
+                        
+                        // Hide all other tooltips first
+                        statCards.forEach(otherCard => {
+                            if (otherCard !== this) {
+                                otherCard.classList.remove('tooltip-active');
+                            }
+                        });
+                        
+                        // Toggle current tooltip
+                        this.classList.toggle('tooltip-active');
+                        
+                        // Auto-hide after 4 seconds
+                        if (this.classList.contains('tooltip-active')) {
+                            setTimeout(() => {
+                                this.classList.remove('tooltip-active');
+                            }, 4000);
+                        }
+                    });
+                    
+                    // Click event for mobile
+                    card.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Same logic as touch
+                        statCards.forEach(otherCard => {
+                            if (otherCard !== this) {
+                                otherCard.classList.remove('tooltip-active');
+                            }
+                        });
+                        
+                        this.classList.toggle('tooltip-active');
+                        
+                        if (this.classList.contains('tooltip-active')) {
+                            setTimeout(() => {
+                                this.classList.remove('tooltip-active');
+                            }, 4000);
+                        }
+                    });
+                });
+                
+                // Hide tooltips when tapping elsewhere
+                document.addEventListener('touchstart', function(e) {
+                    if (!e.target.closest('.stat-card')) {
+                        statCards.forEach(card => {
+                            card.classList.remove('tooltip-active');
+                        });
+                    }
+                });
+            }
+            
             // Initialize theme from localStorage
             const savedTheme = localStorage.getItem('selectedTheme') || 'default';
             applyTheme(savedTheme);
