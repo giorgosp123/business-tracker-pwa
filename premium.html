@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Features - Premium Δυνατότητες</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .premium-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .premium-header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .premium-title {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .premium-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+
+        .subscription-status {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .status-active {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .status-trial {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+        }
+
+        .status-expired {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+
+        .status-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .status-text {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .feature-card.locked {
+            opacity: 0.6;
+            background: rgba(255, 255, 255, 0.7);
+        }
+
+        .feature-card.locked::before {
+            content: '🔒';
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .feature-description {
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .feature-status {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-available {
+            background: #d5f4e6;
+            color: #27ae60;
+            border: 1px solid #27ae60;
+        }
+
+        .status-locked {
+            background: #fadbd8;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .upgrade-section {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .upgrade-title {
+            font-size: 2rem;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .upgrade-text {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .upgrade-btn {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.3);
+        }
+
+        .upgrade-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(243, 156, 18, 0.4);
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 20px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+        }
+
+        .back-btn:hover {
+            background: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .language-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #1976D2 0%, #2196F3 100%);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 12px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            min-width: 44px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .language-toggle:hover {
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(25, 118, 210, 0.3);
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        body.dark-mode .feature-card {
+            background: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .feature-card.locked {
+            background: rgba(44, 62, 80, 0.7);
+        }
+
+        body.dark-mode .feature-title {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .feature-description {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .upgrade-section {
+            background: rgba(44, 62, 80, 0.95);
+        }
+
+        body.dark-mode .upgrade-title {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .upgrade-text {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .back-btn {
+            background: rgba(52, 73, 94, 0.9);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .back-btn:hover {
+            background: #34495e;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .premium-container {
+                padding: 20px 10px;
+            }
+
+            .premium-title {
+                font-size: 2rem;
+            }
+
+            .premium-subtitle {
+                font-size: 1rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .feature-card {
+                padding: 20px;
+            }
+
+            .upgrade-section {
+                padding: 30px 20px;
+            }
+
+            .back-btn {
+                top: 10px;
+                left: 10px;
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+
+            .language-toggle {
+                top: 10px;
+                right: 10px;
+            }
+        }
+
+        /* Notification styles */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 600;
+            z-index: 1100;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .notification.info {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← <span id="backText">Πίσω</span></button>
+    
+    <button class="language-toggle" onclick="toggleLanguage()" title="Αλλαγή γλώσσας">
+        <span id="languageFlag">🇬🇷</span>
+    </button>
+
+    <div class="premium-container">
+        <div class="premium-header">
+            <h1 class="premium-title">⭐ <span id="premiumTitle">Premium Δυνατότητες</span></h1>
+            <p class="premium-subtitle" id="premiumSubtitle">Ξεκλειδώστε όλες τις δυνατότητες με τη συνδρομή σας</p>
+        </div>
+
+        <div class="subscription-status" id="subscriptionStatus">
+            <div class="status-title" id="statusTitle">Κατάσταση Συνδρομής</div>
+            <div class="status-text" id="statusText">Φόρτωση...</div>
+        </div>
+
+        <div class="features-grid" id="featuresGrid">
+            <!-- Features will be populated by JavaScript -->
+        </div>
+
+        <div class="upgrade-section" id="upgradeSection" style="display: none;">
+            <h2 class="upgrade-title" id="upgradeTitle">Αναβαθμίστε τη Συνδρομή σας</h2>
+            <p class="upgrade-text" id="upgradeText">Αποκτήστε πρόσβαση σε όλες τις premium δυνατότητες και βελτιώστε την επιχείρησή σας</p>
+            <button class="upgrade-btn" onclick="upgradeSubscription()" id="upgradeBtn">
+                🚀 <span id="upgradeBtnText">Αναβάθμιση Τώρα</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="notification" id="notification"></div>
+
+    <script>
+        let currentLanguage = localStorage.getItem('language') || 'el';
+        let currentSubscription = localStorage.getItem('subscription') || null;
+        let subscriptionExpiry = localStorage.getItem('subscriptionExpiry') || null;
+        let subscriptionFeatures = JSON.parse(localStorage.getItem('subscriptionFeatures') || '[]');
+
+        // Translations
+        const translations = {
+            el: {
+                premiumTitle: 'Premium Δυνατότητες',
+                premiumSubtitle: 'Ξεκλειδώστε όλες τις δυνατότητες με τη συνδρομή σας',
+                backText: 'Πίσω',
+                
+                // Status
+                statusTitle: 'Κατάσταση Συνδρομής',
+                statusNoSubscription: 'Δεν έχετε ενεργή συνδρομή',
+                statusTrial: 'Δωρεάν Δοκιμή - Λήγει σε {days} ημέρες',
+                statusActive: 'Ενεργή Συνδρομή - {plan}',
+                statusExpired: 'Η συνδρομή έληξε',
+                
+                // Features
+                revenueTrackingTitle: 'Παρακολούθηση Εσόδων',
+                revenueTrackingDesc: 'Καταγράψτε και παρακολουθήστε όλα τα έσοδά σας',
+                simpleReportsTitle: 'Απλές Αναφορές',
+                simpleReportsDesc: 'Βασικές αναφορές για τις πωλήσεις σας',
+                limitedTransactionsTitle: 'Περιορισμένες Συναλλαγές',
+                limitedTransactionsDesc: 'Έως 100 συναλλαγές το μήνα',
+                emailSupportTitle: 'Email Υποστήριξη',
+                emailSupportDesc: 'Λάβετε βοήθεια μέσω email',
+                
+                fullTrackingTitle: 'Πλήρης Παρακολούθηση',
+                fullTrackingDesc: 'Ολοκληρωμένη παρακολούθηση εσόδων και εξόδων',
+                advancedReportsTitle: 'Προηγμένες Αναφορές',
+                advancedReportsDesc: 'Λεπτομερείς αναφορές με γραφήματα',
+                unlimitedTransactionsTitle: 'Απεριόριστες Συναλλαγές',
+                unlimitedTransactionsDesc: 'Χωρίς όρια στις συναλλαγές σας',
+                support247Title: '24/7 Υποστήριξη',
+                support247Desc: 'Άμεση υποστήριξη όλο το 24ωρο',
+                analyticsTitle: 'Προηγμένες Αναλύσεις',
+                analyticsDesc: 'Αναλυτικά γραφήματα και στατιστικά',
+                exportTitle: 'Εξαγωγή Δεδομένων',
+                exportDesc: 'Εξάγετε δεδομένα σε Excel και PDF',
+                multiUserTitle: 'Πολλαπλοί Χρήστες',
+                multiUserDesc: 'Έως 5 χρήστες στον ίδιο λογαριασμό',
+                backupsTitle: 'Αυτόματα Backups',
+                backupsDesc: 'Αυτόματη δημιουργία αντιγράφων ασφαλείας',
+                themesTitle: 'Προσαρμοσμένα Θέματα',
+                themesDesc: 'Περισσότερες επιλογές θεμάτων',
+                
+                // Status badges
+                available: 'Διαθέσιμο',
+                locked: 'Κλειδωμένο',
+                
+                // Upgrade section
+                upgradeTitle: 'Αναβαθμίστε τη Συνδρομή σας',
+                upgradeText: 'Αποκτήστε πρόσβαση σε όλες τις premium δυνατότητες και βελτιώστε την επιχείρησή σας',
+                upgradeBtnText: 'Αναβάθμιση Τώρα',
+                
+                // Notifications
+                languageChanged: 'Η γλώσσα άλλαξε επιτυχώς!'
+            },
+            en: {
+                premiumTitle: 'Premium Features',
+                premiumSubtitle: 'Unlock all features with your subscription',
+                backText: 'Back',
+                
+                // Status
+                statusTitle: 'Subscription Status',
+                statusNoSubscription: 'No active subscription',
+                statusTrial: 'Free Trial - Expires in {days} days',
+                statusActive: 'Active Subscription - {plan}',
+                statusExpired: 'Subscription expired',
+                
+                // Features
+                revenueTrackingTitle: 'Revenue Tracking',
+                revenueTrackingDesc: 'Record and track all your revenue',
+                simpleReportsTitle: 'Simple Reports',
+                simpleReportsDesc: 'Basic reports for your sales',
+                limitedTransactionsTitle: 'Limited Transactions',
+                limitedTransactionsDesc: 'Up to 100 transactions per month',
+                emailSupportTitle: 'Email Support',
+                emailSupportDesc: 'Get help via email',
+                
+                fullTrackingTitle: 'Full Tracking',
+                fullTrackingDesc: 'Complete revenue and expense tracking',
+                advancedReportsTitle: 'Advanced Reports',
+                advancedReportsDesc: 'Detailed reports with charts',
+                unlimitedTransactionsTitle: 'Unlimited Transactions',
+                unlimitedTransactionsDesc: 'No limits on your transactions',
+                support247Title: '24/7 Support',
+                support247Desc: 'Instant support around the clock',
+                analyticsTitle: 'Advanced Analytics',
+                analyticsDesc: 'Detailed charts and statistics',
+                exportTitle: 'Data Export',
+                exportDesc: 'Export data to Excel and PDF',
+                multiUserTitle: 'Multiple Users',
+                multiUserDesc: 'Up to 5 users in the same account',
+                backupsTitle: 'Automatic Backups',
+                backupsDesc: 'Automatic backup creation',
+                themesTitle: 'Custom Themes',
+                themesDesc: 'More theme options',
+                
+                // Status badges
+                available: 'Available',
+                locked: 'Locked',
+                
+                // Upgrade section
+                upgradeTitle: 'Upgrade Your Subscription',
+                upgradeText: 'Get access to all premium features and improve your business',
+                upgradeBtnText: 'Upgrade Now',
+                
+                // Notifications
+                languageChanged: 'Language changed successfully!'
+            }
+        };
+
+        // Feature definitions
+        const allFeatures = [
+            { id: 'revenue_tracking', icon: '📊', plan: 'basic' },
+            { id: 'simple_reports', icon: '📋', plan: 'basic' },
+            { id: 'limited_transactions', icon: '🔢', plan: 'basic' },
+            { id: 'email_support', icon: '📧', plan: 'basic' },
+            { id: 'full_tracking', icon: '📈', plan: 'plus' },
+            { id: 'advanced_reports', icon: '📊', plan: 'plus' },
+            { id: 'unlimited_transactions', icon: '∞', plan: 'plus' },
+            { id: '24_7_support', icon: '🎧', plan: 'plus' },
+            { id: 'analytics', icon: '📉', plan: 'plus' },
+            { id: 'export', icon: '💾', plan: 'plus' },
+            { id: 'multi_user', icon: '👥', plan: 'plus' },
+            { id: 'backups', icon: '🔄', plan: 'plus' },
+            { id: 'themes', icon: '🎨', plan: 'plus' }
+        ];
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Apply saved theme
+            if (localStorage.getItem('darkMode') === 'true') {
+                document.body.classList.add('dark-mode');
+            }
+            
+            updateLanguage();
+            updateSubscriptionStatus();
+            renderFeatures();
+        });
+
+        function updateLanguage() {
+            const t = translations[currentLanguage];
+            
+            document.getElementById('premiumTitle').textContent = t.premiumTitle;
+            document.getElementById('premiumSubtitle').textContent = t.premiumSubtitle;
+            document.getElementById('backText').textContent = t.backText;
+            document.getElementById('statusTitle').textContent = t.statusTitle;
+            
+            // Update language toggle
+            const flagElement = document.getElementById('languageFlag');
+            const toggleButton = document.querySelector('.language-toggle');
+            
+            if (currentLanguage === 'el') {
+                flagElement.textContent = '🇬🇷';
+                toggleButton.title = 'Αλλαγή σε Αγγλικά';
+                document.documentElement.lang = 'el';
+            } else {
+                flagElement.textContent = '🇺🇸';
+                toggleButton.title = 'Change to Greek';
+                document.documentElement.lang = 'en';
+            }
+            
+            updateSubscriptionStatus();
+            renderFeatures();
+        }
+
+        function updateSubscriptionStatus() {
+            const t = translations[currentLanguage];
+            const statusElement = document.getElementById('subscriptionStatus');
+            const statusTextElement = document.getElementById('statusText');
+            const upgradeSection = document.getElementById('upgradeSection');
+            
+            statusElement.className = 'subscription-status';
+            
+            if (!currentSubscription) {
+                statusElement.classList.add('status-expired');
+                statusTextElement.textContent = t.statusNoSubscription;
+                upgradeSection.style.display = 'block';
+            } else {
+                const now = new Date().getTime();
+                const expiry = subscriptionExpiry ? new Date(subscriptionExpiry).getTime() : 0;
+                
+                if (expiry > now) {
+                    const daysLeft = Math.ceil((expiry - now) / (1000 * 60 * 60 * 24));
+                    
+                    if (daysLeft <= 7) {
+                        // Trial period
+                        statusElement.classList.add('status-trial');
+                        statusTextElement.textContent = t.statusTrial.replace('{days}', daysLeft);
+                        upgradeSection.style.display = 'block';
+                    } else {
+                        // Active subscription
+                        statusElement.classList.add('status-active');
+                        statusTextElement.textContent = t.statusActive.replace('{plan}', currentSubscription.toUpperCase());
+                        upgradeSection.style.display = currentSubscription === 'basic' ? 'block' : 'none';
+                    }
+                } else {
+                    // Expired
+                    statusElement.classList.add('status-expired');
+                    statusTextElement.textContent = t.statusExpired;
+                    upgradeSection.style.display = 'block';
+                }
+            }
+            
+            // Update upgrade section text
+            const upgradeTitle = document.getElementById('upgradeTitle');
+            const upgradeText = document.getElementById('upgradeText');
+            const upgradeBtnText = document.getElementById('upgradeBtnText');
+            
+            upgradeTitle.textContent = t.upgradeTitle;
+            upgradeText.textContent = t.upgradeText;
+            upgradeBtnText.textContent = t.upgradeBtnText;
+        }
+
+        function renderFeatures() {
+            const t = translations[currentLanguage];
+            const featuresGrid = document.getElementById('featuresGrid');
+            
+            featuresGrid.innerHTML = '';
+            
+            allFeatures.forEach(feature => {
+                const isAvailable = subscriptionFeatures.includes(feature.id);
+                const featureCard = document.createElement('div');
+                featureCard.className = `feature-card ${isAvailable ? '' : 'locked'}`;
+                
+                featureCard.innerHTML = `
+                    <span class="feature-icon">${feature.icon}</span>
+                    <h3 class="feature-title">${t[feature.id + 'Title']}</h3>
+                    <p class="feature-description">${t[feature.id + 'Desc']}</p>
+                    <span class="feature-status ${isAvailable ? 'status-available' : 'status-locked'}">
+                        ${isAvailable ? t.available : t.locked}
+                    </span>
+                `;
+                
+                featuresGrid.appendChild(featureCard);
+            });
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'el' ? 'en' : 'el';
+            localStorage.setItem('language', currentLanguage);
+            updateLanguage();
+            showNotification(translations[currentLanguage].languageChanged, 'success');
+        }
+
+        function upgradeSubscription() {
+            window.open('subscription.html', '_blank');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Add keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'l') {
+                e.preventDefault();
+                toggleLanguage();
+            }
+            
+            if (e.key === 'Escape') {
+                goBack();
+            }
+            
+            if (e.key === 'u' || e.key === 'U') {
+                upgradeSubscription();
+            }
+        });
+
+        // Auto-refresh subscription status
+        setInterval(function() {
+            const newSubscription = localStorage.getItem('subscription');
+            const newExpiry = localStorage.getItem('subscriptionExpiry');
+            const newFeatures = JSON.parse(localStorage.getItem('subscriptionFeatures') || '[]');
+            
+            if (newSubscription !== currentSubscription || 
+                newExpiry !== subscriptionExpiry || 
+                JSON.stringify(newFeatures) !== JSON.stringify(subscriptionFeatures)) {
+                
+                currentSubscription = newSubscription;
+                subscriptionExpiry = newExpiry;
+                subscriptionFeatures = newFeatures;
+                
+                updateSubscriptionStatus();
+                renderFeatures();
+            }
+        }, 5000); // Check every 5 seconds
+    </script>
+</body>
+</html>

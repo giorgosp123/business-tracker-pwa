@@ -3570,14 +3570,14 @@
             }
         }
 
-        /* Floating Shortcuts Button */
-        .floating-shortcuts {
+        /* Floating Subscription Button */
+        .floating-subscription {
             position: fixed;
             bottom: 20px;
             right: 20px;
             width: 50px;
             height: 50px;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(45deg, #667eea, #764ba2);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -3591,7 +3591,7 @@
             animation: pulse 2s infinite;
         }
 
-        .floating-shortcuts:hover {
+        .floating-subscription:hover {
             transform: scale(1.1);
             box-shadow: 0 6px 20px rgba(0,0,0,0.4);
         }
@@ -3637,6 +3637,8 @@
                             <span class="dropdown-icon">🎯</span>
                             <span>Στόχοι & Targets</span>
                         </div>
+
+                        <div class="dropdown-divider"></div>
                         <div class="dropdown-item" onclick="document.getElementById('themeBtn').click()">
                             <span class="dropdown-icon">🎨</span>
                             <span>Αλλαγή Θέματος</span>
@@ -3689,7 +3691,7 @@
                             <label class="dropdown-label" for="chartCategory">
                                 📊 Επιλογή Κατηγορίας:
                             </label>
-                            <select id="chartCategory">
+                            <select id="chartCategory" data-advanced-analytics>
                                 <option value="">🏢 Όλες οι Κατηγορίες</option>
                             </select>
                         </div>
@@ -3697,7 +3699,7 @@
                             <label class="dropdown-label" for="forecastPeriod">
                                 🔮 Περίοδος Πρόβλεψης:
                             </label>
-                            <select id="forecastPeriod" title="Επιλέξτε πόσους μήνες στο μέλλον θέλετε να προβλέψετε τις πωλήσεις">
+                            <select id="forecastPeriod" data-ai-prediction title="Επιλέξτε πόσους μήνες στο μέλλον θέλετε να προβλέψετε τις πωλήσεις">
                                 <option value="3">📅 Βραχυπρόθεσμη (3 μήνες) - Υψηλή ακρίβεια 🎯</option>
                                 <option value="6">📊 Μεσοπρόθεσμη (6 μήνες) - Καλή ακρίβεια ✅</option>
                                 <option value="12">📈 Ετήσια πρόβλεψη (12 μήνες) - Μέτρια ακρίβεια ⚖️</option>
@@ -3708,7 +3710,7 @@
                     </div>
                     <div class="chart-buttons-row">
                         <button id="compareBtn">📊 Σύγκριση</button>
-                        <button id="forecastBtn">🔮 AI Πρόβλεψη</button>
+                        <button id="forecastBtn" data-ai-prediction="true">🔮 AI Πρόβλεψη</button>
                         <button id="downloadChartBtn">📥 Γράφημα</button>
                     </div>
                     <div class="chart-type-buttons">
@@ -3741,19 +3743,19 @@
                     <div class="stat-value" id="growthRate">0%</div>
                     <div class="stat-label" id="growthRateLabel">Ρυθμός Ανάπτυξης</div>
                 </div>
-                <div class="stat-card" data-tooltip="💹 Βαθμολογία που δείχνει πόσο αποδοτική είναι η επιχείρηση. Υπολογίζεται από την ανάπτυξη και τη σταθερότητα.">
+                <div class="stat-card" data-advanced-analytics="true" data-tooltip="💹 Βαθμολογία που δείχνει πόσο αποδοτική είναι η επιχείρηση. Υπολογίζεται από την ανάπτυξη και τη σταθερότητα.">
                     <div class="stat-value" id="roiScore">0%</div>
                     <div class="stat-label" id="performanceLabel">📈 Βαθμός Απόδοσης</div>
                 </div>
-                <div class="stat-card" data-tooltip="🌊 Μετρά πόσο επηρεάζονται οι πωλήσεις από εποχικές αλλαγές. Υψηλή τιμή = μεγάλη εποχική διακύμανση.">
+                <div class="stat-card" data-advanced-analytics="true" data-tooltip="🌊 Μετρά πόσο επηρεάζονται οι πωλήσεις από εποχικές αλλαγές. Υψηλή τιμή = μεγάλη εποχική διακύμανση.">
                     <div class="stat-value" id="seasonalityIndex">0.0</div>
                     <div class="stat-label" id="seasonalityLabel">🌊 Εποχικότητα</div>
                 </div>
-                <div class="stat-card" data-tooltip="📊 Δείχνει πόσο ισχυρή είναι η τάση ανάπτυξης ή μείωσης. Υψηλή = σταθερή τάση, Χαμηλή = ασταθής απόδοση.">
+                <div class="stat-card" data-advanced-analytics="true" data-tooltip="📊 Δείχνει πόσο ισχυρή είναι η τάση ανάπτυξης ή μείωσης. Υψηλή = σταθερή τάση, Χαμηλή = ασταθής απόδοση.">
                     <div class="stat-value" id="trendStrength">-</div>
                     <div class="stat-label" id="trendStrengthLabel">📊 Ισχύς Τάσης</div>
                 </div>
-                <div class="stat-card" data-tooltip="⚡ Μετρά πόσο ασταθείς είναι οι πωλήσεις. Υψηλή αστάθεια = απρόβλεπτες αλλαγές, Χαμηλή = σταθερές πωλήσεις.">
+                <div class="stat-card" data-advanced-analytics="true" data-tooltip="⚡ Μετρά πόσο ασταθείς είναι οι πωλήσεις. Υψηλή αστάθεια = απρόβλεπτες αλλαγές, Χαμηλή = σταθερές πωλήσεις.">
                     <div class="stat-value" id="volatilityIndex">0%</div>
                     <div class="stat-label" id="volatilityLabel">⚡ Αστάθεια</div>
                 </div>
@@ -3788,6 +3790,7 @@
                             </div>
                             <button class="add-goal-btn" id="addGoalBtn">➕ <span class="translate" data-translate-key="addGoal">Προσθήκη</span></button>
                             <button class="smart-suggestions-btn" id="smartSuggestionsBtn" onclick="showGoalSuggestions()" 
+                                data-smart-suggestion="true"
                                 style="background: linear-gradient(45deg, #9b59b6, #8e44ad); color: white; border: none; border-radius: 8px; padding: 10px 16px; font-size: 12px; font-weight: 600; cursor: pointer; min-height: 38px; transition: all 0.3s ease; margin-left: 10px;" 
                                 data-translate-key="smartSuggestionsTooltip">💡 <span class="translate" data-translate-key="smartSuggestions">Έξυπνες Προτάσεις</span></button>
                         </div>
@@ -3866,10 +3869,10 @@
             </div>
             
             <!-- Smart Insights Panel -->
-            <div class="insights-panel" id="insightsPanel">
+            <div class="insights-panel" data-smart-suggestion="true" id="insightsPanel">
                 <div class="insights-header">
                     <h3>🔍 Έξυπνες Προτάσεις AI</h3>
-                    <button class="refresh-insights-btn" id="toggleInsightsBtn">� Προβολή Λεπτομερειών</button>
+                    <button class="refresh-insights-btn" id="toggleInsightsBtn" data-smart-suggestion="true">📊 Προβολή Λεπτομερειών</button>
                 </div>
                 <div class="insights-content" id="insightsContent" style="display: none;">
                     <div class="insights-loading" id="insightsLoading" style="display: none;">
@@ -3880,16 +3883,16 @@
                         <!-- Insights will be populated here -->
                     </div>
                     <div style="text-align: center; margin-top: 15px;">
-                        <button class="refresh-insights-btn" id="refreshInsightsBtn">🔄 Ανανέωση Αναλύσεων</button>
+                        <button class="refresh-insights-btn" id="refreshInsightsBtn" data-smart-suggestion="true">🔄 Ανανέωση Αναλύσεων</button>
                     </div>
                 </div>
             </div>
             
             <!-- Advanced Analytics Panel -->
-            <div class="analytics-panel" id="analyticsPanel">
+            <div class="analytics-panel" data-advanced-analytics="true" id="analyticsPanel">
                 <div class="analytics-header">
                     <h3 class="translate">advancedAnalytics</h3>
-                    <button class="toggle-analytics-btn" id="toggleAnalyticsBtn">📊 <span class="translate">viewDetails</span></button>
+                    <button class="toggle-analytics-btn" id="toggleAnalyticsBtn" data-advanced-analytics="true">📊 <span class="translate">viewDetails</span></button>
                 </div>
                 <div class="analytics-content" id="analyticsContent" style="display: none;">
                     <div class="analytics-grid">
@@ -4101,9 +4104,9 @@
         </div>
     </div>
 
-    <!-- Floating Shortcuts Button -->
-    <div id="floatingShortcuts" class="floating-shortcuts" onclick="showKeyboardShortcuts()" title="Ctrl + ? για Shortcuts">
-        ⌨️
+    <!-- Floating Subscription Button -->
+    <div id="floatingSubscription" class="floating-subscription" onclick="window.location.href='subscription.html'" title="💼 Συνδρομή - Αναβάθμιση σε Plus">
+        💼
     </div>
 
     <script>
@@ -4124,6 +4127,7 @@
                 exportExcel: 'Εξαγωγή Excel',
                 exportPdf: 'Εξαγωγή PDF',
                 goalsTargets: 'Στόχοι & Targets',
+                subscription: 'Συνδρομή',
                 changeTheme: 'Αλλαγή Θέματος',
                 changeLanguage: 'Αλλαγή Γλώσσας',
                 calculator: 'Αριθμομηχανή',
@@ -4466,6 +4470,7 @@
                 exportExcel: 'Export Excel',
                 exportPdf: 'Export PDF',
                 goalsTargets: 'Goals & Targets',
+                subscription: 'Subscription',
                 changeTheme: 'Change Theme',
                 changeLanguage: 'Change Language',
                 calculator: 'Calculator',
@@ -5110,9 +5115,13 @@
                 if (element) element.textContent = shortcutElements[id];
             });
             
-            // Update floating shortcuts button tooltip
-            const floatingShortcuts = document.getElementById('floatingShortcuts');
-            if (floatingShortcuts) floatingShortcuts.title = t.shortcutsTooltip;
+            // Update floating subscription button tooltip
+            const floatingSubscription = document.getElementById('floatingSubscription');
+            if (floatingSubscription) {
+                floatingSubscription.title = currentLanguage === 'el' ? 
+                    '💼 Συνδρομή - Αναβάθμιση σε Plus' : 
+                    '💼 Subscription - Upgrade to Plus';
+            }
         };
 
         const updateGoalsPanel = () => {
@@ -8857,4 +8866,282 @@ function sanitizeKey(email) {
                 originalShowNotification?.call(this, message, type, duration);
             }
         };
+        
+        // Subscription system
+        function checkSubscriptionAccess(feature) {
+            const currentSubscription = localStorage.getItem('subscription');
+            const subscriptionExpiry = localStorage.getItem('subscriptionExpiry');
+            const subscriptionFeatures = JSON.parse(localStorage.getItem('subscriptionFeatures') || '[]');
+            
+            if (!currentSubscription || !subscriptionExpiry) {
+                return false;
+            }
+            
+            const now = new Date().getTime();
+            const expiry = new Date(subscriptionExpiry).getTime();
+            
+            if (expiry <= now) {
+                return false;
+            }
+            
+            return subscriptionFeatures.includes(feature);
+        }
+        
+        function showSubscriptionPrompt(feature) {
+            const currentLang = localStorage.getItem('language') || 'el';
+            const messages = {
+                el: {
+                    title: '🔒 Premium Δυνατότητα',
+                    message: 'Αυτή η δυνατότητα απαιτεί συνδρομή. Θέλετε να δείτε τα διαθέσιμα πλάνα;',
+                    upgrade: 'Δείτε Πλάνα',
+                    cancel: 'Όχι τώρα'
+                },
+                en: {
+                    title: '🔒 Premium Feature',
+                    message: 'This feature requires a subscription. Would you like to see available plans?',
+                    upgrade: 'View Plans',
+                    cancel: 'Not now'
+                }
+            };
+            
+            const msg = messages[currentLang];
+            
+            if (confirm(msg.message)) {
+                window.open('subscription.html', '_blank');
+            }
+        }
+        
+        // Add subscription checks to export features
+        const originalExportExcel = window.exportExcel;
+        window.exportExcel = function() {
+            if (!checkSubscriptionAccess('export')) {
+                showSubscriptionPrompt('export');
+                return;
+            }
+            originalExportExcel?.call(this);
+        };
+        
+        const originalExportPdf = window.exportPdf;
+        window.exportPdf = function() {
+            if (!checkSubscriptionAccess('export')) {
+                showSubscriptionPrompt('export');
+                return;
+            }
+            originalExportPdf?.call(this);
+        };
+        
+        // Check subscription status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const subscription = localStorage.getItem('subscription');
+            const expiry = localStorage.getItem('subscriptionExpiry');
+            
+            if (subscription && expiry) {
+                const now = new Date().getTime();
+                const expiryTime = new Date(expiry).getTime();
+                const daysLeft = Math.ceil((expiryTime - now) / (1000 * 60 * 60 * 24));
+                
+                if (daysLeft <= 0) {
+                    // Subscription expired
+                    localStorage.removeItem('subscription');
+                    localStorage.removeItem('subscriptionExpiry');
+                    localStorage.removeItem('subscriptionFeatures');
+                    
+                    const currentLang = localStorage.getItem('language') || 'el';
+                    const message = currentLang === 'el' 
+                        ? '⚠️ Η συνδρομή σας έληξε. Κάποιες δυνατότητες ενδέχεται να μην είναι διαθέσιμες.'
+                        : '⚠️ Your subscription has expired. Some features may not be available.';
+                    
+                    showNotification(message, 'warning');
+                } else if (daysLeft <= 3) {
+                    // Subscription expiring soon
+                    const currentLang = localStorage.getItem('language') || 'el';
+                    const message = currentLang === 'el' 
+                        ? `⏰ Η συνδρομή σας λήγει σε ${daysLeft} ημέρες. Ανανεώστε τώρα για να συνεχίσετε.`
+                        : `⏰ Your subscription expires in ${daysLeft} days. Renew now to continue.`;
+                    
+                    showNotification(message, 'warning');
+                }
+            }
+            
+            // Apply subscription restrictions
+            applySubscriptionRestrictions();
+            
+            // Listen for subscription updates from other windows/tabs
+            window.addEventListener('message', function(event) {
+                if (event.data && event.data.type === 'subscription-updated') {
+                    // Re-apply subscription restrictions when subscription is updated
+                    setTimeout(() => {
+                        applySubscriptionRestrictions();
+                    }, 100);
+                }
+            });
+            
+            // Listen for localStorage changes (for subscription updates in same tab)
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'subscription' || event.key === 'subscriptionExpiry') {
+                    setTimeout(() => {
+                        applySubscriptionRestrictions();
+                    }, 100);
+                }
+            });
+        });
+        
+        // Global function to refresh subscription status (can be called from other pages)
+        window.refreshSubscriptionStatus = function() {
+            applySubscriptionRestrictions();
+        };
+        
+        // Apply subscription-based restrictions
+        function applySubscriptionRestrictions() {
+            const subscription = localStorage.getItem('subscription');
+            const expiry = localStorage.getItem('subscriptionExpiry');
+            const features = JSON.parse(localStorage.getItem('subscriptionFeatures') || '[]');
+            
+            const now = new Date().getTime();
+            const expiryTime = expiry ? new Date(expiry).getTime() : 0;
+            const hasValidSubscription = subscription && expiryTime > now;
+            
+            // First unlock all features
+            unlockAllFeatures();
+            
+            // Then lock features only for basic plan or no subscription
+            if (!hasValidSubscription || subscription === 'basic') {
+                lockAdvancedFeatures();
+            }
+        }
+        
+        function unlockAllFeatures() {
+            // Remove all restrictions and lock icons
+            const allRestrictedElements = document.querySelectorAll('[data-smart-suggestion], [data-advanced-analytics], [data-ai-prediction], .smart-suggestion, .ai-suggestion, .advanced-analytics, .ai-prediction, .prediction-feature');
+            
+            allRestrictedElements.forEach(element => {
+                // Reset visual restrictions
+                element.style.opacity = '';
+                element.style.pointerEvents = '';
+                element.title = '';
+                
+                // Remove lock icons
+                const lockIcon = element.querySelector('.lock-icon');
+                if (lockIcon) {
+                    lockIcon.remove();
+                }
+            });
+            
+            // Enable category dropdown
+            const categorySelect = document.getElementById('categorySelect');
+            if (categorySelect) {
+                categorySelect.disabled = false;
+                categorySelect.style.opacity = '';
+                categorySelect.title = '';
+            }
+        }
+        
+        function lockAdvancedFeatures() {
+            const currentLang = localStorage.getItem('language') || 'el';
+            const messages = {
+                el: {
+                    premiumFeature: '🔒 Premium Δυνατότητα',
+                    upgradeMessage: 'Αυτή η δυνατότητα απαιτεί αναβάθμιση σε Plus πλάνο.'
+                },
+                en: {
+                    premiumFeature: '🔒 Premium Feature',
+                    upgradeMessage: 'This feature requires an upgrade to Plus plan.'
+                }
+            };
+            
+            // Lock AI suggestions
+            const smartSuggestionsElements = document.querySelectorAll('[data-smart-suggestion], .smart-suggestion, .ai-suggestion');
+            smartSuggestionsElements.forEach(element => {
+                element.style.opacity = '0.5';
+                element.style.pointerEvents = 'none';
+                element.title = messages[currentLang].upgradeMessage;
+            });
+            
+            // Lock advanced analytics
+            const advancedAnalyticsElements = document.querySelectorAll('.advanced-analytics, [data-advanced-analytics]');
+            advancedAnalyticsElements.forEach(element => {
+                element.style.opacity = '0.5';
+                element.style.pointerEvents = 'none';
+                element.title = messages[currentLang].upgradeMessage;
+            });
+            
+            // Lock category dropdown
+            const categorySelect = document.getElementById('categorySelect');
+            if (categorySelect) {
+                categorySelect.disabled = true;
+                categorySelect.style.opacity = '0.5';
+                categorySelect.title = messages[currentLang].upgradeMessage;
+            }
+            
+            // Lock AI predictions
+            const aiPredictionElements = document.querySelectorAll('.ai-prediction, [data-ai-prediction], .prediction-feature');
+            aiPredictionElements.forEach(element => {
+                element.style.opacity = '0.5';
+                element.style.pointerEvents = 'none';
+                element.title = messages[currentLang].upgradeMessage;
+            });
+            
+            // Add lock icons to restricted features
+            addLockIcons();
+        }
+        
+        function addLockIcons() {
+            const restrictedSelectors = [
+                '[data-smart-suggestion]',
+                '.smart-suggestion',
+                '.ai-suggestion',
+                '.advanced-analytics',
+                '[data-advanced-analytics]',
+                '.ai-prediction',
+                '[data-ai-prediction]',
+                '.prediction-feature'
+            ];
+            
+            restrictedSelectors.forEach(selector => {
+                const elements = document.querySelectorAll(selector);
+                elements.forEach(element => {
+                    if (!element.querySelector('.lock-icon')) {
+                        const lockIcon = document.createElement('span');
+                        lockIcon.className = 'lock-icon';
+                        lockIcon.innerHTML = '🔒';
+                        lockIcon.style.cssText = `
+                            position: absolute;
+                            top: 5px;
+                            right: 5px;
+                            font-size: 0.8rem;
+                            opacity: 0.7;
+                            z-index: 10;
+                        `;
+                        
+                        element.style.position = 'relative';
+                        element.appendChild(lockIcon);
+                    }
+                });
+            });
+        }
+        
+        // Override restricted functions
+        function showSubscriptionPrompt(feature) {
+            const currentLang = localStorage.getItem('language') || 'el';
+            const messages = {
+                el: {
+                    title: '🔒 Premium Δυνατότητα',
+                    message: 'Αυτή η δυνατότητα απαιτεί αναβάθμιση σε Plus πλάνο. Θέλετε να δείτε τα διαθέσιμα πλάνα;',
+                    upgrade: 'Δείτε Πλάνα',
+                    cancel: 'Όχι τώρα'
+                },
+                en: {
+                    title: '🔒 Premium Feature',
+                    message: 'This feature requires an upgrade to Plus plan. Would you like to see available plans?',
+                    upgrade: 'View Plans',
+                    cancel: 'Not now'
+                }
+            };
+            
+            const msg = messages[currentLang];
+            
+            if (confirm(msg.message)) {
+                window.location.href = 'subscription.html';
+            }
+        }
     </script>

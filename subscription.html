@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Συνδρομή - Business Tracker</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* Modern Glassmorphism Container */
+        .subscription-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 50px;
+            box-shadow: 
+                0 8px 32px 0 rgba(31, 38, 135, 0.37),
+                inset 0 0 60px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 550px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes containerEntrance {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Animated gradient border */
+        .subscription-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #ff6b6b, #4ecdc4, #667eea);
+            background-size: 200% 100%;
+            animation: gradientShift 3s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Enhanced Logo with pulse effect */
+        .logo {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            color: white;
+            box-shadow: 
+                0 15px 35px rgba(102, 126, 234, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: logoPulse 2s ease-in-out infinite;
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            opacity: 0.3;
+            animation: logoRipple 2s ease-out infinite;
+        }
+
+        @keyframes logoPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes logoRipple {
+            0% {
+                transform: scale(1);
+                opacity: 0.3;
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* Modern Typography */
+        h1 {
+            color: white;
+            margin-bottom: 15px;
+            font-size: 32px;
+            font-weight: 800;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 35px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        /* Enhanced Plan Card */
+        .plan-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 35px;
+            margin: 25px 0;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 1px 3px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            overflow: hidden;
+        }
+
+        .plan-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                0 30px 60px rgba(102, 126, 234, 0.15),
+                0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .plan-card:hover::before {
+            left: 100%;
+        }
+
+        /* Enhanced Popular Badge */
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 25px;
+            font-size: 13px;
+            font-weight: 700;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+            animation: badgeGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes badgeGlow {
+            from { box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3); }
+            to { box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6); }
+        }
+
+        /* Enhanced Typography & Pricing */
+        .plan-name {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            letter-spacing: -0.5px;
+        }
+
+        .plan-price {
+            font-size: 42px;
+            font-weight: 900;
+            color: #667eea;
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .plan-price::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .plan-period {
+            color: #7f8c8d;
+            margin-bottom: 25px;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        /* Enhanced Free Trial Badge */
+        .free-trial {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-size: 15px;
+            display: inline-block;
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+            animation: trialPulse 3s ease-in-out infinite;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .free-trial::before {
+            content: '✨';
+            position: absolute;
+            left: -20px;
+            animation: sparkle 2s linear infinite;
+        }
+
+        @keyframes trialPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes sparkle {
+            0% { left: -20px; opacity: 0; }
+            50% { opacity: 1; }
+            100% { left: calc(100% + 20px); opacity: 0; }
+        }
+
+        /* Enhanced Features List */
+        .features-list {
+            text-align: left;
+            margin-bottom: 35px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-item:hover {
+            background: rgba(255, 255, 255, 0.8);
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 14px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            animation: iconFloat 3s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .feature-text {
+            color: #2c3e50;
+            font-size: 15px;
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .feature-text strong {
+            color: #667eea;
+            font-weight: 700;
+        }
+
+        /* Enhanced Buttons */
+        .cta-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 45px;
+            border-radius: 50px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 50px rgba(102, 126, 234, 0.6);
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px);
+        }
+
+        .cancel-button {
+            background: transparent;
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cancel-button:hover {
+            background: #e74c3c;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.3);
+        }
+
+        .back-button {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Modern Subscription Status */
+        .subscription-status {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border: none;
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.2);
+            display: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subscription-status::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #28a745, #20c997);
+        }
+
+        .subscription-status.active {
+            display: block;
+            animation: statusSlideIn 0.5s ease-out;
+        }
+
+        @keyframes statusSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Modern Notification System */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            color: #333;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow: 
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 350px;
+            min-width: 300px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 4px solid #2ecc71;
+        }
+
+        .notification.error {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .notification.warning {
+            border-left: 4px solid #f39c12;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3498db;
+        }
+
+        .notification .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification .notification-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification .notification-text {
+            flex: 1;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .notification .notification-close {
+            background: none;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            margin-left: 10px;
+        }
+
+        .notification .notification-close:hover {
+            color: #666;
+        }
+
+        /* Enhanced Terms */
+        .terms {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 25px;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            animation: confetti-fall 3s linear infinite;
+            z-index: 10000;
+        }
+
+        /* Enhanced Confetti */
+        .confetti {
+            position: fixed;
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            animation: confetti-fall 4s linear infinite;
+            z-index: 10000;
+            border-radius: 50%;
+        }
+
+        @keyframes confetti-fall {
+            to {
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+
+        /* Modern Animations */
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                backdrop-filter: blur(0px);
+            }
+            to { 
+                opacity: 1; 
+                backdrop-filter: blur(5px);
+            }
+        }
+
+        @keyframes scaleIn {
+            from { 
+                opacity: 0; 
+                transform: scale(0.8) translateY(-20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+
+        body.dark-mode .subscription-container {
+            background: rgba(44, 62, 80, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .subscription-container::before {
+            background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #2ecc71, #3498db);
+        }
+
+        body.dark-mode .logo {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            box-shadow: 
+                0 15px 35px rgba(52, 152, 219, 0.4),
+                0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode h1 {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .subtitle {
+            color: rgba(236, 240, 241, 0.8);
+        }
+
+        body.dark-mode .plan-card {
+            background: rgba(52, 73, 94, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .plan-card:hover {
+            box-shadow: 
+                0 30px 60px rgba(52, 152, 219, 0.15),
+                0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        body.dark-mode .plan-name {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode .plan-price {
+            color: #3498db;
+        }
+
+        body.dark-mode .plan-period {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .feature-item {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .feature-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .feature-icon {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        }
+
+        body.dark-mode .feature-text {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .feature-text strong {
+            color: #3498db;
+        }
+
+        body.dark-mode .cta-button {
+            background: linear-gradient(135deg, #3498db 0%, #9b59b6 100%);
+            box-shadow: 0 12px 35px rgba(52, 152, 219, 0.4);
+        }
+
+        body.dark-mode .cta-button:hover {
+            box-shadow: 0 20px 50px rgba(52, 152, 219, 0.6);
+        }
+
+        body.dark-mode .cancel-button {
+            color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        body.dark-mode .cancel-button:hover {
+            background: #e74c3c;
+            box-shadow: 0 10px 25px rgba(231, 76, 60, 0.3);
+        }
+
+        body.dark-mode .back-button {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ecf0f1;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .back-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .terms {
+            color: rgba(236, 240, 241, 0.6);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .subscription-status {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+        }
+
+        body.dark-mode .subscription-status::before {
+            background: linear-gradient(180deg, #2ecc71, #27ae60);
+        }
+
+        body.dark-mode .notification {
+            background: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Dark Mode Toggle Button */
+        .dark-mode-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            color: white;
+        }
+
+        .dark-mode-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        body.dark-mode .dark-mode-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ecf0f1;
+        }
+
+        /* Language Toggle Button */
+        .language-toggle {
+            position: fixed;
+            top: 30px;
+            right: 100px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            color: white;
+        }
+
+        .language-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        body.dark-mode .language-toggle {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ecf0f1;
+        }
+
+        /* Stripe Payment Modal Styles */
+        .payment-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10002;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+        }
+
+        .payment-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .payment-title {
+            font-size: 24px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .payment-subtitle {
+            color: #7f8c8d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .payment-element {
+            margin: 25px 0;
+            padding: 20px;
+            border: 2px solid #f1f2f6;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+        }
+
+        .payment-element:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .payment-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .payment-submit {
+            flex: 2;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .payment-submit:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .payment-cancel {
+            flex: 1;
+            background: transparent;
+            color: #7f8c8d;
+            border: 2px solid #bdc3c7;
+            padding: 15px 25px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .payment-cancel:hover {
+            background: #bdc3c7;
+            color: white;
+        }
+
+        .secure-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(46, 204, 113, 0.1);
+            border-radius: 8px;
+            color: #27ae60;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .payment-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .payment-spinner {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Dark Mode Styles for Payment Modal */
+        body.dark-mode .payment-container {
+            background: rgba(52, 73, 94, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .payment-title {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode .payment-subtitle {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .payment-element {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .payment-element:focus-within {
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        body.dark-mode .payment-submit {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+        }
+
+        body.dark-mode .payment-submit:hover {
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+        }
+
+        body.dark-mode .payment-cancel {
+            color: #ecf0f1;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        body.dark-mode .payment-cancel:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .secure-badge {
+            background: rgba(46, 204, 113, 0.2);
+            color: #2ecc71;
+        }
+
+        /* Enhanced Responsive Design */
+        @media (max-width: 768px) {
+            .subscription-container {
+                padding: 30px 25px;
+                margin: 15px;
+                border-radius: 20px;
+            }
+
+            .plan-price {
+                font-size: 36px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            .feature-item {
+                padding: 10px;
+                margin-bottom: 12px;
+            }
+
+            .notification {
+                top: 20px;
+                right: 20px;
+                left: 20px;
+                max-width: none;
+                min-width: auto;
+            }
+
+            .dark-mode-toggle {
+                top: 20px;
+                right: 20px;
+                padding: 8px 12px;
+                font-size: 18px;
+            }
+
+            .language-toggle {
+                top: 20px;
+                right: 80px;
+                padding: 8px 12px;
+                font-size: 18px;
+            }
+
+            .payment-container {
+                margin: 15px;
+                padding: 30px 25px;
+                max-width: none;
+            }
+
+            .payment-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .payment-submit, .payment-cancel {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="subscription-container">
+        <div class="logo">💼</div>
+        <h1 data-translate="title">Premium Συνδρομή</h1>
+        <p class="subtitle" data-translate="subtitle">Ξεκλειδώστε όλες τις δυνατότητες του Business Tracker</p>
+
+        <!-- Subscription Status (shown when user has active subscription) -->
+        <div class="subscription-status" id="subscriptionStatus">
+            <strong data-translate="activeSubscription">🎉 Η συνδρομή σας είναι ενεργή!</strong><br>
+            <span data-translate="expiresOn">Λήγει στις:</span> <span id="expiryDate"></span>
+        </div>
+
+        <!-- Main Plan -->
+        <div class="plan-card">
+            <div class="plan-name" data-translate="planName">Business Pro</div>
+            <div class="plan-price">€12.99</div>
+            <div class="plan-period" data-translate="planPeriod">ανά μήνα</div>
+            <div class="free-trial" data-translate="freeTrial">🎁 3 Μέρες Δωρεάν Δοκιμή</div>
+
+            <div class="features-list">
+                <div class="feature-item">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-text" data-translate="feature1"><strong>Έξυπνες Προτάσεις AI</strong> - Αυτόματη ανάλυση δεδομένων και προτάσεις βελτίωσης</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-text" data-translate="feature2"><strong>Προηγμένα Αναλυτικά</strong> - Λεπτομερείς μετρικές απόδοσης και ανάλυση αγοράς</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🔮</div>
+                    <div class="feature-text" data-translate="feature3"><strong>AI Προβλέψεις</strong> - Προβλέψεις πωλήσεων έως 24 μήνες στο μέλλον</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <div class="feature-text" data-translate="feature4"><strong>Έξυπνοι Στόχοι</strong> - Αυτόματες προτάσεις στόχων βασισμένες στα δεδομένα</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <div class="feature-text" data-translate="feature5"><strong>Εποχικότητα & Τάσεις</strong> - Ανάλυση εποχικών μοτίβων και δυναμικής αγοράς</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">⚡</div>
+                    <div class="feature-text" data-translate="feature6"><strong>Μετρικές Αστάθειας</strong> - Παρακολούθηση κινδύνων και αξιολόγηση απόδοσης</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🌊</div>
+                    <div class="feature-text" data-translate="feature7"><strong>Ανάλυση Κινδύνου</strong> - Εκτίμηση επιπέδου κινδύνου και ρυθμού ανάκαμψης</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">💡</div>
+                    <div class="feature-text" data-translate="feature8"><strong>Άπεριόριστη Πρόσβαση</strong> - Όλες οι δυνατότητες χωρίς περιορισμούς</div>
+                </div>
+            </div>
+
+            <button class="cta-button" onclick="startSubscription()" data-translate="ctaButton">
+                🚀 Ξεκινήστε τη Δωρεάν Δοκιμή
+            </button>
+            
+            <button class="cancel-button" onclick="cancelSubscription()" id="cancelBtn" style="display: none;" data-translate="cancelButton">
+                🗑️ Ακύρωση Συνδρομής
+            </button>
+        </div>
+
+        <button class="back-button" onclick="goBack()" data-translate="backButton">
+            ← Επιστροφή
+        </button>
+
+        <div class="terms" data-translate="terms">
+            Με την εγγραφή συμφωνείτε με τους όρους χρήσης. Η δωρεάν δοκιμή διαρκεί 3 μέρες. 
+            Μετά τη λήξη της δοκιμαστικής περιόδου θα χρεωθείτε €12.99/μήνα. 
+            Μπορείτε να ακυρώσετε ανά πάσα στιγμή.
+        </div>
+    </div>
+
+    <!-- Dark Mode Toggle -->
+    <button class="dark-mode-toggle" id="darkModeToggle" onclick="toggleDarkMode()" title="Toggle Dark Mode">
+        🌙
+    </button>
+
+    <!-- Language Toggle -->
+    <button class="language-toggle" id="languageToggle" onclick="toggleLanguage()" title="Αλλαγή Γλώσσας">
+        🇬🇷
+    </button>
+
+    <!-- Modern Notification Container -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <div class="notification-icon" id="notificationIcon">🎉</div>
+            <div class="notification-text" id="notificationText"></div>
+            <button class="notification-close" onclick="hideNotification()">✕</button>
+        </div>
+    </div>
+
+    <script>
+        /*
+        STRIPE INTEGRATION SETUP GUIDE:
+        
+        1. Get your Stripe keys from https://dashboard.stripe.com/apikeys
+        2. Replace 'pk_test_51234567890abcdef...' with your actual publishable key
+        3. Create a product and price in Stripe Dashboard:
+           - Product: "Business Pro Subscription"
+           - Price: €12.99/month with 3-day trial
+           - Copy the price ID (starts with price_)
+        4. Replace 'price_1234567890abcdef' with your actual price ID
+        5. Set up webhooks in Stripe Dashboard to handle subscription events
+        6. Create backend endpoints to:
+           - Create PaymentIntent/Subscription
+           - Handle webhook events
+           - Manage customer subscriptions
+        
+        For production, you'll also need:
+        - SSL certificate (HTTPS)
+        - Backend server (Node.js, Python, PHP, etc.)
+        - Database to store subscription status
+        - Webhook endpoint to handle Stripe events
+        */
+
+        // Stripe Configuration
+        // ✅ ΕΝΗΜΕΡΩΜΕΝΟ: Stripe Live Key ενεργοποιημένο για production
+        const stripe = Stripe('pk_live_51NsMhxA1DFzFV9pRzlkLOHee4j7cyeDGQZJfolnsTVH0givjHlcWyP9PYYXrQM7WFnYV8tdkAgrkoyfLnaCMJysB003TUxSuBN');
+        let elements;
+        let paymentElement;
+
+        // Stripe Payment Configuration
+        const STRIPE_CONFIG = {
+            publishableKey: 'pk_live_51NsMhxA1DFzFV9pRzlkLOHee4j7cyeDGQZJfolnsTVH0givjHlcWyP9PYYXrQM7WFnYV8tdkAgrkoyfLnaCMJysB003TUxSuBN',
+            priceId: 'price_1RmsJyA1DFzFV9pRZIX920UB', // ✅ ΕΝΗΜΕΡΩΜΕΝΟ ΜΕ ΤΟ ΣΩΣΤΟ PRICE ID!
+            currency: 'eur',
+            amount: 1299, // €12.99 in cents
+            trialDays: 3,
+            isProduction: true // Live mode ενεργοποιημένο
+        };
+
+        // Language System
+        const translations = {
+            el: {
+                title: "Premium Συνδρομή",
+                subtitle: "Ξεκλειδώστε όλες τις δυνατότητες του Business Tracker",
+                activeSubscription: "🎉 Η συνδρομή σας είναι ενεργή!",
+                expiresOn: "Λήγει στις:",
+                planName: "Business Pro",
+                planPeriod: "ανά μήνα",
+                freeTrial: "🎁 3 Μέρες Δωρεάν Δοκιμή",
+                feature1: "<strong>Έξυπνες Προτάσεις AI</strong> - Αυτόματη ανάλυση δεδομένων και προτάσεις βελτίωσης",
+                feature2: "<strong>Προηγμένα Αναλυτικά</strong> - Λεπτομερείς μετρικές απόδοσης και ανάλυση αγοράς",
+                feature3: "<strong>AI Προβλέψεις</strong> - Προβλέψεις πωλήσεων έως 24 μήνες στο μέλλον",
+                feature4: "<strong>Έξυπνοι Στόχοι</strong> - Αυτόματες προτάσεις στόχων βασισμένες στα δεδομένα",
+                feature5: "<strong>Εποχικότητα & Τάσεις</strong> - Ανάλυση εποχικών μοτίβων και δυναμικής αγοράς",
+                feature6: "<strong>Μετρικές Αστάθειας</strong> - Παρακολούθηση κινδύνων και αξιολόγηση απόδοσης",
+                feature7: "<strong>Ανάλυση Κινδύνου</strong> - Εκτίμηση επιπέδου κινδύνου και ρυθμού ανάκαμψης",
+                feature8: "<strong>Άπεριόριστη Πρόσβαση</strong> - Όλες οι δυνατότητες χωρίς περιορισμούς",
+                ctaButton: "🚀 Ξεκινήστε τη Δωρεάν Δοκιμή",
+                cancelButton: "🗑️ Ακύρωση Συνδρομής",
+                backButton: "← Επιστροφή",
+                terms: "Με την εγγραφή συμφωνείτε με τους όρους χρήσης. Η δωρεάν δοκιμή διαρκεί 3 μέρες. Μετά τη λήξη της δοκιμαστικής περιόδου θα χρεωθείτε €12.99/μήνα. Μπορείτε να ακυρώσετε ανά πάσα στιγμή.",
+                activeSubscriptionStatus: "✅ Η Συνδρομή σας είναι Ενεργή",
+                confirmTrialTitle: "Ξεκινήστε τη Δωρεάν Δοκιμή",
+                confirmTrialText: "Θέλετε να ξεκινήσετε τη δωρεάν δοκιμή <strong>3 ημερών</strong>;<br>Θα έχετε πλήρη πρόσβαση σε όλες τις premium δυνατότητες!",
+                confirmTrialYes: "🚀 Ναι, Ξεκινάμε!",
+                confirmTrialNo: "Όχι τώρα",
+                cancelTitle: "Ακύρωση Συνδρομής",
+                cancelText: "Είστε σίγουρος ότι θέλετε να <strong>ακυρώσετε</strong> τη συνδρομή σας;<br>Θα χάσετε την πρόσβαση σε όλες τις premium δυνατότητες.",
+                cancelYes: "💔 Ναι, Ακύρωση",
+                cancelNo: "💼 Κράτησε την Συνδρομή",
+                successTitle: "Καλώς ήρθατε στο Premium!",
+                successText: "🚀 Η δωρεάν δοκιμή σας ξεκίνησε!<br>✨ Έχετε πλήρη πρόσβαση για <strong>3 μέρες</strong>.<br>🔓 Όλες οι premium δυνατότητες είναι πλέον διαθέσιμες!",
+                successButton: "🎯 Πάμε!",
+                notificationWelcome: "🎉 Καλώς ήρθατε στο Premium! Η δωρεάν δοκιμή σας ξεκίνησε!",
+                notificationCanceled: "✅ Η συνδρομή σας ακυρώθηκε επιτυχώς!",
+                notificationDarkMode: "🌙 Dark Mode ενεργοποιήθηκε!",
+                notificationLightMode: "☀️ Light Mode ενεργοποιήθηκε!",
+                // Stripe Payment Translations
+                paymentTitle: "Ολοκλήρωση Πληρωμής",
+                paymentSubtitle: "Εισάγετε τα στοιχεία της κάρτας σας για να ξεκινήσετε τη δωρεάν δοκιμή",
+                paymentProcessing: "⏳ Επεξεργασία πληρωμής...",
+                paymentSuccess: "✅ Η πληρωμή ολοκληρώθηκε επιτυχώς!",
+                paymentError: "❌ Σφάλμα πληρωμής. Παρακαλώ δοκιμάστε ξανά.",
+                paymentCancel: "Ακύρωση",
+                paymentSubmit: "💳 Ξεκινήστε τη Δωρεάν Δοκιμή",
+                securePayment: "🔒 Ασφαλής πληρωμή με κρυπτογράφηση SSL"
+            },
+            en: {
+                title: "Premium Subscription",
+                subtitle: "Unlock all Business Tracker features",
+                activeSubscription: "🎉 Your subscription is active!",
+                expiresOn: "Expires on:",
+                planName: "Business Pro",
+                planPeriod: "per month",
+                freeTrial: "🎁 3 Days Free Trial",
+                feature1: "<strong>Smart AI Suggestions</strong> - Automatic data analysis and improvement recommendations",
+                feature2: "<strong>Advanced Analytics</strong> - Detailed performance metrics and market analysis",
+                feature3: "<strong>AI Predictions</strong> - Sales forecasts up to 24 months ahead",
+                feature4: "<strong>Smart Goals</strong> - Automatic goal suggestions based on data",
+                feature5: "<strong>Seasonality & Trends</strong> - Analysis of seasonal patterns and market dynamics",
+                feature6: "<strong>Volatility Metrics</strong> - Risk monitoring and performance evaluation",
+                feature7: "<strong>Risk Analysis</strong> - Risk level assessment and recovery rate estimation",
+                feature8: "<strong>Unlimited Access</strong> - All features without restrictions",
+                ctaButton: "🚀 Start Free Trial",
+                cancelButton: "🗑️ Cancel Subscription",
+                backButton: "← Back",
+                terms: "By signing up you agree to the terms of use. The free trial lasts 3 days. After the trial period expires you will be charged €12.99/month. You can cancel at any time.",
+                activeSubscriptionStatus: "✅ Your Subscription is Active",
+                confirmTrialTitle: "Start Free Trial",
+                confirmTrialText: "Do you want to start the <strong>3-day</strong> free trial?<br>You will have full access to all premium features!",
+                confirmTrialYes: "🚀 Yes, Let's Start!",
+                confirmTrialNo: "Not now",
+                cancelTitle: "Cancel Subscription",
+                cancelText: "Are you sure you want to <strong>cancel</strong> your subscription?<br>You will lose access to all premium features.",
+                cancelYes: "💔 Yes, Cancel",
+                cancelNo: "💼 Keep Subscription",
+                successTitle: "Welcome to Premium!",
+                successText: "🚀 Your free trial has started!<br>✨ You have full access for <strong>3 days</strong>.<br>🔓 All premium features are now available!",
+                successButton: "🎯 Go!",
+                notificationWelcome: "🎉 Welcome to Premium! Your free trial has started!",
+                notificationCanceled: "✅ Your subscription was successfully canceled!",
+                notificationDarkMode: "🌙 Dark Mode activated!",
+                notificationLightMode: "☀️ Light Mode activated!",
+                // Stripe Payment Translations
+                paymentTitle: "Complete Payment",
+                paymentSubtitle: "Enter your card details to start your free trial",
+                paymentProcessing: "⏳ Processing payment...",
+                paymentSuccess: "✅ Payment completed successfully!",
+                paymentError: "❌ Payment error. Please try again.",
+                paymentCancel: "Cancel",
+                paymentSubmit: "💳 Start Free Trial",
+                securePayment: "🔒 Secure payment with SSL encryption"
+            }
+        };
+
+        // Language Functions
+        function initializeLanguage() {
+            const savedLanguage = localStorage.getItem('language') || 'el';
+            setLanguage(savedLanguage);
+            
+            // Listen for language changes from other tabs
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'language') {
+                    setLanguage(e.newValue);
+                }
+            });
+        }
+
+        function toggleLanguage() {
+            const currentLang = localStorage.getItem('language') || 'el';
+            const newLang = currentLang === 'el' ? 'en' : 'el';
+            localStorage.setItem('language', newLang);
+            setLanguage(newLang);
+            
+            // Show notification
+            const message = newLang === 'el' ? '🇬🇷 Ελληνικά ενεργοποιήθηκαν!' : '🇺🇸 English activated!';
+            showNotification(message, 'info', 2000);
+        }
+
+        function setLanguage(lang) {
+            const elements = document.querySelectorAll('[data-translate]');
+            elements.forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang] && translations[lang][key]) {
+                    element.innerHTML = translations[lang][key];
+                }
+            });
+            
+            // Update language toggle button
+            const toggle = document.getElementById('languageToggle');
+            toggle.textContent = lang === 'el' ? '🇺🇸' : '🇬🇷';
+            toggle.title = lang === 'el' ? 'Switch to English' : 'Αλλαγή σε Ελληνικά';
+            
+            // Update document language
+            document.documentElement.lang = lang;
+            
+            // Update title
+            document.title = lang === 'el' ? 'Premium Συνδρομή - Business Tracker' : 'Premium Subscription - Business Tracker';
+        }
+
+        // Dark Mode Functionality
+        function initializeDarkMode() {
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (savedDarkMode) {
+                document.body.classList.add('dark-mode');
+                updateDarkModeButton();
+            }
+            
+            // Listen for dark mode changes from other tabs
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'darkMode') {
+                    const isDarkMode = e.newValue === 'true';
+                    if (isDarkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                    updateDarkModeButton();
+                }
+            });
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            const currentLang = localStorage.getItem('language') || 'el';
+            localStorage.setItem('darkMode', isDarkMode);
+            updateDarkModeButton();
+            
+            // Show notification
+            const message = isDarkMode ? translations[currentLang].notificationDarkMode : translations[currentLang].notificationLightMode;
+            showNotification(message, 'info', 2000);
+        }
+
+        function updateDarkModeButton() {
+            const toggle = document.getElementById('darkModeToggle');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            toggle.textContent = isDarkMode ? '☀️' : '🌙';
+            toggle.title = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+        }
+        function showNotification(message, type = 'success', duration = 4000) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const text = document.getElementById('notificationText');
+            
+            // Set notification content
+            text.textContent = message;
+            
+            // Set icon based on type
+            const icons = {
+                success: '🎉',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            icon.textContent = icons[type] || icons.success;
+            
+            // Set notification type class
+            notification.className = `notification ${type}`;
+            
+            // Show notification
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            
+            // Auto hide after duration
+            setTimeout(() => {
+                hideNotification();
+            }, duration);
+        }
+
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+        }
+        // Check current subscription status on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize language first
+            initializeLanguage();
+            
+            // Initialize dark mode
+            initializeDarkMode();
+            
+            // Then update subscription UI
+            updateSubscriptionUI();
+            
+            // Listen for subscription updates from other tabs
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'subscription' || e.key === 'subscriptionExpiry') {
+                    updateSubscriptionUI();
+                }
+            });
+        });
+
+        function updateSubscriptionUI() {
+            const subscription = localStorage.getItem('subscription');
+            const expiry = localStorage.getItem('subscriptionExpiry');
+            const statusDiv = document.getElementById('subscriptionStatus');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const ctaBtn = document.querySelector('.cta-button');
+            const currentLang = localStorage.getItem('language') || 'el';
+
+            if (subscription && expiry) {
+                const expiryDate = new Date(expiry);
+                const now = new Date();
+                
+                if (expiryDate > now) {
+                    // Active subscription
+                    statusDiv.classList.add('active');
+                    document.getElementById('expiryDate').textContent = expiryDate.toLocaleDateString(currentLang === 'el' ? 'el-GR' : 'en-US');
+                    cancelBtn.style.display = 'block';
+                    ctaBtn.textContent = translations[currentLang].activeSubscriptionStatus;
+                    ctaBtn.style.background = '#27ae60';
+                    ctaBtn.disabled = true;
+                    return;
+                }
+            }
+
+            // No active subscription
+            statusDiv.classList.remove('active');
+            cancelBtn.style.display = 'none';
+            ctaBtn.textContent = translations[currentLang].ctaButton;
+            ctaBtn.style.background = '';
+            ctaBtn.disabled = false;
+        }
+
+        function startSubscription() {
+            const currentLang = localStorage.getItem('language') || 'el';
+            showPaymentModal(currentLang);
+        }
+
+        function showPaymentModal(lang) {
+            // Create payment modal
+            const paymentModal = document.createElement('div');
+            paymentModal.className = 'payment-modal';
+            paymentModal.id = 'paymentModal';
+            
+            paymentModal.innerHTML = `
+                <div class="payment-container">
+                    <div class="payment-header">
+                        <h2 class="payment-title">${translations[lang].paymentTitle}</h2>
+                        <p class="payment-subtitle">${translations[lang].paymentSubtitle}</p>
+                    </div>
+                    
+                    <form id="payment-form">
+                        <div id="payment-element" class="payment-element">
+                            <!-- Stripe Elements will create form elements here -->
+                        </div>
+                        
+                        <div class="secure-badge">
+                            ${translations[lang].securePayment}
+                        </div>
+                        
+                        <div class="payment-buttons">
+                            <button type="submit" id="submit-payment" class="payment-submit">
+                                ${translations[lang].paymentSubmit}
+                            </button>
+                            <button type="button" class="payment-cancel" onclick="closePaymentModal()">
+                                ${translations[lang].paymentCancel}
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            `;
+            
+            document.body.appendChild(paymentModal);
+            
+            // Apply dark mode if active
+            if (document.body.classList.contains('dark-mode')) {
+                // Dark mode styles are handled by CSS
+            }
+            
+            // Initialize Stripe payment form
+            initializeStripePayment(lang);
+        }
+
+        async function initializeStripePayment(lang) {
+            try {
+                // Check if we have real Price ID
+                const hasRealPriceId = !STRIPE_CONFIG.priceId.includes('PLACEHOLDER');
+                
+                if (!hasRealPriceId) {
+                    // Show message that Price ID is needed
+                    const paymentElement = document.getElementById('payment-element');
+                    paymentElement.innerHTML = `
+                        <div style="padding: 30px; text-align: center; background: linear-gradient(135deg, #fff3cd, #ffeaa7); border-radius: 12px; border: 2px solid #f39c12;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">⚠️</div>
+                            <h3 style="color: #e17055; margin-bottom: 10px; font-size: 18px;">Απαιτείται Price ID</h3>
+                            <p style="color: #6c757d; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                ${lang === 'el' ? 
+                                'Χρειάζεται να δημιουργήσετε το προϊόν στο Stripe Dashboard και να βάλετε το Price ID' : 
+                                'You need to create the product in Stripe Dashboard and add the Price ID'}
+                            </p>
+                            <div style="background: #e17055; color: white; padding: 12px; border-radius: 8px;">
+                                <small style="font-weight: 600;">
+                                    ${lang === 'el' ? 
+                                    '✅ Live Key: Ενεργό | ❌ Price ID: Απαιτείται' : 
+                                    '✅ Live Key: Active | ❌ Price ID: Required'}
+                                </small>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    // Show ready for backend integration message
+                    const paymentElement = document.getElementById('payment-element');
+                    paymentElement.innerHTML = `
+                        <div style="padding: 30px; text-align: center; background: linear-gradient(135deg, #d4edda, #c3e6cb); border-radius: 12px; border: 2px solid #28a745;">
+                            <div style="font-size: 48px; margin-bottom: 15px;">🎯</div>
+                            <h3 style="color: #155724; margin-bottom: 10px; font-size: 18px;">Stripe Έτοιμο για Backend!</h3>
+                            <p style="color: #6c757d; font-size: 14px; line-height: 1.5; margin-bottom: 15px;">
+                                ${lang === 'el' ? 
+                                'Stripe configuration είναι έτοιμο! Χρειάζεται backend server για live payments.' : 
+                                'Stripe configuration is ready! Backend server needed for live payments.'}
+                            </p>
+                            <div style="background: #28a745; color: white; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                                <small style="font-weight: 600;">
+                                    ✅ Live Key: Active<br>
+                                    ✅ Price ID: ${STRIPE_CONFIG.priceId}<br>
+                                    ⚠️ Backend: Required for live payments
+                                </small>
+                            </div>
+                            <button type="button" class="demo-payment-btn" onclick="simulatePayment('${lang}')" 
+                                style="background: #667eea; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                                ${lang === 'el' ? '🎮 Demo Payment (Προσομοίωση)' : '🎮 Demo Payment (Simulation)'}
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // Handle form submission
+                const form = document.getElementById('payment-form');
+                form.addEventListener('submit', handlePaymentSubmit);
+                
+            } catch (error) {
+                console.error('Stripe initialization error:', error);
+                showNotification(translations[lang].paymentError, 'error', 4000);
+            }
+        }
+
+        async function initializeRealStripe(lang) {
+            // Real Stripe Elements initialization
+            const appearance = {
+                theme: document.body.classList.contains('dark-mode') ? 'night' : 'stripe',
+                variables: {
+                    colorPrimary: '#667eea',
+                    colorBackground: document.body.classList.contains('dark-mode') ? '#34495e' : '#ffffff',
+                    colorText: document.body.classList.contains('dark-mode') ? '#ecf0f1' : '#2c3e50',
+                    colorDanger: '#e74c3c',
+                    fontFamily: 'Segoe UI, sans-serif',
+                    spacingUnit: '4px',
+                    borderRadius: '12px',
+                }
+            };
+
+            // Initialize Stripe Elements
+            elements = stripe.elements({
+                appearance,
+                clientSecret: 'pi_example_client_secret' // Get this from your backend
+            });
+
+            // Create and mount the Payment Element
+            paymentElement = elements.create('payment');
+            paymentElement.mount('#payment-element');
+
+            // Handle real-time validation errors from the card Element
+            paymentElement.on('change', ({error}) => {
+                const displayError = document.getElementById('card-errors');
+                if (error) {
+                    displayError.textContent = error.message;
+                } else {
+                    displayError.textContent = '';
+                }
+            });
+        }
+
+        function simulatePayment(lang) {
+            console.log('🎮 Simulating payment with live Stripe config...');
+            
+            // Show loading notification
+            showNotification(translations[lang].paymentProcessing || 'Processing payment...', 'info', 2000);
+            
+            // Simulate payment processing
+            setTimeout(async () => {
+                try {
+                    await processSuccessfulPayment(lang);
+                    console.log('✅ Demo payment completed successfully');
+                } catch (error) {
+                    console.error('Demo payment error:', error);
+                    showNotification(translations[lang].paymentError || 'Payment failed', 'error', 4000);
+                }
+            }, 2500);
+        }
+
+        async function handlePaymentSubmit(event) {
+            event.preventDefault();
+            const currentLang = localStorage.getItem('language') || 'el';
+            const submitButton = document.getElementById('submit-payment');
+            
+            // Check if this is demo mode (no real Stripe Elements)
+            const hasRealStripeElements = elements && paymentElement;
+            
+            // Show loading state
+            submitButton.disabled = true;
+            submitButton.innerHTML = `
+                <div class="payment-loading">
+                    <div class="payment-spinner"></div>
+                    ${translations[currentLang].paymentProcessing}
+                </div>
+            `;
+            
+            try {
+                if (!hasRealStripeElements) {
+                    // Demo mode - simulate payment
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    await processSuccessfulPayment(currentLang);
+                } else {
+                    // Real Stripe payment (requires backend)
+                    await processRealStripePayment(currentLang);
+                }
+                
+            } catch (error) {
+                console.error('Payment error:', error);
+                showNotification(translations[currentLang].paymentError, 'error', 4000);
+                
+                // Reset button
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.innerHTML = translations[currentLang].paymentSubmit;
+                }
+            }
+        }
+
+        async function processRealStripePayment(lang) {
+            // Confirm payment with Stripe
+            const {error, paymentIntent} = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: window.location.href,
+                },
+                redirect: 'if_required'
+            });
+
+            if (error) {
+                throw new Error(error.message);
+            }
+
+            if (paymentIntent.status === 'succeeded') {
+                await processSuccessfulPayment(lang);
+            } else {
+                throw new Error('Payment not completed');
+            }
+        }
+
+        async function processSuccessfulPayment(lang) {
+            // Set subscription data
+            const now = new Date();
+            const expiry = new Date(now.getTime() + (3 * 24 * 60 * 60 * 1000)); // 3 days trial
+            
+            localStorage.setItem('subscription', 'pro');
+            localStorage.setItem('subscriptionExpiry', expiry.toISOString());
+            localStorage.setItem('subscriptionFeatures', JSON.stringify([
+                'smart-suggestion',
+                'advanced-analytics', 
+                'ai-prediction'
+            ]));
+            
+            // Close payment modal
+            closePaymentModal();
+            
+            // Show success notification
+            showNotification(translations[lang].notificationWelcome, 'success', 5000);
+            
+            // Show success animation
+            createConfetti();
+            setTimeout(() => {
+                showSuccessMessage();
+            }, 500);
+            
+            // Update UI
+            updateSubscriptionUI();
+            
+            // Notify other tabs
+            broadcastSubscriptionUpdate();
+        }
+
+        function closePaymentModal() {
+            const modal = document.getElementById('paymentModal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Backend Integration Example
+        /*
+        Example backend endpoint for creating PaymentIntent:
+        
+        POST /create-payment-intent
+        {
+            "priceId": "price_1234567890abcdef",
+            "customerId": "cus_1234567890abcdef", // optional, for existing customers
+            "trialDays": 3
+        }
+        
+        Response:
+        {
+            "clientSecret": "pi_1234567890abcdef_secret_...",
+            "customerId": "cus_1234567890abcdef"
+        }
+        
+        Example webhook handler for subscription events:
+        POST /stripe-webhook
+        - subscription.created
+        - subscription.updated  
+        - subscription.deleted
+        - invoice.payment_succeeded
+        - invoice.payment_failed
+        */
+
+        function cancelSubscription() {
+            const currentLang = localStorage.getItem('language') || 'el';
+            
+            // Enhanced cancellation confirmation
+            const cancelOverlay = document.createElement('div');
+            cancelOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(5px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                animation: fadeIn 0.3s ease;
+            `;
+            
+            cancelOverlay.innerHTML = `
+                <div class="cancel-dialog" style="
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(20px);
+                    padding: 40px;
+                    border-radius: 25px;
+                    text-align: center;
+                    max-width: 450px;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                ">
+                    <div style="font-size: 60px; margin-bottom: 20px; animation: shake 0.5s ease;">😢</div>
+                    <h3 class="dialog-title" style="color: #e74c3c; margin-bottom: 15px; font-size: 22px;">${translations[currentLang].cancelTitle}</h3>
+                    <p class="dialog-text" style="color: #7f8c8d; margin-bottom: 30px; line-height: 1.5;">
+                        ${translations[currentLang].cancelText}
+                    </p>
+                    <div style="display: flex; gap: 15px;">
+                        <button onclick="confirmCancellation()" class="cancel-confirm-btn" style="
+                            flex: 1;
+                            background: linear-gradient(135deg, #e74c3c, #c0392b);
+                            color: white;
+                            border: none;
+                            padding: 15px;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            font-size: 16px;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            ${translations[currentLang].cancelYes}
+                        </button>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" class="keep-btn" style="
+                            flex: 1;
+                            background: linear-gradient(135deg, #667eea, #764ba2);
+                            color: white;
+                            border: none;
+                            padding: 15px;
+                            border-radius: 12px;
+                            cursor: pointer;
+                            font-weight: 600;
+                            font-size: 16px;
+                            transition: all 0.3s ease;
+                        " onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                            ${translations[currentLang].cancelNo}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            // Add to document with dark mode support
+            document.body.appendChild(cancelOverlay);
+            
+            // Apply dark mode styles if active
+            if (document.body.classList.contains('dark-mode')) {
+                const dialog = cancelOverlay.querySelector('.cancel-dialog');
+                const title = cancelOverlay.querySelector('.dialog-title');
+                const text = cancelOverlay.querySelector('.dialog-text');
+                const keepBtn = cancelOverlay.querySelector('.keep-btn');
+                
+                dialog.style.background = 'rgba(52, 73, 94, 0.95)';
+                dialog.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                title.style.color = '#e74c3c';
+                text.style.color = '#bdc3c7';
+                
+                keepBtn.style.background = 'linear-gradient(135deg, #3498db, #9b59b6)';
+            }
+            
+            // Add global function for cancellation
+            window.confirmCancellation = function() {
+                // Clear subscription data
+                localStorage.removeItem('subscription');
+                localStorage.removeItem('subscriptionExpiry');
+                localStorage.removeItem('subscriptionFeatures');
+                
+                // Remove overlay
+                cancelOverlay.remove();
+                
+                // Show success notification
+                showNotification(translations[currentLang].notificationCanceled, 'warning', 4000);
+                
+                // Update UI
+                updateSubscriptionUI();
+                
+                // Notify other tabs
+                broadcastSubscriptionUpdate();
+            };
+        }
+
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#667eea', '#764ba2', '#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#feca57', '#ff9ff3', '#54a0ff'];
+            const shapes = ['●', '▲', '■', '♦', '★'];
+            
+            for (let i = 0; i < 150; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.innerHTML = shapes[Math.floor(Math.random() * shapes.length)];
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.color = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.animationDelay = Math.random() * 3 + 's';
+                    confetti.style.animationDuration = (Math.random() * 4 + 3) + 's';
+                    confetti.style.fontSize = (Math.random() * 10 + 10) + 'px';
+                    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 8000);
+                }, i * 20);
+            }
+        }
+
+        function showSuccessMessage() {
+            const currentLang = localStorage.getItem('language') || 'el';
+            
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.8);
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                animation: fadeIn 0.5s ease;
+            `;
+            
+            overlay.innerHTML = `
+                <div class="success-dialog" style="
+                    background: rgba(255, 255, 255, 0.95);
+                    backdrop-filter: blur(20px);
+                    padding: 50px;
+                    border-radius: 25px;
+                    text-align: center;
+                    max-width: 500px;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+                    border: 1px solid rgba(255, 255, 255, 0.2);
+                    animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+                ">
+                    <div style="
+                        font-size: 80px; 
+                        margin-bottom: 25px; 
+                        animation: bounce 1.5s ease infinite;
+                        filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
+                    ">🎉</div>
+                    <h2 class="success-title" style="
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                        background-clip: text;
+                        margin-bottom: 20px; 
+                        font-size: 28px;
+                        font-weight: 800;
+                    ">${translations[currentLang].successTitle}</h2>
+                    <p class="success-text" style="
+                        color: #7f8c8d; 
+                        margin-bottom: 30px; 
+                        font-size: 16px;
+                        line-height: 1.6;
+                    ">
+                        ${translations[currentLang].successText}
+                    </p>
+                    <button onclick="this.parentElement.parentElement.remove(); window.location.href='dashboard.html';" class="success-btn" style="
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        color: white;
+                        border: none;
+                        padding: 15px 40px;
+                        border-radius: 50px;
+                        cursor: pointer;
+                        font-weight: 700;
+                        font-size: 16px;
+                        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+                        transition: all 0.3s ease;
+                        text-transform: uppercase;
+                        letter-spacing: 0.5px;
+                    " onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(102, 126, 234, 0.4)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 25px rgba(102, 126, 234, 0.3)'">
+                        ${translations[currentLang].successButton}
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(overlay);
+            
+            // Apply dark mode styles if active
+            if (document.body.classList.contains('dark-mode')) {
+                const dialog = overlay.querySelector('.success-dialog');
+                const title = overlay.querySelector('.success-title');
+                const text = overlay.querySelector('.success-text');
+                const btn = overlay.querySelector('.success-btn');
+                
+                dialog.style.background = 'rgba(52, 73, 94, 0.95)';
+                dialog.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                title.style.background = 'linear-gradient(135deg, #3498db, #9b59b6)';
+                title.style.webkitBackgroundClip = 'text';
+                title.style.webkitTextFillColor = 'transparent';
+                text.style.color = '#bdc3c7';
+                btn.style.background = 'linear-gradient(135deg, #3498db, #9b59b6)';
+                btn.style.boxShadow = '0 10px 25px rgba(52, 152, 219, 0.3)';
+            }
+        }
+
+        function broadcastSubscriptionUpdate() {
+            // Notify parent window if opened from dashboard
+            if (window.opener) {
+                window.opener.postMessage({
+                    type: 'subscription-updated',
+                    subscription: localStorage.getItem('subscription'),
+                    expiry: localStorage.getItem('subscriptionExpiry')
+                }, '*');
+            }
+        }
+
+        // Listen for messages from dashboard
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'check-subscription') {
+                updateSubscriptionUI();
+            }
+        });
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: scale(0.9); }
+                to { opacity: 1; transform: scale(1); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
