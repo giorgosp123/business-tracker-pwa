@@ -2,7 +2,7 @@
 <html lang="el">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Premium Συνδρομή - Business Tracker</title>
     <script src="https://js.stripe.com/v3/"></script>
     <style>
@@ -980,63 +980,346 @@
             color: #2ecc71;
         }
 
-        /* Enhanced Responsive Design */
+        /* Enhanced Responsive Design - Βελτιωμένο για κινητά */
         @media (max-width: 768px) {
-            .subscription-container {
-                padding: 30px 25px;
-                margin: 15px;
-                border-radius: 20px;
+            body {
+                padding: 10px;
+                font-size: 14px;
             }
 
-            .plan-price {
-                font-size: 36px;
+            .subscription-container {
+                padding: 25px 18px;
+                margin: 10px 5px;
+                border-radius: 18px;
+                max-width: none;
+                width: calc(100% - 10px);
+                box-sizing: border-box;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+                font-size: 26px;
+                margin-bottom: 18px;
             }
 
             h1 {
-                font-size: 26px;
+                font-size: 22px;
+                margin-bottom: 12px;
+                line-height: 1.3;
             }
 
-            .feature-item {
-                padding: 10px;
+            .subtitle {
+                font-size: 13px;
+                margin-bottom: 20px;
+                line-height: 1.4;
+                padding: 0 5px;
+            }
+
+            .plan-card {
+                padding: 20px 15px;
+                margin: 15px 0;
+                border-radius: 15px;
+            }
+
+            .plan-name {
+                font-size: 17px;
+                margin-bottom: 8px;
+            }
+
+            .plan-price {
+                font-size: 32px;
+                margin: 8px 0;
+            }
+
+            .plan-period {
+                font-size: 12px;
                 margin-bottom: 12px;
             }
 
+            .free-trial {
+                font-size: 12px;
+                padding: 8px 12px;
+                margin: 12px 0 18px;
+                border-radius: 20px;
+            }
+
+            .features-list {
+                margin: 18px 0;
+            }
+
+            .feature-item {
+                padding: 10px 8px;
+                margin-bottom: 8px;
+                border-radius: 10px;
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .feature-icon {
+                font-size: 18px;
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                margin: 0 auto;
+            }
+
+            .feature-text {
+                font-size: 12px;
+                line-height: 1.4;
+                text-align: center;
+            }
+
+            .cta-button, .cancel-button {
+                padding: 16px 20px;
+                font-size: 14px;
+                margin: 10px 0;
+                width: 100%;
+                box-sizing: border-box;
+                border-radius: 12px;
+                min-height: 50px;
+            }
+
+            .back-button {
+                padding: 12px 20px;
+                font-size: 13px;
+                margin-top: 15px;
+                width: 100%;
+                box-sizing: border-box;
+                border-radius: 10px;
+            }
+
+            .terms {
+                font-size: 10px;
+                line-height: 1.4;
+                padding: 12px;
+                margin-top: 15px;
+                border-radius: 10px;
+            }
+
             .notification {
-                top: 20px;
-                right: 20px;
-                left: 20px;
+                bottom: 15px;
+                left: 10px;
+                right: 10px;
+                width: auto;
+                border-radius: 12px;
+                padding: 12px;
                 max-width: none;
                 min-width: auto;
             }
 
+            .notification-content {
+                padding: 8px;
+            }
+
+            .notification-text {
+                font-size: 13px;
+                margin: 0 10px;
+            }
+
             .dark-mode-toggle {
-                top: 20px;
-                right: 20px;
-                padding: 8px 12px;
-                font-size: 18px;
+                top: 15px;
+                right: 15px;
+                padding: 8px;
+                font-size: 16px;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .language-toggle {
-                top: 20px;
-                right: 80px;
-                padding: 8px 12px;
-                font-size: 18px;
+                top: 15px;
+                right: 65px;
+                padding: 8px;
+                font-size: 16px;
+                border-radius: 50%;
+                width: 40px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .payment-modal {
+                padding: 8px;
+                align-items: flex-start;
+                padding-top: 20px;
+                overflow-y: auto;
             }
 
             .payment-container {
-                margin: 15px;
-                padding: 30px 25px;
+                margin: 8px;
+                padding: 22px 18px;
                 max-width: none;
+                width: calc(100% - 16px);
+                border-radius: 18px;
+                box-sizing: border-box;
+            }
+
+            .payment-header {
+                margin-bottom: 20px;
+            }
+
+            .payment-title {
+                font-size: 18px;
+                margin-bottom: 8px;
+            }
+
+            .payment-subtitle {
+                font-size: 12px;
+                line-height: 1.4;
+            }
+
+            .payment-element {
+                margin: 18px 0;
+                padding: 16px;
+                border-radius: 10px;
             }
 
             .payment-buttons {
                 flex-direction: column;
                 gap: 10px;
+                margin-top: 18px;
             }
 
             .payment-submit, .payment-cancel {
-                padding: 12px 20px;
+                padding: 14px 18px;
                 font-size: 14px;
+                width: 100%;
+                box-sizing: border-box;
+                border-radius: 10px;
+                min-height: 48px;
+            }
+
+            .secure-badge {
+                padding: 10px;
+                font-size: 11px;
+                margin-top: 15px;
+                border-radius: 8px;
+            }
+
+            /* Mobile specific button styles */
+            .demo-payment-btn {
+                width: 100% !important;
+                box-sizing: border-box !important;
+                padding: 14px 20px !important;
+                font-size: 14px !important;
+                border-radius: 10px !important;
+                margin-top: 15px !important;
+                min-height: 48px !important;
+            }
+        }
+
+        /* Extra small screens optimization */
+        @media (max-width: 480px) {
+            .subscription-container {
+                padding: 20px 15px;
+                margin: 5px;
+                border-radius: 15px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            .plan-price {
+                font-size: 28px;
+            }
+
+            .feature-text {
+                font-size: 11px;
+            }
+
+            .payment-container {
+                margin: 5px;
+                padding: 18px 15px;
+            }
+
+            .dark-mode-toggle, .language-toggle {
+                top: 10px;
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
+                padding: 6px;
+            }
+
+            .language-toggle {
+                right: 55px;
+            }
+
+            /* Dialogs για πολύ μικρές οθόνες */
+            .cancel-dialog, .success-dialog {
+                margin: 10px !important;
+                padding: 25px 20px !important;
+                border-radius: 15px !important;
+            }
+
+            .cancel-dialog > div {
+                flex-direction: column !important;
+                gap: 12px !important;
+            }
+
+            .cancel-dialog button, .success-dialog button {
+                width: 100% !important;
+                font-size: 13px !important;
+                padding: 12px 18px !important;
+                min-height: 44px !important;
+            }
+        }
+
+        /* Touch-friendly improvements για κινητά */
+        button, .cta-button, .cancel-button, .back-button, 
+        .payment-submit, .payment-cancel, .demo-payment-btn {
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Prevent text selection on buttons */
+        button {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        /* Smooth scrolling για modals στα κινητά */
+        .payment-modal {
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Improve tap targets for mobile */
+        .dark-mode-toggle, .language-toggle, .notification-close {
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        /* Mobile specific hover states (only apply on devices that support hover) */
+        @media (hover: hover) {
+            .cta-button:hover, .cancel-button:hover, .back-button:hover {
+                transform: translateY(-2px);
+            }
+        }
+
+        /* Ensure good contrast for mobile screens */
+        @media (max-width: 768px) {
+            .feature-text strong {
+                color: #2c3e50;
+                font-weight: 700;
+            }
+            
+            body.dark-mode .feature-text strong {
+                color: #ecf0f1;
             }
         }
     </style>
