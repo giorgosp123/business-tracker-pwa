@@ -127,18 +127,35 @@
         /* Mobile responsive για τα top controls */
         @media (max-width: 768px) {
             .top-controls {
-                top: 15px;
-                right: 15px;
-                gap: 8px;
+                top: 10px;
+                right: 10px;
+                gap: 6px;
+                z-index: 9999; /* Higher z-index to stay above everything */
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-radius: 12px;
+                padding: 6px;
+            }
+            
+            body.dark-mode .top-controls {
+                background: rgba(44, 62, 80, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.1);
             }
             
             .top-controls button {
-                width: 44px;
-                height: 44px;
-                font-size: 16px;
+                width: 36px;
+                height: 36px;
+                font-size: 14px;
                 /* Better touch targets for mobile */
-                min-width: 44px;
-                min-height: 44px;
+                min-width: 36px;
+                min-height: 36px;
+                border-radius: 8px;
+            }
+            
+            /* Ensure top controls don't overlap with user area */
+            #userArea {
+                margin-top: 60px; /* Add space for top controls */
+                padding-top: 15px;
             }
         }
 
@@ -1668,18 +1685,19 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Mobile Responsive for notifications - exact subscription styling */
+        /* Mobile Responsive for notifications - positioned at top */
         @media (max-width: 768px) {
             .notification {
-                bottom: 15px;
+                top: 70px; /* Below the top controls */
                 left: 10px;
                 right: 10px;
-                top: auto;
+                bottom: auto;
                 width: auto;
                 border-radius: 12px;
                 padding: 12px;
                 max-width: none;
                 min-width: auto;
+                z-index: 9997; /* Below top controls but above content */
             }
             
             .notification-content {
@@ -1698,49 +1716,52 @@
                 display: flex;
                 flex-direction: row;
                 align-items: center;
-                gap: 6px; /* Smaller gap for better fit */
+                gap: 4px; /* Smaller gap for better fit */
                 justify-content: flex-end;
                 flex-wrap: nowrap; /* Keep buttons on same line */
                 flex-shrink: 0; /* Don't shrink buttons container */
+                max-width: 60%; /* Prevent overflow */
             }
             
             .user-buttons button {
-                padding: 10px 12px !important;
-                font-size: 12px !important;
-                min-height: 40px !important;
+                padding: 8px 10px !important;
+                font-size: 11px !important;
+                min-height: 36px !important;
                 border-radius: 8px !important;
                 flex: none;
                 white-space: nowrap;
+                max-width: 80px; /* Limit button width */
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
             
-            /* Make dropdown button same size as others */
+            /* Make dropdown button compact */
             .dropdown-btn {
-                padding: 10px 12px !important;
-                font-size: 12px !important;
-                min-height: 40px !important;
+                padding: 8px 10px !important;
+                font-size: 11px !important;
+                min-height: 36px !important;
                 border-radius: 8px !important;
                 flex: none;
                 white-space: nowrap;
-                gap: 6px !important;
-                min-width: 100px !important; /* Ensure enough space */
+                gap: 4px !important;
+                min-width: 80px !important;
+                max-width: 85px !important;
                 justify-content: center !important;
                 text-align: center !important;
             }
             
             /* Dropdown arrow smaller */
             .dropdown-arrow {
-                font-size: 10px !important;
-                margin-left: 6px;
+                font-size: 8px !important;
+                margin-left: 4px;
             }
             
-            /* Ensure all header buttons are uniform */
-            #darkModeBtn, #logoutBtn, .language-toggle {
-                padding: 10px 12px !important;
-                font-size: 12px !important;
-                min-height: 40px !important;
-                border-radius: 8px !important;
-                flex: none;
-                white-space: nowrap;
+            /* Ensure logout button is compact */
+            #logoutBtn {
+                padding: 8px 8px !important;
+                font-size: 11px !important;
+                min-height: 36px !important;
+                max-width: 60px !important;
             }
             
             /* Mobile user area layout */
@@ -1748,13 +1769,17 @@
                 flex-direction: row !important;
                 justify-content: space-between !important;
                 align-items: center !important;
-                gap: 6px !important; /* Smaller gap */
-                padding: 10px 15px !important; /* Slightly less padding */
+                gap: 8px !important;
+                padding: 12px 15px !important;
+                margin-top: 60px !important; /* Space for top controls */
+                position: relative;
+                z-index: 9998; /* Below top controls */
             }
             
             .user-info {
                 flex: 1;
                 min-width: 0; /* Allow text overflow */
+                margin-bottom: 0 !important;
             }
             
             .user-info span {
@@ -1768,6 +1793,17 @@
             .user-info img {
                 width: 32px !important;
                 height: 32px !important;
+            }
+            
+            .user-buttons {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 6px;
+                justify-content: flex-end;
+                flex-wrap: nowrap;
+                flex-shrink: 0;
+                max-width: 60%; /* Limit width to prevent overflow */
             }
             
             /* Mobile button text optimizations */
