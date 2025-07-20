@@ -75,6 +75,73 @@
             color: #ecf0f1;
         }
 
+        /* Top Controls Styling */
+        .top-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        .top-controls button {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            color: #2c3e50;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .top-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            background: rgba(255, 255, 255, 1);
+        }
+
+        .top-controls button:active {
+            transform: translateY(0px);
+        }
+
+        /* Dark mode για τα top controls */
+        body.dark-mode .top-controls button {
+            background: rgba(52, 73, 94, 0.9);
+            color: #ecf0f1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .top-controls button:hover {
+            background: rgba(52, 73, 94, 1);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile responsive για τα top controls */
+        @media (max-width: 768px) {
+            .top-controls {
+                top: 15px;
+                right: 15px;
+                gap: 8px;
+            }
+            
+            .top-controls button {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+                /* Better touch targets for mobile */
+                min-width: 44px;
+                min-height: 44px;
+            }
+        }
+
         /* Mobile-first container */
         .container {
             width: 100%;
@@ -300,13 +367,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
         
-        /* Smaller dark mode button */
-        #darkModeBtn {
-            padding: 8px 12px !important;
-            font-size: 12px !important;
-            min-height: 36px !important;
-        }
-
         .user-buttons button:before {
             content: '';
             position: absolute;
@@ -1540,41 +1600,96 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Notification - mobile positioned */
+        /* Notification System - Exact subscription styling positioned left with fade animation */
         .notification {
             position: fixed;
-            top: 20px;
-            left: 10px;
-            right: 10px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
-            color: white;
-            padding: 12px 16px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
-            font-size: 14px;
-            font-weight: 500;
+            top: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            color: #333;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow:
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 10000;
             opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.5s ease;
-            z-index: 9999;
-            text-align: center;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 350px;
+            min-width: 300px;
         }
 
         .notification.show {
             opacity: 1;
-            transform: translateY(0);
+            visibility: visible;
         }
 
         .notification.success {
-            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            border-left: 4px solid #2ecc71;
         }
 
         .notification.error {
-            background: linear-gradient(45deg, #e74c3c, #c0392b);
+            border-left: 4px solid #e74c3c;
         }
 
         .notification.warning {
-            background: linear-gradient(45deg, #f39c12, #e67e22);
+            border-left: 4px solid #f39c12;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3498db;
+        }
+
+        .notification .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification .notification-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification .notification-text {
+            flex: 1;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        /* Dark mode notifications - exact subscription styling */
+        body.dark-mode .notification {
+            background: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Mobile Responsive for notifications - exact subscription styling */
+        @media (max-width: 768px) {
+            .notification {
+                bottom: 15px;
+                left: 10px;
+                right: 10px;
+                top: auto;
+                width: auto;
+                border-radius: 12px;
+                padding: 12px;
+                max-width: none;
+                min-width: auto;
+            }
+            
+            .notification-content {
+                padding: 8px;
+            }
+            
+            .notification-text {
+                font-size: 13px;
+                margin: 0 10px;
+            }
         }
 
         /* Mobile adjustments */
@@ -1771,17 +1886,6 @@
                 display: none !important;
             }
             
-            /* Mobile notifications */
-            .notification {
-                left: 10px;
-                right: 10px;
-                width: auto;
-                max-width: none;
-                border-radius: 12px;
-                font-size: 14px;
-                padding: 12px 16px;
-            }
-            
             /* Mobile form inputs */
             input[type="text"], input[type="number"], select {
                 font-size: 16px !important; /* Prevents zoom on iOS */
@@ -1965,8 +2069,7 @@
 
             .notification {
                 top: 30px;
-                left: auto;
-                right: 30px;
+                left: 30px;
                 max-width: 400px;
             }
 
@@ -2497,22 +2600,6 @@
             -webkit-background-clip: text !important;
             -webkit-text-fill-color: transparent !important;
             background-clip: text !important;
-        }
-
-        .notification {
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)) !important;
-        }
-
-        .notification.success {
-            background: linear-gradient(45deg, #2ecc71, #27ae60) !important;
-        }
-
-        .notification.error {
-            background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
-        }
-
-        .notification.warning {
-            background: linear-gradient(45deg, #f39c12, #e67e22) !important;
         }
 
         h2 {
@@ -3607,10 +3694,180 @@
                 display: none !important;
             }
         }
+
+        /* Footer Styles */
+        .terms-footer {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px 20px 20px;
+            margin-top: 40px;
+            border-radius: 20px 20px 0 0;
+            width: 100%;
+            position: relative;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .footer-section h4 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            padding: 5px 0;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .footer-links a:hover {
+            color: rgba(255, 255, 255, 1);
+            background: rgba(255, 255, 255, 0.1);
+            padding-left: 8px;
+            transform: translateX(5px);
+        }
+
+        .footer-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .footer-secure {
+            margin-top: 8px;
+            padding: 6px 10px;
+            background: rgba(46, 204, 113, 0.2);
+            border-radius: 15px;
+            color: #2ecc71;
+            font-size: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        /* Dark Mode Footer */
+        body.dark-mode .terms-footer {
+            background: rgba(52, 73, 94, 0.3);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .footer-section h4 {
+            color: #ecf0f1;
+        }
+
+        body.dark-mode .footer-links a {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .footer-links a:hover {
+            color: #ecf0f1;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        body.dark-mode .footer-text {
+            color: #95a5a6;
+        }
+
+        /* Mobile Footer Responsive */
+        @media (max-width: 768px) {
+            .terms-footer {
+                padding: 20px 15px 15px;
+                margin-top: 25px;
+                border-radius: 15px 15px 0 0;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                text-align: center;
+            }
+
+            .footer-section h4 {
+                font-size: 13px;
+                margin-bottom: 10px;
+            }
+
+            .footer-links {
+                gap: 6px;
+            }
+
+            .footer-links a {
+                font-size: 11px;
+                padding: 8px 12px;
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                min-height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+            }
+
+            .footer-links a:hover {
+                transform: scale(1.02);
+                padding-left: 12px;
+            }
+
+            .footer-secure {
+                margin-top: 10px;
+                padding: 8px 12px;
+                font-size: 9px;
+            }
+        }
+
+        /* Ultra small screens (κινητά < 400px) */
+        @media (max-width: 400px) {
+            .terms-footer {
+                padding: 15px 10px;
+                margin-top: 20px;
+            }
+
+            .footer-links a {
+                font-size: 10px;
+                padding: 10px 8px;
+                min-height: 40px;
+            }
+
+            .footer-section h4 {
+                font-size: 12px;
+            }
+
+            .footer-text {
+                font-size: 10px;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Top Controls -->
+    <div class="top-controls">
+        <button id="languageToggle" onclick="toggleLanguage()" title="Αλλαγή Γλώσσας">🇬🇷</button>
+        <button id="darkModeToggle" onclick="toggleDarkMode()" title="Dark/Light Mode">🌙</button>
+    </div>
+
     <div class="container">
         <div id="userArea">
             <div class="user-info">
@@ -3659,10 +3916,6 @@
                 <button id="themeBtn" style="display: none;">🎨 Θέματα</button>
                 <button id="calculatorBtn" style="display: none;">🔢 <span class="translate">calculator</span></button>
                 <button id="shortcutsBtn" style="display: none;">⌨️ Συντομεύσεις</button>
-                <button id="darkModeBtn">🌙/☀️</button>
-                <button id="modernLanguageToggle" class="language-toggle" onclick="toggleLanguage()" title="Change Language">
-                    <span class="flag-emoji" id="languageFlag">🇬🇷</span>
-                </button>
                 <button id="logoutBtn">🚪 Έξοδος</button>
             </div>
         </div>
@@ -3961,7 +4214,12 @@
         </div>
     </div>
 
-    <div class="notification" id="notification"></div>
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <div class="notification-icon" id="notificationIcon">🔔</div>
+            <div class="notification-text" id="notificationText"></div>
+        </div>
+    </div>
 
     <!-- Calculator Widget -->
     <div id="calculatorWidget" class="calculator-widget" style="display: none;">
@@ -4393,6 +4651,76 @@
                 excelExportCompleted: 'Εξαγωγή Excel ολοκληρώθηκε!',
                 pdfExportCompleted: 'Εξαγωγή PDF ολοκληρώθηκε!',
                 
+                // Footer Terms Translations
+                terms_policies: 'Όροι & Πολιτικές',
+                support: 'Υποστήριξη',
+                company: 'Εταιρεία',
+                terms_of_use: 'Όροι Χρήσης',
+                privacy_policy: 'Πολιτική Απορρήτου',
+                refund_policy: 'Πολιτική Επιστροφών',
+                contact_us: 'Επικοινωνία',
+                help_center: 'Κέντρο Βοήθειας',
+                faq: 'Συχνές Ερωτήσεις',
+                copyright: '© 2025 Business Tracker. Όλα τα δικαιώματα διατηρούνται.',
+                secure_encrypted: '🔒 Ασφαλές & Κρυπτογραφημένο',
+                terms_title: 'Όροι Χρήσης',
+                terms_section1: 'Περιγραφή Υπηρεσίας',
+                terms_desc1: 'Οι πληροφορίες, στατιστικά και προβλέψεις που παρουσιάζονται σε αυτήν την ιστοσελίδα παρέχονται αποκλειστικά για ενημερωτικούς σκοπούς.Παρά τις προσπάθειες για την εξασφάλιση της ακρίβειας των δεδομένων, δεν παρέχεται καμία εγγύηση ως προς την πληρότητα, ακρίβεια ή επικαιρότητά τους. Ο δημιουργός/ιδιοκτήτης της ιστοσελίδας δεν φέρει καμία ευθύνη για οποιαδήποτε ζημιά ή απώλεια, άμεση ή έμμεση, που ενδέχεται να προκύψει από τη χρήση ή την ερμηνεία των στοιχείων που παρέχονται.Με την πρόσβαση και χρήση της παρούσας ιστοσελίδας αποδέχεστε ότι ενεργείτε αποκλειστικά με δική σας ευθύνη. ',
+                terms_section2: 'Όροι Πληρωμής',
+                terms_desc2: 'Η πληρωμή επεξεργάζεται μηνιαίως μέσω Stripe. Η συνδρομή θα ανανεώνεται αυτόματα εκτός αν ακυρωθεί πριν την ημερομηνία ανανέωσης.',
+                terms_section3: 'Πολιτική Ακύρωσης',
+                terms_desc3: 'Μπορείτε να ακυρώσετε τη συνδρομή σας οποιαδήποτε στιγμή μέσω της σελίδας συνδρομής. Δεν θα παρασχεθούν επιστροφές χρημάτων για μερική χρήση του μήνα.',
+                terms_section4: 'Ευθύνες Χρήστη',
+                terms_desc4: 'Οι χρήστες είναι υπεύθυνοι για τη διατήρηση της ασφάλειας του λογαριασμού, την ακρίβεια των δεδομένων και την τήρηση των κανόνων της πλατφόρμας.',
+                privacy_title: 'Πολιτική Απορρήτου',
+                privacy_section1: 'Συλλογή Δεδομένων',
+                privacy_desc1: 'Συλλέγουμε επιχειρηματικά δεδομένα που εισάγετε, αναλυτικά χρήσης και πληροφορίες λογαριασμού απαραίτητες για την παροχή υπηρεσιών.',
+                privacy_section2: 'Χρήση Δεδομένων',
+                privacy_desc2: 'Τα επιχειρηματικά σας δεδομένα χρησιμοποιούνται αποκλειστικά για την παροχή αναλυτικών, προβλέψεων και insights. Δεν μοιραζόμαστε ή πουλάμε τις επιχειρηματικές σας πληροφορίες.',
+                privacy_section3: 'Ασφάλεια Δεδομένων',
+                privacy_desc3: 'Όλα τα δεδομένα κρυπτογραφούνται και αποθηκεύονται με ασφάλεια στο Firebase με μέτρα ασφαλείας βιομηχανικού επιπέδου. Τα τοπικά δεδομένα αποθηκεύονται μόνο στον browser σας.',
+                privacy_section4: 'Τα Δικαιώματά Σας',
+                privacy_desc4: 'Έχετε το δικαίωμα να εξάγετε, να τροποποιήσετε ή να διαγράψετε τα επιχειρηματικά σας δεδομένα ανά πάσα στιγμή μέσω του dashboard ή επικοινωνώντας με την υποστήριξη.',
+                refund_title: 'Πολιτική Επιστροφών',
+                refund_section1: 'Γενική Πολιτική',
+                refund_desc1: 'Λόγω της φύσης της υπηρεσίας analytics, οι επιστροφές χρημάτων εξετάζονται σε κάθε περίπτωση ξεχωριστά για τεχνικά προβλήματα που εμποδίζουν τη χρήση της υπηρεσίας.',
+                refund_section2: 'Δοκιμαστική Περίοδος',
+                refund_desc2: 'Αν έχετε ενεργή δοκιμή, μπορείτε να ακυρώσετε πριν τελειώσει για να αποφύγετε χρεώσεις. Επικοινωνήστε με την υποστήριξη για βοήθεια με τη διαχείριση της δοκιμής.',
+                refund_section3: 'Ειδικές Περιστάσεις',
+                refund_desc3: 'Οι επιστροφές χρημάτων μπορεί να παρασχεθούν για επιβεβαιωμένα τεχνικά προβλήματα, σφάλματα χρέωσης ή διακοπές υπηρεσίας που επηρεάζουν τη δυνατότητά σας να χρησιμοποιήσετε την πλατφόρμα.',
+                refund_section4: 'Επικοινωνία Υποστήριξης',
+                refund_desc4: 'Για αιτήματα επιστροφής χρημάτων, επικοινωνήστε με την ομάδα υποστήριξής μας με τα στοιχεία του λογαριασμού σας, πληροφορίες συνδρομής και λεπτομερή αιτιολόγηση του αιτήματος.',
+                contact_title: 'Επικοινωνία Υποστήριξης',
+                contact_email: 'Υποστήριξη Email',
+                contact_response: 'Απάντηση εντός 24 ωρών',
+                contact_live: 'Live Chat',
+                contact_available: 'Διαθέσιμο Δευτέρα-Παρασκευή 9πμ-6μμ EST',
+                contact_start_chat: 'Ξεκινήστε Chat',
+                contact_phone: 'Τεχνική Υποστήριξη',
+                contact_business: 'Μόνο ώρες λειτουργίας',
+                help_title: 'Κέντρο Βοήθειας',
+                help_data: '📊 Διαχείριση Δεδομένων',
+                help_data_desc: 'Προσθήκη δεδομένων, επεξεργασία τιμών, εισαγωγή/εξαγωγή',
+                help_analytics: '📈 Analytics & Γραφήματα',
+                help_analytics_desc: 'Κατανόηση γραφημάτων, προβλέψεις, insights',
+                help_account: '👤 Λογαριασμός & Χρέωση',
+                help_account_desc: 'Διαχείριση συνδρομής, χρέωση, ρυθμίσεις λογαριασμού',
+                help_technical: '⚙️ Τεχνική Υποστήριξη',
+                help_technical_desc: 'Προβλήματα browser, απόδοση, αντιμετώπιση προβλημάτων',
+                faq_title: 'Συχνές Ερωτήσεις',
+                faq_q1: 'Πώς προσθέτω δεδομένα πωλήσεων;',
+                faq_a1: 'Κάντε κλικ σε οποιοδήποτε κελί του πίνακα για να επεξεργαστείτε τιμές απευθείας. Χρησιμοποιήστε το κουμπί "Προσθήκη Κατηγορίας" για νέες κατηγορίες προϊόντων.',
+                faq_q2: 'Πόσο ακριβείς είναι οι προβλέψεις;',
+                faq_a2: 'Οι προβλέψεις χρησιμοποιούν προηγμένους αλγόριθμους που συνδυάζουν ανάλυση τάσεων, εποχιακά μοτίβα και ιστορικά δεδομένα. Η ακρίβεια βελτιώνεται με περισσότερα δεδομένα.',
+                faq_q3: 'Μπορώ να εξάγω τα δεδομένα μου;',
+                faq_a3: 'Ναι, χρησιμοποιήστε τα κουμπιά Εξαγωγής για να κατεβάσετε τα δεδομένα σας σε μορφή Excel ή PDF. Τα δεδομένα σας αποθηκεύονται επίσης αυτόματα.',
+                faq_q4: 'Τι είναι τα Smart Insights;',
+                faq_a4: 'Ανάλυση με τεχνητή νοημοσύνη που εντοπίζει αυτόματα τάσεις, ευκαιρίες και πιθανά προβλήματα στα επιχειρηματικά σας δεδομένα.',
+                faq_q5: 'Είναι ασφαλή τα επιχειρηματικά μου δεδομένα;',
+                faq_a5: 'Ναι, όλα τα δεδομένα κρυπτογραφούνται και αποθηκεύονται με ασφάλεια. Μπορείτε επίσης να εργαστείτε offline με τοπική αποθήκευση ως backup.',
+                chat_starting: 'Ξεκινά το live chat...',
+                chat_demo: 'Live chat demo - Επικοινωνήστε με την υποστήριξη για πραγματική βοήθεια',
+                
                 // Comparison and forecast notifications
                 noDataFoundForCategory: 'Δεν βρέθηκαν δεδομένα για την κατηγορία',
                 noDataFoundForCategoryYear: 'Δεν βρέθηκαν δεδομένα για την κατηγορία',
@@ -4736,6 +5064,76 @@
                 excelExportCompleted: 'Excel export completed!',
                 pdfExportCompleted: 'PDF export completed!',
                 
+                // Footer Terms Translations
+                terms_policies: 'Terms & Policies',
+                support: 'Support',
+                company: 'Company',
+                terms_of_use: 'Terms of Use',
+                privacy_policy: 'Privacy Policy',
+                refund_policy: 'Refund Policy',
+                contact_us: 'Contact Us',
+                help_center: 'Help Center',
+                faq: 'FAQ',
+                copyright: '© 2025 Business Tracker. All rights reserved.',
+                secure_encrypted: '🔒 Secure & Encrypted',
+                terms_title: 'Terms of Use',
+                terms_section1: 'Service Description',
+                terms_desc1: 'This service provides business analytics and tracking tools for a monthly subscription fee. The service includes comprehensive data analysis and forecasting capabilities.',
+                terms_section2: 'Payment Terms',
+                terms_desc2: 'Payment is processed monthly via Stripe. The subscription will automatically renew unless cancelled before the renewal date.',
+                terms_section3: 'Cancellation Policy',
+                terms_desc3: 'You may cancel your subscription at any time through the subscription page. No refunds will be provided for partial month usage.',
+                terms_section4: 'User Responsibilities',
+                terms_desc4: 'Users are responsible for maintaining account security, data accuracy, and following platform guidelines.',
+                privacy_title: 'Privacy Policy',
+                privacy_section1: 'Data Collection',
+                privacy_desc1: 'We collect business data that you input, usage analytics, and account information necessary for service provision.',
+                privacy_section2: 'Data Usage',
+                privacy_desc2: 'Your business data is used solely for providing analytics, forecasting, and insights. We do not share or sell your business information.',
+                privacy_section3: 'Data Security',
+                privacy_desc3: 'All data is encrypted and stored securely in Firebase with industry-standard security measures. Local data is stored in your browser only.',
+                privacy_section4: 'Your Rights',
+                privacy_desc4: 'You have the right to export, modify, or delete your business data at any time through the dashboard or by contacting support.',
+                refund_title: 'Refund Policy',
+                refund_section1: 'General Policy',
+                refund_desc1: 'Due to the nature of our analytics service, refunds are considered on a case-by-case basis for technical issues that prevent service use.',
+                refund_section2: 'Trial Period',
+                refund_desc2: 'If you have an active trial, you can cancel before it ends to avoid charges. Contact support for assistance with trial management.',
+                refund_section3: 'Special Circumstances',
+                refund_desc3: 'Refunds may be provided for verified technical issues, billing errors, or service outages affecting your ability to use the platform.',
+                refund_section4: 'Contact Support',
+                refund_desc4: 'For refund requests, contact our support team with your account details, subscription information, and detailed reason for the request.',
+                contact_title: 'Contact Support',
+                contact_email: 'Email Support',
+                contact_response: 'Response within 24 hours',
+                contact_live: 'Live Chat',
+                contact_available: 'Available Monday-Friday 9AM-6PM EST',
+                contact_start_chat: 'Start Chat',
+                contact_phone: 'Technical Support',
+                contact_business: 'Business hours only',
+                help_title: 'Help Center',
+                help_data: '📊 Data Management',
+                help_data_desc: 'Adding data, editing values, importing/exporting',
+                help_analytics: '📈 Analytics & Charts',
+                help_analytics_desc: 'Understanding charts, forecasting, insights',
+                help_account: '👤 Account & Billing',
+                help_account_desc: 'Subscription management, billing, account settings',
+                help_technical: '⚙️ Technical Support',
+                help_technical_desc: 'Browser issues, performance, troubleshooting',
+                faq_title: 'Frequently Asked Questions',
+                faq_q1: 'How do I add sales data?',
+                faq_a1: 'Click on any cell in the table to edit values directly. Use the "Add Category" button to create new product categories.',
+                faq_q2: 'How accurate are the forecasts?',
+                faq_a2: 'Forecasts use advanced algorithms combining trend analysis, seasonal patterns, and historical data. Accuracy improves with more data.',
+                faq_q3: 'Can I export my data?',
+                faq_a3: 'Yes, use the Export buttons to download your data in Excel or PDF format. Your data is also automatically saved.',
+                faq_q4: 'What are Smart Insights?',
+                faq_a4: 'AI-powered analysis that identifies trends, opportunities, and potential issues in your business data automatically.',
+                faq_q5: 'Is my business data secure?',
+                faq_a5: 'Yes, all data is encrypted and stored securely. You can also work offline with local storage as backup.',
+                chat_starting: 'Starting live chat...',
+                chat_demo: 'Live chat demo - Contact support for real assistance',
+                
                 // Comparison and forecast notifications
                 noDataFoundForCategory: 'No data found for category',
                 noDataFoundForCategoryYear: 'No data found for category',
@@ -4929,19 +5327,24 @@
         const toggleLanguage = () => {
             const newLang = currentLanguage === 'el' ? 'en' : 'el';
             changeLanguage(newLang);
+            
+            // Show notification
+            const message = newLang === 'el' ? '🇬🇷 Ελληνικά ενεργοποιήθηκαν!' : '🇺🇸 English activated!';
+            showNotification(message, 'info', 2000);
         };
 
         const updateLanguageToggleButton = () => {
-            const flagElement = document.getElementById('languageFlag');
-            const toggleButton = document.getElementById('modernLanguageToggle');
+            const toggleButton = document.getElementById('languageToggle');
             const t = translations[currentLanguage];
             
-            if (currentLanguage === 'el') {
-                flagElement.textContent = '🇬🇷';
-                toggleButton.title = t.changeToEnglish;
-            } else {
-                flagElement.textContent = '🇺🇸';
-                toggleButton.title = t.changeToGreek;
+            if (toggleButton) {
+                if (currentLanguage === 'el') {
+                    toggleButton.textContent = '🇺🇸';
+                    toggleButton.title = t.changeToEnglish || 'Switch to English';
+                } else {
+                    toggleButton.textContent = '🇬🇷';
+                    toggleButton.title = t.changeToGreek || 'Αλλαγή σε Ελληνικά';
+                }
             }
         };
 
@@ -5311,14 +5714,41 @@
             document.getElementById('loadingSpinner').style.display = 'none';
         };
 
-        const showNotification = (message, type = 'info', duration = 3000) => {
+        function showNotification(message, type = 'success', duration = 3000) {
             const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.className = `notification show ${type}`;
+            const icon = document.getElementById('notificationIcon');
+            const text = document.getElementById('notificationText');
+
+            // Set notification content
+            text.textContent = message;
+
+            // Set icon based on type
+            const icons = {
+                success: '🎉',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            icon.textContent = icons[type] || icons.success;
+
+            // Set notification type class
+            notification.className = `notification ${type}`;
+
+            // Show notification with fade animation
             setTimeout(() => {
-                notification.classList.remove('show');
+                notification.classList.add('show');
+            }, 100);
+
+            // Auto hide after duration
+            setTimeout(() => {
+                hideNotification();
             }, duration);
-        };
+        }
+
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+        }
 
         // Dark mode toggle
         const toggleDarkMode = () => {
@@ -5326,6 +5756,24 @@
             const isDark = document.body.classList.contains('dark-mode');
             localStorage.setItem('darkMode', isDark);
             updateChart();
+            updateDarkModeButton();
+            
+            // Show notification
+            const currentLang = localStorage.getItem('language') || 'el';
+            const message = isDark ? 
+                (currentLang === 'el' ? '🌙 Dark Mode ενεργοποιήθηκε!' : '🌙 Dark Mode activated!') :
+                (currentLang === 'el' ? '☀️ Light Mode ενεργοποιήθηκε!' : '☀️ Light Mode activated!');
+            showNotification(message, 'info', 2000);
+        };
+
+        // Update dark mode button
+        const updateDarkModeButton = () => {
+            const toggle = document.getElementById('darkModeToggle');
+            if (toggle) {
+                const isDarkMode = document.body.classList.contains('dark-mode');
+                toggle.textContent = isDarkMode ? '☀️' : '🌙';
+                toggle.title = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
+            }
         };
 
         // Theme management
@@ -7574,7 +8022,6 @@ const deleteCategory = (category, rowElement) => {
             });
 
             // Main buttons
-            document.getElementById('darkModeBtn').addEventListener('click', toggleDarkMode);
             document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
             document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
             document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
@@ -7637,6 +8084,7 @@ const deleteCategory = (category, rowElement) => {
             if (darkMode) {
                 document.body.classList.add('dark-mode');
             }
+            updateDarkModeButton();
         };
 
         // Load data from localStorage as fallback
@@ -7731,6 +8179,13 @@ function loadFromFirebase() {
             // Initialize language toggle button
             updateLanguageToggleButton();
             
+            // Initialize dark mode
+            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (savedDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+            updateDarkModeButton();
+            
             // Set username
             const userDisplay = document.getElementById('userDisplay');
             let username = sessionStorage.getItem('loggedInUser') || translations[currentLanguage].user;
@@ -7807,6 +8262,25 @@ function loadFromFirebase() {
                     .then(() => console.log("✅ Service Worker εγγράφηκε επιτυχώς"))
                     .catch(error => console.error("❌ Σφάλμα Service Worker:", error));
             }
+
+            // Listen for changes from other tabs
+            window.addEventListener('storage', function(e) {
+                if (e.key === 'language') {
+                    const newLang = e.newValue;
+                    if (newLang && newLang !== currentLanguage) {
+                        changeLanguage(newLang);
+                    }
+                } else if (e.key === 'darkMode') {
+                    const isDarkMode = e.newValue === 'true';
+                    if (isDarkMode) {
+                        document.body.classList.add('dark-mode');
+                    } else {
+                        document.body.classList.remove('dark-mode');
+                    }
+                    updateDarkModeButton();
+                    updateChart();
+                }
+            });
 
             // Welcome message
             setTimeout(() => {
@@ -9120,6 +9594,241 @@ function sanitizeKey(email) {
             });
         }
         
+        // ==================== FOOTER MODAL FUNCTIONS ====================
+        
+        function showTermsModal() {
+            const t = translations[currentLanguage];
+            showCustomModal(
+                t.terms_title || 'Terms of Use',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <h3>${t.terms_section1 || 'Service Description'}</h3>
+                    <p>${t.terms_desc1 || 'This service provides business analytics and tracking tools for a monthly subscription fee. The service includes comprehensive data analysis and forecasting capabilities.'}</p>
+                    
+                    <h3>${t.terms_section2 || 'Payment Terms'}</h3>
+                    <p>${t.terms_desc2 || 'Payment is processed monthly via Stripe. The subscription will automatically renew unless cancelled before the renewal date.'}</p>
+                    
+                    <h3>${t.terms_section3 || 'Cancellation Policy'}</h3>
+                    <p>${t.terms_desc3 || 'You may cancel your subscription at any time through the subscription page. No refunds will be provided for partial month usage.'}</p>
+                    
+                    <h3>${t.terms_section4 || 'User Responsibilities'}</h3>
+                    <p>${t.terms_desc4 || 'Users are responsible for maintaining account security, data accuracy, and following platform guidelines.'}</p>
+                </div>
+                `,
+                'I Understand'
+            );
+        }
+
+        function showPrivacyModal() {
+            const t = translations[currentLanguage];
+            showCustomModal(
+                t.privacy_title || 'Privacy Policy',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <h3>${t.privacy_section1 || 'Data Collection'}</h3>
+                    <p>${t.privacy_desc1 || 'We collect business data that you input, usage analytics, and account information necessary for service provision.'}</p>
+                    
+                    <h3>${t.privacy_section2 || 'Data Usage'}</h3>
+                    <p>${t.privacy_desc2 || 'Your business data is used solely for providing analytics, forecasting, and insights. We do not share or sell your business information.'}</p>
+                    
+                    <h3>${t.privacy_section3 || 'Data Security'}</h3>
+                    <p>${t.privacy_desc3 || 'All data is encrypted and stored securely in Firebase with industry-standard security measures. Local data is stored in your browser only.'}</p>
+                    
+                    <h3>${t.privacy_section4 || 'Your Rights'}</h3>
+                    <p>${t.privacy_desc4 || 'You have the right to export, modify, or delete your business data at any time through the dashboard or by contacting support.'}</p>
+                </div>
+                `,
+                'Understood'
+            );
+        }
+
+        function showRefundModal() {
+            const t = translations[currentLanguage];
+            showCustomModal(
+                t.refund_title || 'Refund Policy',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <h3>${t.refund_section1 || 'General Policy'}</h3>
+                    <p>${t.refund_desc1 || 'Due to the nature of our analytics service, refunds are considered on a case-by-case basis for technical issues that prevent service use.'}</p>
+                    
+                    <h3>${t.refund_section2 || 'Trial Period'}</h3>
+                    <p>${t.refund_desc2 || 'If you have an active trial, you can cancel before it ends to avoid charges. Contact support for assistance with trial management.'}</p>
+                    
+                    <h3>${t.refund_section3 || 'Special Circumstances'}</h3>
+                    <p>${t.refund_desc3 || 'Refunds may be provided for verified technical issues, billing errors, or service outages affecting your ability to use the platform.'}</p>
+                    
+                    <h3>${t.refund_section4 || 'Contact Support'}</h3>
+                    <p>${t.refund_desc4 || 'For refund requests, contact our support team with your account details, subscription information, and detailed reason for the request.'}</p>
+                </div>
+                `,
+                'Contact Support'
+            );
+        }
+
+        function showContactModal() {
+            const t = translations[currentLanguage];
+            showCustomModal(
+                t.contact_title || 'Contact Support',
+                `
+                <div style="text-align: left; line-height: 1.6;">
+                    <div style="background: rgba(52, 152, 219, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="margin-top: 0;">${t.contact_email || 'Email Support'}</h3>
+                        <p style="margin: 5px 0;"><strong>Email:</strong> support@businesstracker.com</p>
+                        <p style="margin: 5px 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.contact_response || 'Response within 24 hours'}</p>
+                    </div>
+                    
+                    <div style="background: rgba(46, 204, 113, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="margin-top: 0;">${t.contact_live || 'Live Chat'}</h3>
+                        <p style="margin: 5px 0;">${t.contact_available || 'Available Monday-Friday 9AM-6PM EST'}</p>
+                        <button onclick="startLiveChat()" style="background: #2ecc71; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-top: 8px;">${t.contact_start_chat || 'Start Chat'}</button>
+                    </div>
+                    
+                    <div style="background: rgba(155, 89, 182, 0.1); padding: 15px; border-radius: 10px;">
+                        <h3 style="margin-top: 0;">${t.contact_phone || 'Technical Support'}</h3>
+                        <p style="margin: 5px 0;"><strong>Phone:</strong> +1 (555) 123-4567</p>
+                        <p style="margin: 5px 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.contact_business || 'Business hours only'}</p>
+                    </div>
+                </div>
+                `,
+                'Got It'
+            );
+        }
+
+        function showHelpModal() {
+            const t = translations[currentLanguage];
+            showCustomModal(
+                t.help_title || 'Help Center',
+                `
+                <div style="text-align: left; line-height: 1.6;">
+                    <div style="display: grid; gap: 12px;">
+                        <div style="background: rgba(52, 152, 219, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showDataHelp()">
+                            <h4 style="margin: 0; color: #3498db;">${t.help_data || '📊 Data Management'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_data_desc || 'Adding data, editing values, importing/exporting'}</p>
+                        </div>
+                        
+                        <div style="background: rgba(46, 204, 113, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showAnalyticsHelp()">
+                            <h4 style="margin: 0; color: #2ecc71;">${t.help_analytics || '📈 Analytics & Charts'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_analytics_desc || 'Understanding charts, forecasting, insights'}</p>
+                        </div>
+                        
+                        <div style="background: rgba(230, 126, 34, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showAccountHelp()">
+                            <h4 style="margin: 0; color: #e67e22;">${t.help_account || '👤 Account & Billing'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_account_desc || 'Subscription management, billing, account settings'}</p>
+                        </div>
+                        
+                        <div style="background: rgba(155, 89, 182, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showTechnicalHelp()">
+                            <h4 style="margin: 0; color: #9b59b6;">${t.help_technical || '⚙️ Technical Support'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_technical_desc || 'Browser issues, performance, troubleshooting'}</p>
+                        </div>
+                    </div>
+                </div>
+                `,
+                'Contact Support'
+            );
+        }
+
+        function showFaqModal() {
+            const t = translations[currentLanguage];
+            showCustomModal(
+                t.faq_title || 'Frequently Asked Questions',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #3498db; margin: 0 0 5px 0;">${t.faq_q1 || 'How do I add sales data?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a1 || 'Click on any cell in the table to edit values directly. Use the "Add Category" button to create new product categories.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #2ecc71; margin: 0 0 5px 0;">${t.faq_q2 || 'How accurate are the forecasts?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a2 || 'Forecasts use advanced algorithms combining trend analysis, seasonal patterns, and historical data. Accuracy improves with more data.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #e67e22; margin: 0 0 5px 0;">${t.faq_q3 || 'Can I export my data?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a3 || 'Yes, use the Export buttons to download your data in Excel or PDF format. Your data is also automatically saved.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #9b59b6; margin: 0 0 5px 0;">${t.faq_q4 || 'What are Smart Insights?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a4 || 'AI-powered analysis that identifies trends, opportunities, and potential issues in your business data automatically.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #e74c3c; margin: 0 0 5px 0;">${t.faq_q5 || 'Is my business data secure?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a5 || 'Yes, all data is encrypted and stored securely. You can also work offline with local storage as backup.'}</p>
+                    </div>
+                </div>
+                `,
+                'Got It'
+            );
+        }
+
+        // Helper functions για τα modals
+        function showCustomModal(title, content, buttonText = 'Close') {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+                background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; backdrop-filter: blur(5px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                           padding: 25px; border-radius: 15px; max-width: 500px; width: 90%; 
+                           max-height: 70vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+                    <h2 style="margin: 0 0 20px 0; color: white; font-size: 18px; text-align: center;">${title}</h2>
+                    ${content}
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button onclick="this.closest('.modal-overlay').remove()" 
+                               style="background: rgba(255,255,255,0.2); color: white; border: none; 
+                                      padding: 10px 20px; border-radius: 8px; cursor: pointer; 
+                                      font-weight: 600; transition: all 0.3s ease;">
+                            ${buttonText}
+                        </button>
+                    </div>
+                </div>
+            `;
+            
+            modal.className = 'modal-overlay';
+            modal.onclick = (e) => {
+                if (e.target === modal) modal.remove();
+            };
+            
+            document.body.appendChild(modal);
+        }
+
+        function startLiveChat() {
+            const t = translations[currentLanguage];
+            showNotification(
+                t.chat_starting || 'Starting live chat...',
+                'info'
+            );
+            setTimeout(() => {
+                showNotification(
+                    t.chat_demo || 'Live chat demo - Contact support for real assistance',
+                    'warning'
+                );
+            }, 2000);
+        }
+
+        function showDataHelp() {
+            showNotification('📊 Opening Data Management help...', 'info');
+        }
+
+        function showAnalyticsHelp() {
+            showNotification('📈 Opening Analytics help...', 'info');
+        }
+
+        function showAccountHelp() {
+            showNotification('👤 Opening Account help...', 'info');
+        }
+
+        function showTechnicalHelp() {
+            showNotification('⚙️ Opening Technical Support...', 'info');
+        }
+
+        // ==================== END FOOTER MODAL FUNCTIONS ====================
+        
         // Override restricted functions
         function showSubscriptionPrompt(feature) {
             const currentLang = localStorage.getItem('language') || 'el';
@@ -9145,3 +9854,35 @@ function sanitizeKey(email) {
             }
         }
     </script>
+
+    <!-- Footer Section -->
+    <footer class="terms-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4 data-translate="terms_policies">Terms & Policies</h4>
+                <div class="footer-links">
+                    <a href="#" onclick="showTermsModal()" data-translate="terms_of_use">Terms of Use</a>
+                    <a href="#" onclick="showPrivacyModal()" data-translate="privacy_policy">Privacy Policy</a>
+                    <a href="#" onclick="showRefundModal()" data-translate="refund_policy">Refund Policy</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-translate="support">Support</h4>
+                <div class="footer-links">
+                    <a href="#" onclick="showContactModal()" data-translate="contact_us">Contact Us</a>
+                    <a href="#" onclick="showHelpModal()" data-translate="help_center">Help Center</a>
+                    <a href="#" onclick="showFaqModal()" data-translate="faq">FAQ</a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4 data-translate="company">Company</h4>
+                <div class="footer-text" data-translate="copyright">© 2025 Business Tracker. All rights reserved.</div>
+                <div class="footer-secure" data-translate="secure_encrypted">🔒 Secure & Encrypted</div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

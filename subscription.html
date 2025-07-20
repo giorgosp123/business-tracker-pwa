@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html
 <html lang="el">
 <head>
     <meta charset="UTF-8">
@@ -16,11 +16,10 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             color: #333;
             overflow-x: hidden;
+            padding: 20px 0;
+            box-sizing: border-box;
         }
 
         /* Modern Glassmorphism Container */
@@ -37,8 +36,9 @@
             width: 90%;
             text-align: center;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin: 20px auto;
         }
 
         @keyframes containerEntrance {
@@ -537,6 +537,19 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
+        .terms-link {
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .terms-link:hover {
+            color: #5a6fd8;
+            text-decoration: none;
+        }
+
         .confetti {
             position: fixed;
             width: 10px;
@@ -711,6 +724,14 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
+        body.dark-mode .terms-link {
+            color: #74b9ff;
+        }
+
+        body.dark-mode .terms-link:hover {
+            color: #0984e3;
+        }
+
         body.dark-mode .subscription-status {
             background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
@@ -781,74 +802,172 @@
             color: #ecf0f1;
         }
 
-        /* Stripe Payment Modal Styles */
+        /* Enhanced Stripe Payment Modal Styles */
         .payment-modal {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(10px);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 10002;
-            animation: fadeIn 0.3s ease;
+            animation: modalFadeIn 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(15px);
+            }
         }
 
         .payment-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(25px);
+            border-radius: 30px;
+            padding: 45px;
+            max-width: 520px;
+            width: 92%;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.25),
+                0 20px 40px rgba(102, 126, 234, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            animation: modalSlideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
+            overflow: hidden;
+            transform: translateY(50px) scale(0.9);
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .payment-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #ff6b6b, #4ecdc4, #667eea);
+            background-size: 300% 100%;
+            animation: gradientFlow 4s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .payment-header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            position: relative;
+        }
+
+        .payment-header::before {
+            content: '💳';
+            font-size: 48px;
+            display: block;
+            margin-bottom: 15px;
+            animation: iconBounce 2s ease-in-out infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-8px) rotate(-5deg); }
+            75% { transform: translateY(-4px) rotate(5deg); }
         }
 
         .payment-title {
-            font-size: 24px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            font-size: 28px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #667eea, #764ba2, #ff6b6b);
+            background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            animation: titleGradient 3s ease infinite;
+            letter-spacing: -0.5px;
+        }
+
+        @keyframes titleGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .payment-subtitle {
             color: #7f8c8d;
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 15px;
+            line-height: 1.6;
+            font-weight: 500;
         }
 
         .payment-element {
-            margin: 25px 0;
-            padding: 20px;
-            border: 2px solid #f1f2f6;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.8);
-            transition: all 0.3s ease;
+            margin: 30px 0;
+            padding: 25px;
+            border: 2px solid transparent;
+            border-radius: 18px;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.8));
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-element::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
         }
 
         .payment-element:focus-within {
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 
+                0 12px 30px rgba(102, 126, 234, 0.2),
+                0 0 0 4px rgba(102, 126, 234, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .payment-element:focus-within::before {
+            transform: translateX(0);
         }
 
         .payment-buttons {
             display: flex;
-            gap: 15px;
-            margin-top: 25px;
+            gap: 18px;
+            margin-top: 30px;
         }
 
         .payment-submit {
@@ -856,58 +975,137 @@
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             border: none;
-            padding: 15px 25px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            padding: 18px 30px;
+            border-radius: 16px;
+            font-size: 17px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             position: relative;
             overflow: hidden;
+            box-shadow: 
+                0 12px 25px rgba(102, 126, 234, 0.3),
+                0 4px 10px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .payment-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transition: left 0.6s ease;
         }
 
         .payment-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 20px 40px rgba(102, 126, 234, 0.4),
+                0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .payment-submit:hover::before {
+            left: 100%;
+        }
+
+        .payment-submit:active {
+            transform: translateY(-1px);
+            transition: transform 0.1s ease;
         }
 
         .payment-submit:disabled {
-            background: #bdc3c7;
+            background: linear-gradient(135deg, #bdc3c7, #95a5a6);
             cursor: not-allowed;
             transform: none;
-            box-shadow: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .payment-cancel {
             flex: 1;
-            background: transparent;
-            color: #7f8c8d;
-            border: 2px solid #bdc3c7;
-            padding: 15px 25px;
-            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #e74c3c;
+            border: 2px solid #e74c3c;
+            padding: 18px 30px;
+            border-radius: 16px;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-cancel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #e74c3c;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: -1;
         }
 
         .payment-cancel:hover {
-            background: #bdc3c7;
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(231, 76, 60, 0.3);
+        }
+
+        .payment-cancel:hover::before {
+            transform: translateY(0);
         }
 
         .secure-badge {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-top: 20px;
-            padding: 12px;
-            background: rgba(46, 204, 113, 0.1);
-            border-radius: 8px;
+            gap: 10px;
+            margin-top: 25px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.15), rgba(39, 174, 96, 0.1));
+            border-radius: 15px;
             color: #27ae60;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
+            border: 1px solid rgba(46, 204, 113, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .secure-badge::before {
+            content: '🔒';
+            font-size: 20px;
+            animation: secureFloat 3s ease-in-out infinite;
+        }
+
+        .secure-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(46, 204, 113, 0.1), transparent);
+            animation: secureShimmer 2s ease infinite;
+        }
+
+        @keyframes secureFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        @keyframes secureShimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .payment-loading {
@@ -930,14 +1128,23 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Dark Mode Styles for Payment Modal */
+        /* Enhanced Dark Mode Styles for Payment Modal */
         body.dark-mode .payment-container {
-            background: rgba(52, 73, 94, 0.95);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(145deg, rgba(44, 62, 80, 0.98), rgba(52, 73, 94, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(52, 152, 219, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .payment-container::before {
+            background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #2ecc71, #3498db);
         }
 
         body.dark-mode .payment-title {
-            background: linear-gradient(135deg, #3498db, #9b59b6);
+            background: linear-gradient(135deg, #3498db, #9b59b6, #74b9ff);
+            background-size: 200% 100%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -948,26 +1155,35 @@
         }
 
         body.dark-mode .payment-element {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(236, 240, 241, 0.05));
+            border-color: rgba(255, 255, 255, 0.15);
         }
 
         body.dark-mode .payment-element:focus-within {
             border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            box-shadow: 
+                0 12px 30px rgba(52, 152, 219, 0.2),
+                0 0 0 4px rgba(52, 152, 219, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         body.dark-mode .payment-submit {
             background: linear-gradient(135deg, #3498db, #9b59b6);
+            box-shadow: 
+                0 12px 25px rgba(52, 152, 219, 0.3),
+                0 4px 10px rgba(0, 0, 0, 0.2);
         }
 
         body.dark-mode .payment-submit:hover {
-            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(52, 152, 219, 0.4),
+                0 8px 15px rgba(0, 0, 0, 0.25);
         }
 
         body.dark-mode .payment-cancel {
             color: #ecf0f1;
             border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         body.dark-mode .payment-cancel:hover {
@@ -976,24 +1192,277 @@
         }
 
         body.dark-mode .secure-badge {
-            background: rgba(46, 204, 113, 0.2);
+            background: linear-gradient(135deg, rgba(46, 204, 113, 0.2), rgba(39, 174, 96, 0.15));
             color: #2ecc71;
+            border-color: rgba(46, 204, 113, 0.3);
+        }
+
+        /* Enhanced Dark Mode Styles for General Modals */
+        body.dark-mode .modal-content {
+            background: linear-gradient(145deg, rgba(44, 62, 80, 0.98), rgba(52, 73, 94, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ecf0f1;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(52, 152, 219, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .modal-content::before {
+            background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #2ecc71, #3498db);
+        }
+
+        body.dark-mode .modal-content h3 {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode .modal-content h3::after {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+        }
+
+        body.dark-mode .modal-content p {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .modal-btn-primary {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        body.dark-mode .modal-btn-primary:hover {
+            box-shadow: 0 12px 30px rgba(52, 152, 219, 0.4);
+        }
+
+        body.dark-mode .modal-btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ecf0f1;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Enhanced Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            animation: overlayFadeIn 0.4s ease;
+            opacity: 0;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes overlayFadeIn {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(12px);
+            }
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.98), rgba(255, 255, 255, 0.95));
+            backdrop-filter: blur(25px);
+            padding: 40px;
+            border-radius: 25px;
+            max-width: 650px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.2),
+                0 20px 40px rgba(102, 126, 234, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            margin: 20px;
+            position: relative;
+            transform: translateY(50px) scale(0.9);
+            animation: modalContentSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            overflow: hidden;
+        }
+
+        @keyframes modalContentSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2, #ff6b6b, #4ecdc4, #667eea);
+            background-size: 300% 100%;
+            animation: modalGradientFlow 4s ease infinite;
+        }
+
+        @keyframes modalGradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .modal-content h3 {
+            color: #667eea;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 20px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+        }
+
+        .modal-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 2px;
+        }
+
+        .modal-content p {
+            line-height: 1.7;
+            margin-bottom: 18px;
+            color: #444;
+            font-size: 15px;
+        }
+
+        /* Enhanced Modal Buttons */
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-btn-primary {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .modal-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .modal-btn-secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #7f8c8d;
+            border: 2px solid rgba(127, 140, 141, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-btn-secondary:hover {
+            background: rgba(127, 140, 141, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Dark mode modal styles */
+        body.dark-mode .modal-content {
+            background: linear-gradient(145deg, rgba(44, 62, 80, 0.98), rgba(52, 73, 94, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #ecf0f1;
+            box-shadow: 
+                0 30px 60px rgba(0, 0, 0, 0.4),
+                0 20px 40px rgba(52, 152, 219, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode .modal-content::before {
+            background: linear-gradient(90deg, #3498db, #9b59b6, #e74c3c, #2ecc71, #3498db);
+        }
+
+        body.dark-mode .modal-content h3 {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode .modal-content h3::after {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+        }
+
+        body.dark-mode .modal-content p {
+            color: #bdc3c7;
+        }
+
+        body.dark-mode .modal-btn-primary {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);
+        }
+
+        body.dark-mode .modal-btn-primary:hover {
+            box-shadow: 0 12px 30px rgba(52, 152, 219, 0.4);
+        }
+
+        body.dark-mode .modal-btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: #ecf0f1;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        body.dark-mode .modal-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
         }
 
         /* Enhanced Responsive Design - Βελτιωμένο για κινητά */
         @media (max-width: 768px) {
             body {
-                padding: 10px;
+                padding: 15px 10px;
                 font-size: 14px;
+                min-height: 100vh;
             }
 
             .subscription-container {
                 padding: 25px 18px;
-                margin: 10px 5px;
+                margin: 10px auto;
                 border-radius: 18px;
                 max-width: none;
-                width: calc(100% - 10px);
+                width: calc(100% - 20px);
                 box-sizing: border-box;
+                overflow: visible;
             }
 
             .logo {
@@ -1145,61 +1614,80 @@
             }
 
             .payment-modal {
-                padding: 8px;
+                padding: 10px;
                 align-items: flex-start;
                 padding-top: 20px;
                 overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
             }
 
             .payment-container {
-                margin: 8px;
-                padding: 22px 18px;
+                margin: 10px auto;
+                padding: 30px 20px;
                 max-width: none;
-                width: calc(100% - 16px);
-                border-radius: 18px;
+                width: calc(100% - 20px);
+                border-radius: 20px;
                 box-sizing: border-box;
+                transform: none;
+                animation: mobileModalSlideUp 0.4s ease forwards;
+            }
+
+            @keyframes mobileModalSlideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .payment-header {
-                margin-bottom: 20px;
+                margin-bottom: 25px;
+            }
+
+            .payment-header::before {
+                font-size: 36px;
+                margin-bottom: 12px;
             }
 
             .payment-title {
-                font-size: 18px;
-                margin-bottom: 8px;
+                font-size: 22px;
+                margin-bottom: 10px;
             }
 
             .payment-subtitle {
-                font-size: 12px;
-                line-height: 1.4;
+                font-size: 13px;
+                line-height: 1.5;
             }
 
             .payment-element {
-                margin: 18px 0;
-                padding: 16px;
-                border-radius: 10px;
+                margin: 20px 0;
+                padding: 20px 16px;
+                border-radius: 15px;
             }
 
             .payment-buttons {
                 flex-direction: column;
-                gap: 10px;
-                margin-top: 18px;
+                gap: 12px;
+                margin-top: 25px;
             }
 
             .payment-submit, .payment-cancel {
-                padding: 14px 18px;
-                font-size: 14px;
+                padding: 16px 20px;
+                font-size: 15px;
                 width: 100%;
                 box-sizing: border-box;
-                border-radius: 10px;
-                min-height: 48px;
+                border-radius: 14px;
+                min-height: 50px;
             }
 
             .secure-badge {
-                padding: 10px;
-                font-size: 11px;
-                margin-top: 15px;
-                border-radius: 8px;
+                padding: 12px 16px;
+                font-size: 13px;
+                margin-top: 20px;
+                border-radius: 12px;
             }
 
             /* Mobile specific button styles */
@@ -1212,14 +1700,69 @@
                 margin-top: 15px !important;
                 min-height: 48px !important;
             }
+
+            /* Enhanced Modal responsive styles */
+            .modal-content {
+                margin: 15px !important;
+                padding: 30px 25px !important;
+                max-height: 90vh !important;
+                max-width: calc(100vw - 30px) !important;
+                border-radius: 20px !important;
+                transform: none !important;
+                animation: mobileModalContentSlideUp 0.4s ease forwards !important;
+            }
+
+            @keyframes mobileModalContentSlideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .modal-content h3 {
+                font-size: 18px !important;
+                margin-top: 20px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .modal-content p {
+                font-size: 14px !important;
+                line-height: 1.6 !important;
+                margin-bottom: 15px !important;
+            }
+
+            .modal-buttons {
+                flex-direction: column !important;
+                gap: 12px !important;
+                margin-top: 25px !important;
+            }
+
+            .modal-btn {
+                width: 100% !important;
+                padding: 14px 20px !important;
+                font-size: 14px !important;
+                border-radius: 12px !important;
+                min-height: 48px !important;
+            }
         }
 
         /* Extra small screens optimization */
         @media (max-width: 480px) {
+            body {
+                padding: 10px 5px;
+                min-height: 100vh;
+            }
+
             .subscription-container {
                 padding: 20px 15px;
-                margin: 5px;
+                margin: 5px auto;
                 border-radius: 15px;
+                width: calc(100% - 10px);
+                overflow: visible;
             }
 
             h1 {
@@ -1235,8 +1778,59 @@
             }
 
             .payment-container {
-                margin: 5px;
-                padding: 18px 15px;
+                margin: 8px auto;
+                padding: 25px 18px;
+                border-radius: 18px;
+                width: calc(100% - 16px);
+            }
+
+            .payment-header::before {
+                font-size: 30px;
+                margin-bottom: 10px;
+            }
+
+            .payment-title {
+                font-size: 20px;
+            }
+
+            .payment-subtitle {
+                font-size: 12px;
+            }
+
+            .payment-element {
+                padding: 18px 14px;
+                margin: 16px 0;
+            }
+
+            .payment-submit, .payment-cancel {
+                padding: 14px 18px;
+                font-size: 14px;
+                min-height: 46px;
+            }
+
+            .secure-badge {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+
+            .modal-content {
+                margin: 8px !important;
+                padding: 25px 18px !important;
+                border-radius: 18px !important;
+            }
+
+            .modal-content h3 {
+                font-size: 16px !important;
+            }
+
+            .modal-content p {
+                font-size: 13px !important;
+            }
+
+            .modal-btn {
+                padding: 12px 18px !important;
+                font-size: 13px !important;
+                min-height: 44px !important;
             }
 
             .dark-mode-toggle, .language-toggle {
@@ -1447,6 +2041,298 @@
         let elements;
         let paymentElement;
 
+        // ==================== FOOTER MODAL FUNCTIONS ====================
+        
+        function showTermsModal() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            const modal = createModal(
+                translations[currentLanguage]['terms_title'] || 'Terms of Use',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <h3>${translations[currentLanguage]['terms_section1'] || 'Service Description'}</h3>
+                    <p>${translations[currentLanguage]['terms_desc1'] || 'This service provides premium content access for a monthly subscription fee. The service includes a 3-day free trial period.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['terms_section2'] || 'Payment Terms'}</h3>
+                    <p>${translations[currentLanguage]['terms_desc2'] || 'Payment is processed monthly via Stripe. The subscription will automatically renew unless cancelled before the renewal date.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['terms_section3'] || 'Cancellation Policy'}</h3>
+                    <p>${translations[currentLanguage]['terms_desc3'] || 'You may cancel your subscription at any time. No refunds will be provided for partial month usage.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['terms_section4'] || 'User Responsibilities'}</h3>
+                    <p>${translations[currentLanguage]['terms_desc4'] || 'Users are responsible for maintaining account security and following community guidelines.'}</p>
+                </div>
+                `,
+                'I Agree',
+                'Close'
+            );
+        }
+
+        function showPrivacyModal() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            const modal = createModal(
+                translations[currentLanguage]['privacy_title'] || 'Privacy Policy',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <h3>${translations[currentLanguage]['privacy_section1'] || 'Data Collection'}</h3>
+                    <p>${translations[currentLanguage]['privacy_desc1'] || 'We collect only necessary information for service provision including email, payment information, and usage analytics.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['privacy_section2'] || 'Data Usage'}</h3>
+                    <p>${translations[currentLanguage]['privacy_desc2'] || 'Your data is used solely for service delivery, customer support, and improving our offerings. We do not sell personal information.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['privacy_section3'] || 'Data Security'}</h3>
+                    <p>${translations[currentLanguage]['privacy_desc3'] || 'All data is encrypted and stored securely. Payment processing is handled by Stripe with industry-standard security measures.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['privacy_section4'] || 'Your Rights'}</h3>
+                    <p>${translations[currentLanguage]['privacy_desc4'] || 'You have the right to access, modify, or delete your personal data at any time by contacting our support team.'}</p>
+                </div>
+                `,
+                'Understood',
+                'Close'
+            );
+        }
+
+        function showRefundModal() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            const modal = createModal(
+                translations[currentLanguage]['refund_title'] || 'Refund Policy',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <h3>${translations[currentLanguage]['refund_section1'] || 'General Policy'}</h3>
+                    <p>${translations[currentLanguage]['refund_desc1'] || 'Due to the digital nature of our service, refunds are generally not provided after the free trial period ends.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['refund_section2'] || 'Trial Period'}</h3>
+                    <p>${translations[currentLanguage]['refund_desc2'] || 'You can cancel during the 3-day free trial without any charges. Cancel before the trial ends to avoid billing.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['refund_section3'] || 'Special Circumstances'}</h3>
+                    <p>${translations[currentLanguage]['refund_desc3'] || 'Refunds may be considered in exceptional circumstances such as technical issues preventing service access.'}</p>
+                    
+                    <h3>${translations[currentLanguage]['refund_section4'] || 'Contact Support'}</h3>
+                    <p>${translations[currentLanguage]['refund_desc4'] || 'For refund requests, please contact our support team with your subscription details and reason for the request.'}</p>
+                </div>
+                `,
+                'Understood',
+                'Close'
+            );
+        }
+
+        function showContactModal() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            const modal = createModal(
+                translations[currentLanguage]['contact_title'] || 'Contact Support',
+                `
+                <div style="text-align: left; line-height: 1.6;">
+                    <div style="background: rgba(52, 152, 219, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="margin-top: 0;">${translations[currentLanguage]['contact_email'] || 'Email Support'}</h3>
+                        <p style="margin: 5px 0;"><strong>Email:</strong> support@example.com</p>
+                        <p style="margin: 5px 0; font-size: 12px; color: rgba(255,255,255,0.7);">${translations[currentLanguage]['contact_response'] || 'Response within 24 hours'}</p>
+                    </div>
+                    
+                    <div style="background: rgba(46, 204, 113, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                        <h3 style="margin-top: 0;">${translations[currentLanguage]['contact_live'] || 'Live Chat'}</h3>
+                        <p style="margin: 5px 0;">${translations[currentLanguage]['contact_available'] || 'Available Monday-Friday 9AM-6PM EST'}</p>
+                        <button onclick="startLiveChat()" style="background: #2ecc71; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-top: 8px;">${translations[currentLanguage]['contact_start_chat'] || 'Start Chat'}</button>
+                    </div>
+                    
+                    <div style="background: rgba(155, 89, 182, 0.1); padding: 15px; border-radius: 10px;">
+                        <h3 style="margin-top: 0;">${translations[currentLanguage]['contact_phone'] || 'Phone Support'}</h3>
+                        <p style="margin: 5px 0;"><strong>Phone:</strong> +1 (555) 123-4567</p>
+                        <p style="margin: 5px 0; font-size: 12px; color: rgba(255,255,255,0.7);">${translations[currentLanguage]['contact_business'] || 'Business hours only'}</p>
+                    </div>
+                </div>
+                `,
+                'Got It',
+                'Close'
+            );
+        }
+
+        function showHelpModal() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            const modal = createModal(
+                translations[currentLanguage]['help_title'] || 'Help Center',
+                `
+                <div style="text-align: left; line-height: 1.6;">
+                    <div style="display: grid; gap: 12px;">
+                        <div style="background: rgba(52, 152, 219, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showFaqSection('billing')">
+                            <h4 style="margin: 0; color: #3498db;">${translations[currentLanguage]['help_billing'] || '💳 Billing & Payments'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${translations[currentLanguage]['help_billing_desc'] || 'Payment issues, billing questions, subscription management'}</p>
+                        </div>
+                        
+                        <div style="background: rgba(46, 204, 113, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showFaqSection('account')">
+                            <h4 style="margin: 0; color: #2ecc71;">${translations[currentLanguage]['help_account'] || '👤 Account Management'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${translations[currentLanguage]['help_account_desc'] || 'Login issues, password reset, account settings'}</p>
+                        </div>
+                        
+                        <div style="background: rgba(230, 126, 34, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showFaqSection('technical')">
+                            <h4 style="margin: 0; color: #e67e22;">${translations[currentLanguage]['help_technical'] || '⚙️ Technical Support'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${translations[currentLanguage]['help_technical_desc'] || 'App issues, browser compatibility, performance problems'}</p>
+                        </div>
+                        
+                        <div style="background: rgba(155, 89, 182, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showFaqSection('general')">
+                            <h4 style="margin: 0; color: #9b59b6;">${translations[currentLanguage]['help_general'] || '❓ General Questions'}</h4>
+                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${translations[currentLanguage]['help_general_desc'] || 'How to use features, getting started, general inquiries'}</p>
+                        </div>
+                    </div>
+                </div>
+                `,
+                'Contact Support',
+                'Close'
+            );
+        }
+
+        function showFaqModal() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            const modal = createModal(
+                translations[currentLanguage]['faq_title'] || 'Frequently Asked Questions',
+                `
+                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #3498db; margin: 0 0 5px 0;">${translations[currentLanguage]['faq_q1'] || 'How do I cancel my subscription?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${translations[currentLanguage]['faq_a1'] || 'You can cancel anytime by clicking the "Cancel Subscription" button in your account settings or by contacting support.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #2ecc71; margin: 0 0 5px 0;">${translations[currentLanguage]['faq_q2'] || 'When will I be charged?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${translations[currentLanguage]['faq_a2'] || 'You will be charged after your 3-day free trial ends, then monthly on the same date each month.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #e67e22; margin: 0 0 5px 0;">${translations[currentLanguage]['faq_q3'] || 'Can I change my payment method?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${translations[currentLanguage]['faq_a3'] || 'Yes, you can update your payment method in your account settings or contact support for assistance.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #9b59b6; margin: 0 0 5px 0;">${translations[currentLanguage]['faq_q4'] || 'What happens if my payment fails?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${translations[currentLanguage]['faq_a4'] || 'We will retry payment and send you a notification. Your access will be maintained for 48 hours to update payment information.'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h4 style="color: #e74c3c; margin: 0 0 5px 0;">${translations[currentLanguage]['faq_q5'] || 'Is my payment information secure?'}</h4>
+                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${translations[currentLanguage]['faq_a5'] || 'Yes, all payments are processed securely through Stripe with industry-standard encryption and security measures.'}</p>
+                    </div>
+                </div>
+                `,
+                'Contact Support',
+                'Close'
+            );
+        }
+
+        // Helper functions για τα footer modals
+        function startLiveChat() {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            showNotification(
+                translations[currentLanguage]['chat_starting'] || 'Starting live chat...',
+                'info'
+            );
+            setTimeout(() => {
+                showNotification(
+                    translations[currentLanguage]['chat_demo'] || 'Live chat demo - Contact support for real assistance',
+                    'warning'
+                );
+            }, 2000);
+        }
+
+        function showFaqSection(section) {
+            const currentLanguage = localStorage.getItem('language') || 'el';
+            showNotification(
+                translations[currentLanguage]['faq_loading'] || `Loading ${section} FAQ section...`,
+                'info'
+            );
+        }
+
+        // Core Modal Creation Function
+        function createModal(title, content, primaryButtonText = 'OK', secondaryButtonText = 'Cancel') {
+            // Create modal overlay
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay';
+            modalOverlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                backdrop-filter: blur(5px);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10001;
+                animation: fadeIn 0.3s ease;
+            `;
+
+            // Create modal content
+            const modalContent = document.createElement('div');
+            modalContent.className = 'modal-content';
+            modalContent.style.cssText = `
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(20px);
+                padding: 30px;
+                border-radius: 20px;
+                max-width: 600px;
+                max-height: 80vh;
+                overflow-y: auto;
+                box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                animation: scaleIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                margin: 20px;
+            `;
+
+            // Apply dark mode if active
+            if (document.body.classList.contains('dark-mode')) {
+                modalContent.style.background = 'rgba(52, 73, 94, 0.95)';
+                modalContent.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+                modalContent.style.color = '#ecf0f1';
+            }
+
+            modalContent.innerHTML = `
+                <div class="modal-header" style="margin-bottom: 20px;">
+                    <h2 style="margin: 0; font-size: 24px; color: ${document.body.classList.contains('dark-mode') ? '#74b9ff' : '#667eea'};">${title}</h2>
+                </div>
+                <div class="modal-body" style="margin-bottom: 25px;">
+                    ${content}
+                </div>
+                <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button onclick="closeModal()" style="
+                        background: transparent;
+                        color: ${document.body.classList.contains('dark-mode') ? '#bdc3c7' : '#6c757d'};
+                        border: 1px solid ${document.body.classList.contains('dark-mode') ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'};
+                        padding: 10px 20px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">${secondaryButtonText}</button>
+                    <button onclick="closeModal()" style="
+                        background: linear-gradient(135deg, #667eea, #764ba2);
+                        color: white;
+                        border: none;
+                        padding: 10px 20px;
+                        border-radius: 8px;
+                        cursor: pointer;
+                        transition: all 0.2s ease;
+                    ">${primaryButtonText}</button>
+                </div>
+            `;
+
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+
+            // Close modal when clicking outside
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            // Global close function
+            window.closeModal = function() {
+                modalOverlay.remove();
+                delete window.closeModal;
+            };
+
+            return modalOverlay;
+        }
+
+        // ==================== END FOOTER MODAL FUNCTIONS ====================
+
         // Stripe Payment Configuration
         const STRIPE_CONFIG = {
             publishableKey: 'pk_live_51NsMhxA1DFzFV9pRzlkLOHee4j7cyeDGQZJfolnsTVH0givjHlcWyP9PYYXrQM7WFnYV8tdkAgrkoyfLnaCMJysB003TUxSuBN',
@@ -1478,7 +2364,7 @@
                 ctaButton: "🚀 Ξεκινήστε τη Δωρεάν Δοκιμή",
                 cancelButton: "🗑️ Ακύρωση Συνδρομής",
                 backButton: "← Επιστροφή",
-                terms: "Με την εγγραφή συμφωνείτε με τους όρους χρήσης. Η δωρεάν δοκιμή διαρκεί 3 μέρες. Μετά τη λήξη της δοκιμαστικής περιόδου θα χρεωθείτε €12.99/μήνα. Μπορείτε να ακυρώσετε ανά πάσα στιγμή.",
+                terms: "Με την εγγραφή συμφωνείτε με τους <span class='terms-link' onclick='showTermsModal()'>όρους χρήσης</span>. Η δωρεάν δοκιμή διαρκεί 3 μέρες. Μετά τη λήξη της δοκιμαστικής περιόδου θα χρεωθείτε €12.99/μήνα. Μπορείτε να ακυρώσετε ανά πάσα στιγμή.",
                 activeSubscriptionStatus: "✅ Η Συνδρομή σας είναι Ενεργή",
                 confirmTrialTitle: "Ξεκινήστε τη Δωρεάν Δοκιμή",
                 confirmTrialText: "Θέλετε να ξεκινήσετε τη δωρεάν δοκιμή <strong>3 ημερών</strong>;<br>Θα έχετε πλήρη πρόσβαση σε όλες τις premium δυνατότητες!",
@@ -1503,7 +2389,66 @@
                 paymentError: "❌ Σφάλμα πληρωμής. Παρακαλώ δοκιμάστε ξανά.",
                 paymentCancel: "Ακύρωση",
                 paymentSubmit: "💳 Ξεκινήστε τη Δωρεάν Δοκιμή",
-                securePayment: "🔒 Ασφαλής πληρωμή με κρυπτογράφηση SSL"
+                securePayment: "🔒 Ασφαλής πληρωμή με κρυπτογράφηση SSL",
+                // Footer Terms Translations
+                terms_title: "Όροι Χρήσης",
+                terms_section1: "Περιγραφή Υπηρεσίας",
+                terms_desc1: "Αυτή η υπηρεσία παρέχει πρόσβαση σε premium περιεχόμενο έναντι μηνιαίας συνδρομής. Η υπηρεσία περιλαμβάνει δωρεάν δοκιμαστική περίοδο 3 ημερών.",
+                terms_section2: "Όροι Πληρωμής",
+                terms_desc2: "Η πληρωμή επεξεργάζεται μηνιαίως μέσω Stripe. Η συνδρομή θα ανανεώνεται αυτόματα εκτός αν ακυρωθεί πριν την ημερομηνία ανανέωσης.",
+                terms_section3: "Πολιτική Ακύρωσης",
+                terms_desc3: "Μπορείτε να ακυρώσετε τη συνδρομή σας οποιαδήποτε στιγμή. Δεν θα παρασχεθούν επιστροφές χρημάτων για μερική χρήση του μήνα.",
+                terms_section4: "Ευθύνες Χρήστη",
+                terms_desc4: "Οι χρήστες είναι υπεύθυνοι για τη διατήρηση της ασφάλειας του λογαριασμού και την τήρηση των κανόνων της κοινότητας.",
+                privacy_title: "Πολιτική Απορρήτου",
+                privacy_section1: "Συλλογή Δεδομένων",
+                privacy_desc1: "Συλλέγουμε μόνο τις απαραίτητες πληροφορίες για την παροχή υπηρεσιών, συμπεριλαμβανομένου email, στοιχείων πληρωμής και αναλυτικών χρήσης.",
+                privacy_section2: "Χρήση Δεδομένων",
+                privacy_desc2: "Τα δεδομένα σας χρησιμοποιούνται αποκλειστικά για την παροχή υπηρεσιών, υποστήριξη πελατών και βελτίωση των προσφορών μας. Δεν πουλάμε προσωπικές πληροφορίες.",
+                privacy_section3: "Ασφάλεια Δεδομένων",
+                privacy_desc3: "Όλα τα δεδομένα κρυπτογραφούνται και αποθηκεύονται με ασφάλεια. Η επεξεργασία πληρωμών γίνεται από τη Stripe με μέτρα ασφαλείας βιομηχανικού επιπέδου.",
+                privacy_section4: "Τα Δικαιώματά Σας",
+                privacy_desc4: "Έχετε το δικαίωμα πρόσβασης, τροποποίησης ή διαγραφής των προσωπικών σας δεδομένων ανά πάσα στιγμή επικοινωνώντας με την ομάδα υποστήριξής μας.",
+                refund_title: "Πολιτική Επιστροφών",
+                refund_section1: "Γενική Πολιτική",
+                refund_desc1: "Λόγω της ψηφιακής φύσης της υπηρεσίας μας, οι επιστροφές χρημάτων γενικά δεν παρέχονται μετά το τέλος της δωρεάν δοκιμαστικής περιόδου.",
+                refund_section2: "Δοκιμαστική Περίοδος",
+                refund_desc2: "Μπορείτε να ακυρώσετε κατά τη διάρκεια της 3ήμερης δωρεάν δοκιμής χωρίς χρεώσεις. Ακυρώστε πριν τελειώσει η δοκιμή για να αποφύγετε χρέωση.",
+                refund_section3: "Ειδικές Περιστάσεις",
+                refund_desc3: "Οι επιστροφές χρημάτων μπορεί να εξεταστούν σε εξαιρετικές περιστάσεις όπως τεχνικά προβλήματα που εμποδίζουν την πρόσβαση στην υπηρεσία.",
+                refund_section4: "Επικοινωνία Υποστήριξης",
+                refund_desc4: "Για αιτήματα επιστροφής χρημάτων, παρακαλώ επικοινωνήστε με την ομάδα υποστήριξής μας με τα στοιχεία της συνδρομής σας και τον λόγο του αιτήματος.",
+                contact_title: "Επικοινωνία Υποστήριξης",
+                contact_email: "Υποστήριξη Email",
+                contact_response: "Απάντηση εντός 24 ωρών",
+                contact_live: "Live Chat",
+                contact_available: "Διαθέσιμο Δευτέρα-Παρασκευή 9πμ-6μμ EST",
+                contact_start_chat: "Ξεκινήστε Chat",
+                contact_phone: "Τηλεφωνική Υποστήριξη",
+                contact_business: "Μόνο ώρες λειτουργίας",
+                help_title: "Κέντρο Βοήθειας",
+                help_billing: "💳 Χρεώσεις & Πληρωμές",
+                help_billing_desc: "Προβλήματα πληρωμής, ερωτήσεις χρέωσης, διαχείριση συνδρομής",
+                help_account: "👤 Διαχείριση Λογαριασμού",
+                help_account_desc: "Προβλήματα σύνδεσης, επαναφορά κωδικού, ρυθμίσεις λογαριασμού",
+                help_technical: "⚙️ Τεχνική Υποστήριξη",
+                help_technical_desc: "Προβλήματα εφαρμογής, συμβατότητα browser, προβλήματα απόδοσης",
+                help_general: "❓ Γενικές Ερωτήσεις",
+                help_general_desc: "Πώς να χρησιμοποιήσετε τις δυνατότητες, ξεκινώντας, γενικές ερωτήσεις",
+                faq_title: "Συχνές Ερωτήσεις",
+                faq_q1: "Πώς ακυρώνω τη συνδρομή μου;",
+                faq_a1: "Μπορείτε να ακυρώσετε ανά πάσα στιγμή κάνοντας κλικ στο κουμπί \"Ακύρωση Συνδρομής\" στις ρυθμίσεις του λογαριασμού σας ή επικοινωνώντας με την υποστήριξη.",
+                faq_q2: "Πότε θα χρεωθώ;",
+                faq_a2: "Θα χρεωθείτε μετά το τέλος της 3ήμερης δωρεάν δοκιμής, στη συνέχεια μηνιαίως την ίδια ημερομηνία κάθε μήνα.",
+                faq_q3: "Μπορώ να αλλάξω τη μέθοδο πληρωμής μου;",
+                faq_a3: "Ναι, μπορείτε να ενημερώσετε τη μέθοδο πληρωμής σας στις ρυθμίσεις του λογαριασμού σας ή να επικοινωνήσετε με την υποστήριξη για βοήθεια.",
+                faq_q4: "Τι συμβαίνει αν αποτύχει η πληρωμή μου;",
+                faq_a4: "Θα επαναλάβουμε την πληρωμή και θα σας στείλουμε ειδοποίηση. Η πρόσβασή σας θα διατηρηθεί για 48 ώρες για να ενημερώσετε τις πληροφορίες πληρωμής.",
+                faq_q5: "Είναι ασφαλείς οι πληροφορίες πληρωμής μου;",
+                faq_a5: "Ναι, όλες οι πληρωμές επεξεργάζονται με ασφάλεια μέσω Stripe με κρυπτογράφηση και μέτρα ασφαλείας βιομηχανικού επιπέδου.",
+                chat_starting: "Ξεκινά το live chat...",
+                chat_demo: "Live chat demo - Επικοινωνήστε με την υποστήριξη για πραγματική βοήθεια",
+                faq_loading: "Φόρτωση τμήματος FAQ..."
             },
             en: {
                 title: "Premium Subscription",
@@ -1524,7 +2469,7 @@
                 ctaButton: "🚀 Start Free Trial",
                 cancelButton: "🗑️ Cancel Subscription",
                 backButton: "← Back",
-                terms: "By signing up you agree to the terms of use. The free trial lasts 3 days. After the trial period expires you will be charged €12.99/month. You can cancel at any time.",
+                terms: "By signing up you agree to the <span class='terms-link' onclick='showTermsModal()'>terms of use</span>. The free trial lasts 3 days. After the trial period expires you will be charged €12.99/month. You can cancel at any time.",
                 activeSubscriptionStatus: "✅ Your Subscription is Active",
                 confirmTrialTitle: "Start Free Trial",
                 confirmTrialText: "Do you want to start the <strong>3-day</strong> free trial?<br>You will have full access to all premium features!",
@@ -1549,7 +2494,66 @@
                 paymentError: "❌ Payment error. Please try again.",
                 paymentCancel: "Cancel",
                 paymentSubmit: "💳 Start Free Trial",
-                securePayment: "🔒 Secure payment with SSL encryption"
+                securePayment: "🔒 Secure payment with SSL encryption",
+                // Footer Terms Translations
+                terms_title: "Terms of Use",
+                terms_section1: "Service Description",
+                terms_desc1: "This service provides premium content access for a monthly subscription fee. The service includes a 3-day free trial period.",
+                terms_section2: "Payment Terms",
+                terms_desc2: "Payment is processed monthly via Stripe. The subscription will automatically renew unless cancelled before the renewal date.",
+                terms_section3: "Cancellation Policy",
+                terms_desc3: "You may cancel your subscription at any time. No refunds will be provided for partial month usage.",
+                terms_section4: "User Responsibilities",
+                terms_desc4: "Users are responsible for maintaining account security and following community guidelines.",
+                privacy_title: "Privacy Policy",
+                privacy_section1: "Data Collection",
+                privacy_desc1: "We collect only necessary information for service provision including email, payment information, and usage analytics.",
+                privacy_section2: "Data Usage",
+                privacy_desc2: "Your data is used solely for service delivery, customer support, and improving our offerings. We do not sell personal information.",
+                privacy_section3: "Data Security",
+                privacy_desc3: "All data is encrypted and stored securely. Payment processing is handled by Stripe with industry-standard security measures.",
+                privacy_section4: "Your Rights",
+                privacy_desc4: "You have the right to access, modify, or delete your personal data at any time by contacting our support team.",
+                refund_title: "Refund Policy",
+                refund_section1: "General Policy",
+                refund_desc1: "Due to the digital nature of our service, refunds are generally not provided after the free trial period ends.",
+                refund_section2: "Trial Period",
+                refund_desc2: "You can cancel during the 3-day free trial without any charges. Cancel before the trial ends to avoid billing.",
+                refund_section3: "Special Circumstances",
+                refund_desc3: "Refunds may be considered in exceptional circumstances such as technical issues preventing service access.",
+                refund_section4: "Contact Support",
+                refund_desc4: "For refund requests, please contact our support team with your subscription details and reason for the request.",
+                contact_title: "Contact Support",
+                contact_email: "Email Support",
+                contact_response: "Response within 24 hours",
+                contact_live: "Live Chat",
+                contact_available: "Available Monday-Friday 9AM-6PM EST",
+                contact_start_chat: "Start Chat",
+                contact_phone: "Phone Support",
+                contact_business: "Business hours only",
+                help_title: "Help Center",
+                help_billing: "💳 Billing & Payments",
+                help_billing_desc: "Payment issues, billing questions, subscription management",
+                help_account: "👤 Account Management",
+                help_account_desc: "Login issues, password reset, account settings",
+                help_technical: "⚙️ Technical Support",
+                help_technical_desc: "App issues, browser compatibility, performance problems",
+                help_general: "❓ General Questions",
+                help_general_desc: "How to use features, getting started, general inquiries",
+                faq_title: "Frequently Asked Questions",
+                faq_q1: "How do I cancel my subscription?",
+                faq_a1: "You can cancel anytime by clicking the \"Cancel Subscription\" button in your account settings or by contacting support.",
+                faq_q2: "When will I be charged?",
+                faq_a2: "You will be charged after your 3-day free trial ends, then monthly on the same date each month.",
+                faq_q3: "Can I change my payment method?",
+                faq_a3: "Yes, you can update your payment method in your account settings or contact support for assistance.",
+                faq_q4: "What happens if my payment fails?",
+                faq_a4: "We will retry payment and send you a notification. Your access will be maintained for 48 hours to update payment information.",
+                faq_q5: "Is my payment information secure?",
+                faq_a5: "Yes, all payments are processed securely through Stripe with industry-standard encryption and security measures.",
+                chat_starting: "Starting live chat...",
+                chat_demo: "Live chat demo - Contact support for real assistance",
+                faq_loading: "Loading FAQ section..."
             }
         };
 
