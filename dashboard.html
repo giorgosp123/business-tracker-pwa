@@ -1152,7 +1152,11 @@
                 border: 1px solid rgba(255, 255, 255, 0.4) !important;
                 box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
                 backdrop-filter: blur(15px) !important;
-                bottom: 20vh !important;
+                bottom: 25vh !important;
+                left: 5px !important;
+                right: 5px !important;
+                font-size: 13px !important;
+                padding: 14px 18px !important;
             }
         }
 
@@ -1164,7 +1168,11 @@
                 border: 1px solid rgba(255, 255, 255, 0.4) !important;
                 box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
                 backdrop-filter: blur(15px) !important;
-                bottom: 10vh !important;
+                bottom: 15vh !important;
+                left: 15px !important;
+                right: 15px !important;
+                font-size: 14px !important;
+                padding: 12px 16px !important;
             }
         }
 
@@ -1175,59 +1183,60 @@
         /* Mobile tooltip adjustments - Better orientation handling */
         @media (max-width: 768px) {
             .stat-card::before {
-                position: fixed;
-                bottom: 15vh; /* Use viewport height for better orientation handling */
-                left: 10px;
-                right: 10px;
-                transform: none;
-                max-width: none;
-                text-align: center;
-                border-radius: 12px;
-                font-size: 14px;
-                padding: 16px 20px;
-                z-index: 10000;
-                background: rgba(0, 0, 0, 0.95);
-                backdrop-filter: blur(10px);
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-                border: 1px solid rgba(255, 255, 255, 0.1);
-                line-height: 1.4;
-                font-weight: 500;
-                white-space: normal;
-                word-wrap: break-word;
-                min-height: auto;
+                position: fixed !important;
+                bottom: 15vh !important; /* Use viewport height for better orientation handling */
+                left: 10px !important;
+                right: 10px !important;
+                transform: none !important;
+                max-width: none !important;
+                text-align: center !important;
+                border-radius: 12px !important;
+                font-size: 14px !important;
+                padding: 16px 20px !important;
+                z-index: 10000 !important;
+                background: rgba(0, 0, 0, 0.95) !important;
+                backdrop-filter: blur(10px) !important;
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
+                border: 1px solid rgba(255, 255, 255, 0.1) !important;
+                line-height: 1.4 !important;
+                font-weight: 500 !important;
+                white-space: normal !important;
+                word-wrap: break-word !important;
+                min-height: auto !important;
+            }
+
+            .stat-card::after {
+                display: none !important;
+            }
+
+            .stat-card:hover::before {
+                transform: none !important;
             }
         }
 
         /* Specific adjustments for portrait orientation */
         @media (max-width: 768px) and (orientation: portrait) {
             .stat-card::before {
-                bottom: 20vh !important; /* More space from bottom in portrait */
+                bottom: 25vh !important; /* More space from bottom in portrait */
                 left: 5px !important;
                 right: 5px !important;
                 font-size: 13px !important;
                 padding: 14px 18px !important;
-                max-height: 25vh; /* Prevent tooltip from taking too much screen */
-                overflow-y: auto;
+                max-height: 30vh !important; /* Prevent tooltip from taking too much screen */
+                overflow-y: auto !important;
             }
         }
 
         /* Specific adjustments for landscape orientation */
         @media (max-width: 768px) and (orientation: landscape) {
             .stat-card::before {
-                bottom: 10vh !important; /* Less space needed in landscape */
-                left: 20px !important;
-                right: 20px !important;
+                bottom: 15vh !important; /* Less space needed in landscape */
+                left: 15px !important;
+                right: 15px !important;
                 font-size: 14px !important;
                 padding: 12px 16px !important;
             }
         }
-
-            .stat-card::after {
-                display: none;
-            }
-
-            .stat-card:hover::before {
-                transform: none;
             }
             
             /* Ensure tooltips appear on tap for mobile */
@@ -1241,8 +1250,8 @@
             .stat-card.tooltip-active::before {
                 opacity: 1 !important;
                 visibility: visible !important;
-                animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
                 display: block !important;
+                animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
             }
             
             @keyframes tooltipSlideIn {
@@ -1260,8 +1269,8 @@
             .stat-card:active::before {
                 opacity: 1 !important;
                 visibility: visible !important;
-                animation: tooltipPulse 0.3s ease-out;
                 display: block !important;
+                animation: tooltipPulse 0.3s ease-out !important;
             }
             
             /* Auto-hide tooltip after 5 seconds on mobile for better UX */
@@ -9489,57 +9498,73 @@ function sanitizeKey(email) {
                 // Enhanced mobile tooltip functionality
                 const statCards = document.querySelectorAll('.stat-card');
                 
+                // Function to show tooltip
+                function showTooltip(card) {
+                    // Hide all other tooltips first
+                    statCards.forEach(otherCard => {
+                        if (otherCard !== card) {
+                            otherCard.classList.remove('tooltip-active');
+                        }
+                    });
+                    
+                    // Show current tooltip
+                    card.classList.add('tooltip-active');
+                    
+                    // Auto-hide after 5 seconds
+                    setTimeout(() => {
+                        card.classList.remove('tooltip-active');
+                    }, 5000);
+                }
+                
+                // Function to hide all tooltips
+                function hideAllTooltips() {
+                    statCards.forEach(card => {
+                        card.classList.remove('tooltip-active');
+                    });
+                }
+                
                 statCards.forEach(card => {
                     // Touch event handling for mobile tooltips
                     card.addEventListener('touchstart', function(e) {
                         e.preventDefault();
-                        
-                        // Hide all other tooltips first
-                        statCards.forEach(otherCard => {
-                            if (otherCard !== this) {
-                                otherCard.classList.remove('tooltip-active');
-                            }
-                        });
-                        
-                        // Toggle current tooltip
-                        this.classList.toggle('tooltip-active');
-                        
-                        // Auto-hide after 4 seconds
-                        if (this.classList.contains('tooltip-active')) {
-                            setTimeout(() => {
-                                this.classList.remove('tooltip-active');
-                            }, 4000);
-                        }
-                    });
+                        e.stopPropagation();
+                        showTooltip(this);
+                    }, { passive: false });
                     
-                    // Click event for mobile
+                    // Click event for mobile and desktop
                     card.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        
-                        // Same logic as touch
-                        statCards.forEach(otherCard => {
-                            if (otherCard !== this) {
-                                otherCard.classList.remove('tooltip-active');
-                            }
-                        });
-                        
-                        this.classList.toggle('tooltip-active');
-                        
-                        if (this.classList.contains('tooltip-active')) {
-                            setTimeout(() => {
-                                this.classList.remove('tooltip-active');
-                            }, 4000);
-                        }
+                        showTooltip(this);
+                    });
+                    
+                    // Long press event for mobile
+                    let pressTimer;
+                    card.addEventListener('touchstart', function(e) {
+                        pressTimer = setTimeout(() => {
+                            showTooltip(this);
+                        }, 500);
+                    });
+                    
+                    card.addEventListener('touchend', function() {
+                        clearTimeout(pressTimer);
+                    });
+                    
+                    card.addEventListener('touchmove', function() {
+                        clearTimeout(pressTimer);
                     });
                 });
                 
                 // Hide tooltips when tapping elsewhere
                 document.addEventListener('touchstart', function(e) {
                     if (!e.target.closest('.stat-card')) {
-                        statCards.forEach(card => {
-                            card.classList.remove('tooltip-active');
-                        });
+                        hideAllTooltips();
+                    }
+                });
+                
+                document.addEventListener('click', function(e) {
+                    if (!e.target.closest('.stat-card')) {
+                        hideAllTooltips();
                     }
                 });
             }
