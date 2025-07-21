@@ -1133,7 +1133,7 @@
             box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
         }
 
-        /* Dark mode mobile tooltips */
+        /* Dark mode mobile tooltips - Better orientation handling */
         @media (max-width: 768px) {
             body.dark-mode .stat-card::before {
                 background: rgba(255, 255, 255, 0.98) !important;
@@ -1144,17 +1144,41 @@
             }
         }
 
+        /* Dark mode portrait orientation */
+        @media (max-width: 768px) and (orientation: portrait) {
+            body.dark-mode .stat-card::before {
+                background: rgba(255, 255, 255, 0.98) !important;
+                color: #2c3e50 !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
+                backdrop-filter: blur(15px) !important;
+                bottom: 20vh !important;
+            }
+        }
+
+        /* Dark mode landscape orientation */
+        @media (max-width: 768px) and (orientation: landscape) {
+            body.dark-mode .stat-card::before {
+                background: rgba(255, 255, 255, 0.98) !important;
+                color: #2c3e50 !important;
+                border: 1px solid rgba(255, 255, 255, 0.4) !important;
+                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
+                backdrop-filter: blur(15px) !important;
+                bottom: 10vh !important;
+            }
+        }
+
         body.dark-mode .stat-card::after {
             border-top-color: rgba(255, 255, 255, 0.95);
         }
 
-        /* Mobile tooltip adjustments */
+        /* Mobile tooltip adjustments - Better orientation handling */
         @media (max-width: 768px) {
             .stat-card::before {
                 position: fixed;
-                bottom: 120px; /* Increased distance from bottom */
-                left: 15px;
-                right: 15px;
+                bottom: 15vh; /* Use viewport height for better orientation handling */
+                left: 10px;
+                right: 10px;
                 transform: none;
                 max-width: none;
                 text-align: center;
@@ -1168,7 +1192,35 @@
                 border: 1px solid rgba(255, 255, 255, 0.1);
                 line-height: 1.4;
                 font-weight: 500;
+                white-space: normal;
+                word-wrap: break-word;
+                min-height: auto;
             }
+        }
+
+        /* Specific adjustments for portrait orientation */
+        @media (max-width: 768px) and (orientation: portrait) {
+            .stat-card::before {
+                bottom: 20vh !important; /* More space from bottom in portrait */
+                left: 5px !important;
+                right: 5px !important;
+                font-size: 13px !important;
+                padding: 14px 18px !important;
+                max-height: 25vh; /* Prevent tooltip from taking too much screen */
+                overflow-y: auto;
+            }
+        }
+
+        /* Specific adjustments for landscape orientation */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .stat-card::before {
+                bottom: 10vh !important; /* Less space needed in landscape */
+                left: 20px !important;
+                right: 20px !important;
+                font-size: 14px !important;
+                padding: 12px 16px !important;
+            }
+        }
 
             .stat-card::after {
                 display: none;
@@ -1185,11 +1237,12 @@
                 animation: tooltipPulse 0.3s ease-out;
             }
             
-            /* Enhanced mobile tooltip visibility */
+            /* Enhanced mobile tooltip visibility for all orientations */
             .stat-card.tooltip-active::before {
                 opacity: 1 !important;
                 visibility: visible !important;
                 animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+                display: block !important;
             }
             
             @keyframes tooltipSlideIn {
@@ -1203,9 +1256,17 @@
                 }
             }
             
-            /* Auto-hide tooltip after 4 seconds on mobile */
+            /* Enhanced tooltip activation for touch devices */
+            .stat-card:active::before {
+                opacity: 1 !important;
+                visibility: visible !important;
+                animation: tooltipPulse 0.3s ease-out;
+                display: block !important;
+            }
+            
+            /* Auto-hide tooltip after 5 seconds on mobile for better UX */
             .stat-card.tooltip-active {
-                animation: hideTooltipAfterDelay 4s ease-in-out forwards;
+                animation: hideTooltipAfterDelay 5s ease-in-out forwards;
             }
             
             @keyframes hideTooltipAfterDelay {
