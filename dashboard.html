@@ -997,7 +997,7 @@
 
         .chart-buttons-row {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 8px;
         }
 
@@ -1042,7 +1042,7 @@
         /* Chart wrapper */
         .chart-wrapper {
             position: relative;
-            height: 300px;
+            height: 400px;
             margin-top: 20px;
         }
 
@@ -2279,6 +2279,10 @@
                 background-clip: text;
             }
             
+            .chart-wrapper {
+                height: 350px;
+            }
+            
             body.dark-mode .chart-title {
                 background: linear-gradient(135deg, #74b9ff, #a29bfe);
                 -webkit-background-clip: text;
@@ -2345,17 +2349,18 @@
             /* Enhanced chart buttons */
             .chart-buttons-row {
                 display: flex;
-                flex-direction: column;
-                gap: 10px;
+                flex-direction: row;
+                gap: 8px;
                 margin-bottom: 15px;
             }
             
             .chart-buttons-row button {
-                padding: 14px 18px;
+                flex: 1;
+                padding: 12px 8px;
                 border-radius: 12px;
-                font-size: 14px;
+                font-size: 12px;
                 font-weight: 600;
-                min-height: 48px;
+                min-height: 44px;
                 border: none;
                 background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
                 backdrop-filter: blur(10px);
@@ -2364,6 +2369,7 @@
                 transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
                 position: relative;
                 overflow: hidden;
+                text-align: center;
             }
             
             .chart-buttons-row button::before {
@@ -2866,7 +2872,7 @@
             /* Improved chart controls for mobile */
             .chart-type-buttons {
                 display: grid;
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: repeat(3, 1fr);
                 gap: 8px;
                 margin-bottom: 15px;
             }
