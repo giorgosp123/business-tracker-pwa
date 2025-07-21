@@ -5446,6 +5446,10 @@
     </div>
 
     <script>
+        // Cache buster for Netlify deployment
+        const CACHE_VERSION = 'v2025_01_21_fixes';
+        console.log(`🚀 Dashboard loaded - ${CACHE_VERSION}`);
+        
         // Initialize data storage
         const salesData = { [new Date().getFullYear()]: {} };
         let selectedYear = new Date().getFullYear();
@@ -9514,13 +9518,14 @@ function initializeUI() {
                 }
             });
 
-            // Welcome message
+            // Welcome message with cache info
             setTimeout(() => {
                 showNotification(`🧠 ${t.advancedAnalyticsActivated}`, "success");
                 showNotification(`🎉 ${t.welcome}, ${username.split('@')[0]}!`, "success");
                 showNotification(`⌨️ ${t.keyboardShortcutsNew}`, "info");
                 showNotification(`🚀 ${t.autoUpdateSystemActive}`, "info");
                 showNotification(`🔄 ${t.liveUpdatesActive}`, "success");
+                showNotification(`✅ Cache Version: ${CACHE_VERSION}`, "info");
             }, 1000);
             
             // Auto-save κάθε 30 δευτερόλεπτα
