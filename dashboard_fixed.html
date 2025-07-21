@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Business Tracker">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Stock Manager Pro - Mobile</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2c3e50;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ecf0f1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .container {
+            background: rgba(44, 62, 80, 0.9);
+        }
+
+        h1, h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        body.dark-mode h1,
+        body.dark-mode h2 {
+            background: linear-gradient(135deg, #74b9ff, #a29bfe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .user-area {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        body.dark-mode .user-area {
+            background: rgba(52, 73, 94, 0.5);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-info img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        body.dark-mode button {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+        }
+
+        .input-section {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        body.dark-mode input,
+        body.dark-mode select {
+            background: rgba(52, 73, 94, 0.8);
+            border-color: rgba(255,255,255,0.2);
+            color: #ecf0f1;
+        }
+
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255,255,255,0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode .chart-container {
+            background: rgba(52, 73, 94, 0.8);
+        }
+
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .table-container {
+            margin: 20px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        body.dark-mode table {
+            background: rgba(52, 73, 94, 0.9);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        body.dark-mode th,
+        body.dark-mode td {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: 600;
+        }
+
+        body.dark-mode th {
+            background: linear-gradient(135deg, #3498db, #9b59b6);
+        }
+
+        .editable {
+            cursor: pointer;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 4px;
+            padding: 4px 8px;
+            margin: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .editable:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        body.dark-mode .editable {
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        body.dark-mode .editable:hover {
+            background: rgba(52, 152, 219, 0.2);
+        }
+
+        .actions button {
+            padding: 6px 12px;
+            font-size: 12px;
+            margin: 2px;
+        }
+
+        .delete-btn {
+            background: linear-gradient(135deg, #e74c3c, #c0392b) !important;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            color: #333;
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        body.dark-mode .notification {
+            background: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+        }
+
+        .loading-spinner {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(102, 126, 234, 0.3);
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 15px;
+                border-radius: 15px;
+            }
+            
+            .input-section {
+                flex-direction: column;
+            }
+            
+            input, select {
+                min-width: auto;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+            
+            .chart-wrapper {
+                height: 250px;
+            }
+            
+            table {
+                font-size: 14px;
+            }
+            
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- User Area -->
+        <div class="user-area">
+            <div class="user-info">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiM2NjdlZWEiLz4KPHN2ZyB4PSI4IiB5PSI4IiB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMTIgMTJjMi4yMSAwIDQtMS43OSA0LTRzLTEuNzktNC00LTQtNCAxLjc5LTQgNCAxLjc5IDQgNCA0em0wIDJjLTIuNjcgMC04IDEuMzQtOCA0djJoMTZ2LTJjMC0yLjY2LTUuMzMtNC04LTR6Ii8+Cjwvc3ZnPgo8L3N2Zz4K" alt="User">
+                <span>Καλώς ήρθες, <b id="userDisplay">Χρήστης</b></span>
+            </div>
+            <div class="user-buttons">
+                <button onclick="toggleDarkMode()" id="darkModeBtn">🌙 Dark</button>
+                <button onclick="alert('Logout functionality')" id="logoutBtn">Έξοδος</button>
+            </div>
+        </div>
+
+        <h1>📊 Stock Manager Pro</h1>
+
+        <!-- Category Input -->
+        <div class="input-section">
+            <input type="text" id="categoryInput" placeholder="Όνομα Κατηγορίας">
+            <button onclick="addCategory()">Προσθήκη</button>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-container">
+            <h2>📈 Αναλυτικά Στοιχεία</h2>
+            <div class="input-section">
+                <select id="chartCategory">
+                    <option value="">Επιλέξτε κατηγορία</option>
+                </select>
+                <select id="chartType">
+                    <option value="line">Γραμμικό</option>
+                    <option value="bar">Ραβδογράφημα</option>
+                    <option value="doughnut">Κυκλικό</option>
+                </select>
+                <button onclick="updateChart()">Ενημέρωση</button>
+            </div>
+            <div class="chart-wrapper">
+                <canvas id="salesChart"></canvas>
+                <div class="loading-spinner" id="loadingSpinner"></div>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="table-container">
+            <div id="tableContainer">
+                <table>
+                    <thead>
+                        <tr id="tableHeader">
+                            <th>Κατηγορία</th>
+                            <th>Ιαν</th>
+                            <th>Φεβ</th>
+                            <th>Μαρ</th>
+                            <th>Απρ</th>
+                            <th>Μάι</th>
+                            <th>Ιουν</th>
+                            <th>Ιουλ</th>
+                            <th>Αυγ</th>
+                            <th>Σεπ</th>
+                            <th>Οκτ</th>
+                            <th>Νοε</th>
+                            <th>Δεκ</th>
+                            <th>Σύνολο</th>
+                            <th>Ενέργειες</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div id="notification" class="notification">
+        <span id="notificationText"></span>
+    </div>
+
+    <script>
+        // Initialize data storage
+        const salesData = { [new Date().getFullYear()]: {} };
+        let selectedYear = new Date().getFullYear();
+        let chart;
+        let currentChartType = 'line';
+        
+        const months = ["Ιαν", "Φεβ", "Μαρ", "Απρ", "Μάι", "Ιουν", "Ιουλ", "Αυγ", "Σεπ", "Οκτ", "Νοε", "Δεκ"];
+        const monthKeys = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+        
+        // Colors for charts
+        const modernColors = [
+            '#667eea', '#764ba2', '#f093fb', '#f5576c',
+            '#4facfe', '#00f2fe', '#43e97b', '#38f9d7',
+            '#ffecd2', '#fcb69f', '#a8edea', '#fed6e3'
+        ];
+
+        // Utility Functions
+        function showNotification(message, type = 'success', duration = 3000) {
+            const notification = document.getElementById('notification');
+            const text = document.getElementById('notificationText');
+            
+            text.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+
+        function showLoading() {
+            document.getElementById('loadingSpinner').style.display = 'block';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingSpinner').style.display = 'none';
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('salesData', JSON.stringify(salesData));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('salesData');
+            if (saved) {
+                const parsedData = JSON.parse(saved);
+                Object.assign(salesData, parsedData);
+            }
+        }
+
+        // Category Management
+        function addCategory() {
+            const input = document.getElementById('categoryInput');
+            const categoryName = input.value.trim();
+            
+            if (!categoryName) {
+                showNotification('❌ Παρακαλώ εισάγετε όνομα κατηγορίας!', 'error');
+                return;
+            }
+            
+            if (salesData[selectedYear][categoryName]) {
+                showNotification('❌ Η κατηγορία υπάρχει ήδη!', 'error');
+                return;
+            }
+            
+            // Initialize category
+            salesData[selectedYear][categoryName] = {
+                sales: {}
+            };
+            
+            monthKeys.forEach(month => {
+                salesData[selectedYear][categoryName].sales[month] = 0;
+            });
+            
+            input.value = '';
+            updateTable();
+            updateCategoryDropdown();
+            saveToLocalStorage();
+            showNotification('✅ Η κατηγορία προστέθηκε επιτυχώς!', 'success');
+        }
+
+        function deleteCategory(categoryName) {
+            if (confirm(`Είστε σίγουροι ότι θέλετε να διαγράψετε την κατηγορία "${categoryName}";`)) {
+                delete salesData[selectedYear][categoryName];
+                updateTable();
+                updateCategoryDropdown();
+                saveToLocalStorage();
+                showNotification('✅ Η κατηγορία διαγράφηκε!', 'success');
+            }
+        }
+
+        // Table Management
+        function updateTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+            
+            Object.keys(salesData[selectedYear]).forEach(category => {
+                const row = document.createElement('tr');
+                
+                // Category name
+                const categoryCell = document.createElement('td');
+                categoryCell.textContent = category;
+                categoryCell.className = 'category-name';
+                row.appendChild(categoryCell);
+                
+                // Month cells
+                let total = 0;
+                monthKeys.forEach(monthKey => {
+                    const cell = document.createElement('td');
+                    const value = salesData[selectedYear][category].sales[monthKey] || 0;
+                    cell.textContent = value;
+                    cell.className = 'editable';
+                    cell.onclick = () => editCell(cell, category, monthKey);
+                    row.appendChild(cell);
+                    total += value;
+                });
+                
+                // Total cell
+                const totalCell = document.createElement('td');
+                totalCell.textContent = total;
+                totalCell.style.fontWeight = 'bold';
+                row.appendChild(totalCell);
+                
+                // Actions cell
+                const actionsCell = document.createElement('td');
+                actionsCell.className = 'actions';
+                actionsCell.innerHTML = `
+                    <button class="delete-btn" onclick="deleteCategory('${category}')">🗑️</button>
+                `;
+                row.appendChild(actionsCell);
+                
+                tableBody.appendChild(row);
+            });
+        }
+
+        function editCell(cell, category, monthKey) {
+            const currentValue = cell.textContent;
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentValue;
+            input.style.width = '100%';
+            input.style.border = '2px solid #667eea';
+            input.style.borderRadius = '4px';
+            input.style.padding = '4px';
+            
+            input.onblur = () => {
+                const newValue = parseInt(input.value) || 0;
+                salesData[selectedYear][category].sales[monthKey] = newValue;
+                cell.textContent = newValue;
+                updateTable();
+                saveToLocalStorage();
+            };
+            
+            input.onkeypress = (e) => {
+                if (e.key === 'Enter') {
+                    input.blur();
+                }
+            };
+            
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        // Category Dropdown
+        function updateCategoryDropdown() {
+            const select = document.getElementById('chartCategory');
+            select.innerHTML = '<option value="">Επιλέξτε κατηγορία</option>';
+            
+            Object.keys(salesData[selectedYear]).forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                select.appendChild(option);
+            });
+        }
+
+        // Chart Management
+        function updateChart() {
+            showLoading();
+            
+            setTimeout(() => {
+                const ctxElement = document.getElementById('salesChart');
+                if (chart) chart.destroy();
+                
+                const ctx = ctxElement.getContext('2d');
+                const selectedCategory = document.getElementById('chartCategory').value;
+                const chartType = document.getElementById('chartType').value;
+                currentChartType = chartType;
+                
+                let datasets = [];
+                let labels = months;
+                
+                if (chartType === 'doughnut') {
+                    const categoryTotals = {};
+                    Object.keys(salesData[selectedYear]).forEach(cat => {
+                        categoryTotals[cat] = monthKeys.reduce((sum, monthKey) => {
+                            return sum + (salesData[selectedYear][cat].sales[monthKey] || 0);
+                        }, 0);
+                    });
+                    
+                    labels = Object.keys(categoryTotals);
+                    datasets = [{
+                        data: Object.values(categoryTotals),
+                        backgroundColor: modernColors.slice(0, labels.length),
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
+                    }];
+                } else {
+                    if (selectedCategory) {
+                        datasets = [{
+                            label: selectedCategory,
+                            data: monthKeys.map(monthKey => 
+                                salesData[selectedYear][selectedCategory]?.sales[monthKey] || 0
+                            ),
+                            borderColor: modernColors[0],
+                            backgroundColor: chartType === 'line' ? 
+                                `${modernColors[0]}20` : modernColors[0],
+                            fill: chartType === 'line',
+                            tension: 0.4,
+                            borderWidth: 2
+                        }];
+                    } else {
+                        // Show all categories
+                        Object.keys(salesData[selectedYear]).forEach((cat, index) => {
+                            datasets.push({
+                                label: cat,
+                                data: monthKeys.map(monthKey => 
+                                    salesData[selectedYear][cat].sales[monthKey] || 0
+                                ),
+                                borderColor: modernColors[index % modernColors.length],
+                                backgroundColor: chartType === 'line' ? 
+                                    `${modernColors[index % modernColors.length]}20` : 
+                                    modernColors[index % modernColors.length],
+                                fill: chartType === 'line',
+                                tension: 0.4,
+                                borderWidth: 2
+                            });
+                        });
+                    }
+                }
+                
+                const config = {
+                    type: chartType,
+                    data: {
+                        labels: labels,
+                        datasets: datasets
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: {
+                                    usePointStyle: true,
+                                    padding: 15,
+                                    font: {
+                                        size: 12,
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#fff',
+                                bodyColor: '#fff',
+                                borderColor: '#667eea',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                displayColors: true
+                            }
+                        },
+                        scales: chartType !== 'doughnut' ? {
+                            x: {
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 10,
+                                        weight: '500'
+                                    }
+                                }
+                            },
+                            y: {
+                                grid: {
+                                    color: 'rgba(0, 0, 0, 0.1)'
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 10,
+                                        weight: '500'
+                                    }
+                                },
+                                beginAtZero: true
+                            }
+                        } : {}
+                    }
+                };
+                
+                chart = new Chart(ctx, config);
+                hideLoading();
+            }, 300);
+        }
+
+        // Theme Management
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            
+            const btn = document.getElementById('darkModeBtn');
+            btn.textContent = isDark ? '☀️ Light' : '🌙 Dark';
+            
+            // Update chart if it exists
+            if (chart) {
+                updateChart();
+            }
+        }
+
+        // Initialize Application
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('🚀 Application starting...');
+            
+            // Load saved data
+            loadFromLocalStorage();
+            
+            // Load dark mode preference
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                document.getElementById('darkModeBtn').textContent = '☀️ Light';
+            }
+            
+            // Set username
+            const userDisplay = document.getElementById('userDisplay');
+            const username = sessionStorage.getItem('loggedInUser') || 'Χρήστης';
+            userDisplay.textContent = username.split('@')[0] || 'Χρήστης';
+            
+            // Initialize UI
+            updateTable();
+            updateCategoryDropdown();
+            
+            // Add event listeners
+            document.getElementById('categoryInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    addCategory();
+                }
+            });
+            
+            document.getElementById('chartType').addEventListener('change', () => {
+                if (Object.keys(salesData[selectedYear]).length > 0) {
+                    updateChart();
+                }
+            });
+            
+            document.getElementById('chartCategory').addEventListener('change', () => {
+                if (Object.keys(salesData[selectedYear]).length > 0) {
+                    updateChart();
+                }
+            });
+            
+            showNotification('✅ Εφαρμογή φορτώθηκε επιτυχώς!', 'success');
+            console.log('✅ Application loaded successfully!');
+        });
+    </script>
+</body>
+</html>

@@ -48,47 +48,16 @@
             --desktop-padding: 20px;
         }
         
-        /* Mobile Device Optimizations */
+        /* Mobile-specific optimizations */
         .mobile-device {
             --animation-duration: 0.2s;
             --padding: var(--mobile-padding);
-            touch-action: manipulation;
-            -webkit-tap-highlight-color: transparent;
         }
         
         .mobile-device * {
             scroll-behavior: smooth;
             -webkit-touch-callout: none;
-            -webkit-tap-highlight-color: rgba(0,0,0,0.05);
-        }
-
-        /* Enhanced Mobile Tooltip Overlay */
-        .mobile-device .stat-card.tooltip-active::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 14999;
-            backdrop-filter: blur(2px);
-            opacity: 0;
-            animation: overlayFadeIn 0.3s ease forwards;
-        }
-
-        @keyframes overlayFadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Improved stat card interaction feedback */
-        .mobile-device .stat-card {
-            transform-origin: center;
-            transition: transform 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-        }
-
-        .mobile-device .stat-card:active {
-            transform: scale(0.98);
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
         }
 
         html, body {
@@ -1179,59 +1148,54 @@
             border-top-color: rgba(255, 255, 255, 0.95);
         }
 
-        /* Enhanced Mobile Tooltip System */
+        /* Mobile tooltip adjustments */
         @media (max-width: 768px) {
-            /* Disable hover tooltips on mobile */
-            .stat-card:hover::before,
-            .stat-card:hover::after {
-                opacity: 0 !important;
-                visibility: hidden !important;
-            }
-            
-            /* Mobile-optimized tooltip */
             .stat-card::before {
-                position: fixed !important;
-                bottom: 80px !important;
-                left: 10px !important;
-                right: 10px !important;
-                transform: none !important;
-                max-width: none !important;
-                text-align: center !important;
-                border-radius: 15px !important;
-                font-size: 15px !important;
-                padding: 18px 22px !important;
-                z-index: 15000 !important;
-                background: rgba(0, 0, 0, 0.96) !important;
-                backdrop-filter: blur(15px) !important;
-                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                line-height: 1.5 !important;
-                font-weight: 600 !important;
-                word-break: break-word !important;
-                white-space: normal !important;
-                opacity: 0 !important;
-                visibility: hidden !important;
-                transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+                position: fixed;
+                bottom: 120px; /* Increased distance from bottom */
+                left: 15px;
+                right: 15px;
+                transform: none;
+                max-width: none;
+                text-align: center;
+                border-radius: 12px;
+                font-size: 14px;
+                padding: 16px 20px;
+                z-index: 10000;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                line-height: 1.4;
+                font-weight: 500;
             }
 
             .stat-card::after {
-                display: none !important;
+                display: none;
+            }
+
+            .stat-card:hover::before {
+                transform: none;
             }
             
-            /* Mobile touch activation */
+            /* Ensure tooltips appear on tap for mobile */
+            .stat-card:active::before {
+                opacity: 1;
+                visibility: visible;
+                animation: tooltipPulse 0.3s ease-out;
+            }
+            
+            /* Enhanced mobile tooltip visibility */
             .stat-card.tooltip-active::before {
                 opacity: 1 !important;
                 visibility: visible !important;
-                animation: mobileTooltipShow 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+                animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             }
             
-            @keyframes mobileTooltipShow {
+            @keyframes tooltipSlideIn {
                 0% { 
                     opacity: 0;
-                    transform: translateY(30px) scale(0.8);
-                }
-                60% {
-                    transform: translateY(-5px) scale(1.05);
+                    transform: translateY(20px) scale(0.8);
                 }
                 100% { 
                     opacity: 1;
@@ -1241,41 +1205,18 @@
             
             /* Auto-hide tooltip after 4 seconds on mobile */
             .stat-card.tooltip-active {
-                position: relative;
+                animation: hideTooltipAfterDelay 4s ease-in-out forwards;
             }
             
-            .stat-card.tooltip-active::before {
-                animation: mobileTooltipShow 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55),
-                           mobileTooltipHide 0.3s ease-in 3.7s forwards !important;
+            @keyframes hideTooltipAfterDelay {
+                0%, 85% { }
+                100% { }
             }
             
-            @keyframes mobileTooltipHide {
-                0% { 
-                    opacity: 1;
-                    transform: translateY(0) scale(1);
-                }
-                100% { 
-                    opacity: 0;
-                    transform: translateY(20px) scale(0.9);
-                }
-            }
-            
-            /* Dark mode mobile tooltips */
-            body.dark-mode .stat-card::before {
-                background: rgba(255, 255, 255, 0.96) !important;
-                color: #2c3e50 !important;
-                border: 1px solid rgba(255, 255, 255, 0.3) !important;
-                box-shadow: 0 10px 40px rgba(255, 255, 255, 0.15) !important;
-            }
-            
-            /* Visual feedback for touched stat cards */
-            .stat-card:active {
-                transform: scale(0.96) !important;
-                background: linear-gradient(135deg, rgba(103, 126, 234, 0.15), rgba(118, 75, 162, 0.15)) !important;
-            }
-            
-            body.dark-mode .stat-card:active {
-                background: linear-gradient(135deg, rgba(79, 172, 254, 0.15), rgba(0, 242, 254, 0.15)) !important;
+            @keyframes tooltipPulse {
+                0% { transform: scale(0.95); opacity: 0; }
+                50% { transform: scale(1.02); }
+                100% { transform: scale(1); opacity: 1; }
             }
         }
 
@@ -4762,158 +4703,29 @@
                 display: none !important;
             }
             
-            /* Enhanced Mobile Dropdown Styling */
+            /* Better dropdown positioning on mobile */
             .dropdown-container {
                 position: relative;
-                z-index: 9999;
-            }
-            
-            .dropdown-btn {
-                width: 100% !important;
-                min-height: 48px !important;
-                font-size: 15px !important;
-                font-weight: 600 !important;
-                padding: 14px 20px !important;
-                border-radius: 12px !important;
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
-                color: white !important;
-                border: none !important;
-                box-shadow: 0 4px 15px rgba(103, 126, 234, 0.3) !important;
-                transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
-                position: relative !important;
-                overflow: hidden !important;
-                touch-action: manipulation !important;
-                -webkit-tap-highlight-color: transparent !important;
-                user-select: none !important;
-            }
-            
-            .dropdown-btn:active {
-                transform: scale(0.96) !important;
-                box-shadow: 0 2px 8px rgba(103, 126, 234, 0.4) !important;
-            }
-            
-            .dropdown-btn::before {
-                content: '' !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: -100% !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent) !important;
-                transition: left 0.5s ease !important;
-            }
-            
-            .dropdown-btn:active::before {
-                left: 100% !important;
-            }
-            
-            .dropdown-arrow {
-                margin-left: 8px !important;
-                transition: transform 0.3s ease !important;
-                font-size: 14px !important;
-            }
-            
-            .dropdown-container.active .dropdown-arrow {
-                transform: rotate(180deg) !important;
             }
             
             .dropdown-menu {
                 position: absolute !important;
-                top: calc(100% + 8px) !important;
-                left: 0 !important;
-                right: 0 !important;
-                background: rgba(255, 255, 255, 0.98) !important;
-                backdrop-filter: blur(20px) !important;
-                border-radius: 15px !important;
-                box-shadow: 0 8px 30px rgba(0,0,0,0.25) !important;
-                border: 1px solid rgba(255,255,255,0.3) !important;
+                top: calc(100% + 10px) !important;
+                left: 50% !important;
+                transform: translateX(-50%) translateY(10px) !important;
+                width: 90vw !important;
+                max-width: 300px !important;
                 z-index: 10000 !important;
+                border-radius: 15px !important;
+                box-shadow: 0 5px 25px rgba(0,0,0,0.3) !important;
                 opacity: 0 !important;
                 visibility: hidden !important;
-                transform: translateY(-10px) scale(0.95) !important;
-                transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
-                max-height: 400px !important;
-                overflow-y: auto !important;
-                -webkit-overflow-scrolling: touch !important;
             }
             
             .dropdown-container.active .dropdown-menu {
+                transform: translateX(-50%) translateY(0) !important;
                 opacity: 1 !important;
                 visibility: visible !important;
-                transform: translateY(0) scale(1) !important;
-            }
-            
-            .dropdown-item {
-                display: flex !important;
-                align-items: center !important;
-                gap: 12px !important;
-                padding: 15px 18px !important;
-                cursor: pointer !important;
-                transition: all 0.3s ease !important;
-                font-size: 15px !important;
-                color: #2c3e50 !important;
-                border-radius: 10px !important;
-                margin: 4px 8px !important;
-                font-weight: 500 !important;
-                min-height: 48px !important;
-                touch-action: manipulation !important;
-                -webkit-tap-highlight-color: transparent !important;
-                position: relative !important;
-                overflow: hidden !important;
-            }
-            
-            .dropdown-item:active {
-                background: linear-gradient(135deg, rgba(103, 126, 234, 0.2), rgba(118, 75, 162, 0.2)) !important;
-                color: #667eea !important;
-                transform: scale(0.96) !important;
-            }
-            
-            .dropdown-item::before {
-                content: '' !important;
-                position: absolute !important;
-                top: 0 !important;
-                left: -100% !important;
-                width: 100% !important;
-                height: 100% !important;
-                background: linear-gradient(90deg, transparent, rgba(103, 126, 234, 0.1), transparent) !important;
-                transition: left 0.3s ease !important;
-            }
-            
-            .dropdown-item:active::before {
-                left: 100% !important;
-            }
-            
-            .dropdown-icon {
-                font-size: 18px !important;
-                width: 24px !important;
-                text-align: center !important;
-                flex-shrink: 0 !important;
-            }
-            
-            .dropdown-divider {
-                height: 1px !important;
-                background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent) !important;
-                margin: 8px 16px !important;
-            }
-            
-            /* Dark mode dropdown for mobile */
-            body.dark-mode .dropdown-menu {
-                background: rgba(44, 62, 80, 0.98) !important;
-                border: 1px solid rgba(255,255,255,0.2) !important;
-                box-shadow: 0 8px 30px rgba(0,0,0,0.4) !important;
-            }
-            
-            body.dark-mode .dropdown-item {
-                color: #ecf0f1 !important;
-            }
-            
-            body.dark-mode .dropdown-item:active {
-                background: linear-gradient(135deg, rgba(79, 172, 254, 0.2), rgba(0, 242, 254, 0.2)) !important;
-                color: #4facfe !important;
-            }
-            
-            body.dark-mode .dropdown-divider {
-                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent) !important;
             }
         }
 
@@ -9301,27 +9113,24 @@ const deleteCategory = (category, rowElement) => {
                 if (e.key === 'Enter') addCategory();
             });
 
-            // Dropdown functionality - Enhanced for mobile
-            initializeMobileDropdown();
+            // Dropdown functionality
+            document.getElementById('actionsDropdownBtn').addEventListener('click', toggleActionsDropdown);
             
-            // Initialize mobile tooltips
-            initializeMobileTooltips();
-            
-            // Close dropdown when clicking/touching outside
+            // Close dropdown when clicking outside
             document.addEventListener('click', (e) => {
                 const dropdownContainer = document.querySelector('.dropdown-container');
-                if (dropdownContainer && !dropdownContainer.contains(e.target)) {
+                if (!dropdownContainer.contains(e.target)) {
                     closeActionsDropdown();
                 }
             });
             
-            // Enhanced touch support for mobile devices
+            // Touch support for mobile devices
             document.addEventListener('touchend', (e) => {
                 const dropdownContainer = document.querySelector('.dropdown-container');
-                if (dropdownContainer && !dropdownContainer.contains(e.target)) {
+                if (!dropdownContainer.contains(e.target)) {
                     closeActionsDropdown();
                 }
-            }, { passive: true });
+            });
             
             // Prevent zoom on double tap for iOS
             document.addEventListener('touchend', function(e) {
@@ -9789,194 +9598,40 @@ function sanitizeKey(email) {
     }
 });
 
-        // Enhanced Dropdown Menu Functions with Mobile Support
-        function toggleActionsDropdown(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-            
+        // Dropdown Menu Functions
+        function toggleActionsDropdown() {
             const container = document.querySelector('.dropdown-container');
             const dropdown = document.getElementById('actionsDropdown');
-            const isActive = container.classList.contains('active');
             
-            // Enhanced haptic feedback for mobile
-            if (isMobile) {
-                triggerVibration(20);
-            }
+            container.classList.toggle('active');
             
-            if (isActive) {
-                // Close dropdown
-                container.classList.remove('active');
-                if (isMobile) {
-                    // Remove touch body lock
-                    document.body.style.overflow = '';
-                }
-            } else {
-                // Open dropdown
-                container.classList.add('active');
+            if (container.classList.contains('active')) {
+                // Add animation delay for dropdown items
+                const items = dropdown.querySelectorAll('.dropdown-item');
+                items.forEach((item, index) => {
+                    item.style.animationDelay = `${index * 0.05}s`;
+                    item.style.animation = 'slideInLeft 0.3s ease forwards';
+                });
                 
-                // Enhanced mobile handling
+                // Better mobile positioning - ensure dropdown is visible
                 if (isMobile) {
-                    // Prevent body scroll when dropdown is open
-                    document.body.style.overflow = 'hidden';
-                    
-                    // Ensure dropdown is visible on mobile
                     setTimeout(() => {
+                        // Check if dropdown is in viewport and adjust if needed
                         const rect = dropdown.getBoundingClientRect();
-                        const viewportHeight = window.innerHeight;
-                        
-                        if (rect.bottom > viewportHeight) {
-                            const scrollAmount = rect.bottom - viewportHeight + 20;
-                            window.scrollBy({
-                                top: scrollAmount,
+                        if (rect.bottom > window.innerHeight) {
+                            window.scrollTo({
+                                top: window.scrollY + rect.bottom - window.innerHeight + 20,
                                 behavior: 'smooth'
                             });
                         }
                     }, 100);
-                    
-                    // Add enhanced animations for mobile
-                    const items = dropdown.querySelectorAll('.dropdown-item');
-                    items.forEach((item, index) => {
-                        item.style.opacity = '0';
-                        item.style.transform = 'translateX(-20px)';
-                        item.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
-                        
-                        setTimeout(() => {
-                            item.style.opacity = '1';
-                            item.style.transform = 'translateX(0)';
-                        }, index * 50 + 100);
-                    });
                 }
             }
         }
 
         function closeActionsDropdown() {
             const container = document.querySelector('.dropdown-container');
-            if (container.classList.contains('active')) {
-                container.classList.remove('active');
-                
-                if (isMobile) {
-                    // Restore body scroll
-                    document.body.style.overflow = '';
-                }
-            }
-        }
-
-        // Enhanced Mobile Touch Handlers
-        function initializeMobileDropdown() {
-            const dropdownBtn = document.getElementById('actionsDropdownBtn');
-            const dropdownContainer = document.querySelector('.dropdown-container');
-            
-            if (!dropdownBtn || !dropdownContainer) return;
-            
-            // Enhanced touch handling for mobile
-            if (isMobile) {
-                let touchStartTime = 0;
-                let touchMoved = false;
-                
-                dropdownBtn.addEventListener('touchstart', (e) => {
-                    touchStartTime = Date.now();
-                    touchMoved = false;
-                    dropdownBtn.style.transform = 'scale(0.96)';
-                }, { passive: true });
-                
-                dropdownBtn.addEventListener('touchmove', (e) => {
-                    touchMoved = true;
-                    dropdownBtn.style.transform = 'scale(1)';
-                }, { passive: true });
-                
-                dropdownBtn.addEventListener('touchend', (e) => {
-                    e.preventDefault();
-                    const touchDuration = Date.now() - touchStartTime;
-                    
-                    dropdownBtn.style.transform = 'scale(1)';
-                    
-                    // Only trigger if it was a quick tap and not a scroll
-                    if (!touchMoved && touchDuration < 300) {
-                        setTimeout(() => {
-                            toggleActionsDropdown(e);
-                        }, 50);
-                    }
-                }, { passive: false });
-                
-                // Enhanced click handling for mobile
-                dropdownBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleActionsDropdown(e);
-                });
-            } else {
-                // Desktop click handler
-                dropdownBtn.addEventListener('click', toggleActionsDropdown);
-            }
-        }
-
-        // Enhanced Mobile Tooltip System
-        function initializeMobileTooltips() {
-            if (!isMobile) return;
-            
-            const statCards = document.querySelectorAll('.stat-card[data-tooltip]');
-            let currentActiveTooltip = null;
-            
-            statCards.forEach(card => {
-                let touchStartTime = 0;
-                let touchMoved = false;
-                let tooltipTimeout;
-                
-                card.addEventListener('touchstart', (e) => {
-                    touchStartTime = Date.now();
-                    touchMoved = false;
-                }, { passive: true });
-                
-                card.addEventListener('touchmove', (e) => {
-                    touchMoved = true;
-                }, { passive: true });
-                
-                card.addEventListener('touchend', (e) => {
-                    const touchDuration = Date.now() - touchStartTime;
-                    
-                    // Only show tooltip for quick taps (not scrolls)
-                    if (!touchMoved && touchDuration < 300) {
-                        e.preventDefault();
-                        
-                        // Close any existing tooltip
-                        if (currentActiveTooltip && currentActiveTooltip !== card) {
-                            currentActiveTooltip.classList.remove('tooltip-active');
-                        }
-                        
-                        // Toggle current tooltip
-                        if (card.classList.contains('tooltip-active')) {
-                            card.classList.remove('tooltip-active');
-                            currentActiveTooltip = null;
-                        } else {
-                            card.classList.add('tooltip-active');
-                            currentActiveTooltip = card;
-                            
-                            // Enhanced haptic feedback
-                            triggerVibration(30);
-                            
-                            // Auto-hide after 4 seconds
-                            clearTimeout(tooltipTimeout);
-                            tooltipTimeout = setTimeout(() => {
-                                card.classList.remove('tooltip-active');
-                                if (currentActiveTooltip === card) {
-                                    currentActiveTooltip = null;
-                                }
-                            }, 4000);
-                        }
-                    }
-                }, { passive: false });
-            });
-            
-            // Close tooltips when touching elsewhere
-            document.addEventListener('touchend', (e) => {
-                const touchedCard = e.target.closest('.stat-card');
-                if (!touchedCard && currentActiveTooltip) {
-                    currentActiveTooltip.classList.remove('tooltip-active');
-                    currentActiveTooltip = null;
-                }
-            }, { passive: true });
+            container.classList.remove('active');
         }
 
         // Add slide in animation for dropdown items
@@ -10012,54 +9667,7 @@ function sanitizeKey(email) {
         let calcWaitingForOperand = false;
         
         // Mobile detection
-        // Enhanced Vibration Feedback System
-        function triggerVibration(duration = 20) {
-            if ('vibrate' in navigator) {
-                try {
-                    navigator.vibrate(duration);
-                } catch (e) {
-                    console.log('Vibration not supported');
-                }
-            }
-        }
-
-        // Enhanced Mobile Device Detection
         const isMobile = window.innerWidth <= 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const isTouchDevice = () => {
-            return 'ontouchstart' in window || 
-                   navigator.maxTouchPoints > 0 || 
-                   navigator.msMaxTouchPoints > 0;
-        };
-
-        // Enhanced initialization for mobile features
-        function initializeEnhancedMobileFeatures() {
-            if (isMobile || isTouchDevice()) {
-                // Add mobile class to body for CSS targeting
-                document.body.classList.add('mobile-device');
-                
-                // Disable iOS bounce scroll
-                document.addEventListener('touchmove', function(e) {
-                    if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
-                        const isScrollable = e.target.scrollHeight > e.target.clientHeight;
-                        if (!isScrollable) {
-                            e.preventDefault();
-                        }
-                    }
-                }, { passive: false });
-                
-                // Enhanced double-tap protection
-                let lastTouchEnd = 0;
-                document.addEventListener('touchend', function(e) {
-                    const now = (new Date()).getTime();
-                    if (now - lastTouchEnd <= 300) {
-                        e.preventDefault();
-                    }
-                    lastTouchEnd = now;
-                }, false);
-                
-                console.log('🚀 Enhanced mobile features activated!');
-            }
-        }
         
         // Prevent calculator drag on mobile (use touch events instead)
         function isTouchDevice() {
@@ -10734,7 +10342,6 @@ function sanitizeKey(email) {
 
         // Initialize when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
-            initializeEnhancedMobileFeatures();
             setTimeout(initializeMobileFeatures, 500);
             registerServiceWorker();
         });

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background: #5a6fd8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Stock Manager Pro - Test</h1>
+        <p>Αυτό είναι ένα test για να βεβαιωθούμε ότι λειτουργεί</p>
+        <button onclick="alert('Το πρόγραμμα λειτουργεί!')">Δοκιμή</button>
+        
+        <div id="content">
+            <h2>Περιεχόμενο Loading...</h2>
+        </div>
+    </div>
+    
+    <script>
+        console.log('Script loaded successfully!');
+        
+        // Test if everything works
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('content').innerHTML = '<h2>✅ Το πρόγραμμα δουλεύει κανονικά!</h2>';
+            console.log('Page loaded successfully!');
+        });
+    </script>
+</body>
+</html>
