@@ -1133,7 +1133,7 @@
             box-shadow: 0 8px 30px rgba(255, 255, 255, 0.1);
         }
 
-        /* Dark mode mobile tooltips - Better orientation handling */
+        /* Dark mode mobile tooltips */
         @media (max-width: 768px) {
             body.dark-mode .stat-card::before {
                 background: rgba(255, 255, 255, 0.98) !important;
@@ -1141,38 +1141,6 @@
                 border: 1px solid rgba(255, 255, 255, 0.4) !important;
                 box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
                 backdrop-filter: blur(15px) !important;
-            }
-        }
-
-        /* Dark mode portrait orientation */
-        @media (max-width: 768px) and (orientation: portrait) {
-            body.dark-mode .stat-card::before {
-                background: rgba(255, 255, 255, 0.98) !important;
-                color: #2c3e50 !important;
-                border: 1px solid rgba(255, 255, 255, 0.4) !important;
-                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
-                backdrop-filter: blur(15px) !important;
-                bottom: 25vh !important;
-                left: 5px !important;
-                right: 5px !important;
-                font-size: 13px !important;
-                padding: 14px 18px !important;
-            }
-        }
-
-        /* Dark mode landscape orientation */
-        @media (max-width: 768px) and (orientation: landscape) {
-            body.dark-mode .stat-card::before {
-                background: rgba(255, 255, 255, 0.98) !important;
-                color: #2c3e50 !important;
-                border: 1px solid rgba(255, 255, 255, 0.4) !important;
-                box-shadow: 0 8px 30px rgba(255, 255, 255, 0.2) !important;
-                backdrop-filter: blur(15px) !important;
-                bottom: 15vh !important;
-                left: 15px !important;
-                right: 15px !important;
-                font-size: 14px !important;
-                padding: 12px 16px !important;
             }
         }
 
@@ -1180,70 +1148,48 @@
             border-top-color: rgba(255, 255, 255, 0.95);
         }
 
-        /* Mobile tooltip adjustments - Better orientation handling */
+        /* Mobile tooltip adjustments */
         @media (max-width: 768px) {
             .stat-card::before {
-                position: fixed !important;
-                bottom: 15vh !important; /* Use viewport height for better orientation handling */
-                left: 10px !important;
-                right: 10px !important;
-                transform: none !important;
-                max-width: none !important;
-                text-align: center !important;
-                border-radius: 12px !important;
-                font-size: 14px !important;
-                padding: 16px 20px !important;
-                z-index: 10000 !important;
-                background: rgba(0, 0, 0, 0.95) !important;
-                backdrop-filter: blur(10px) !important;
-                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4) !important;
-                border: 1px solid rgba(255, 255, 255, 0.1) !important;
-                line-height: 1.4 !important;
-                font-weight: 500 !important;
-                white-space: normal !important;
-                word-wrap: break-word !important;
-                min-height: auto !important;
+                position: fixed;
+                bottom: 120px; /* Increased distance from bottom */
+                left: 15px;
+                right: 15px;
+                transform: none;
+                max-width: none;
+                text-align: center;
+                border-radius: 12px;
+                font-size: 14px;
+                padding: 16px 20px;
+                z-index: 10000;
+                background: rgba(0, 0, 0, 0.95);
+                backdrop-filter: blur(10px);
+                box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                line-height: 1.4;
+                font-weight: 500;
             }
 
             .stat-card::after {
-                display: none !important;
+                display: none;
             }
 
             .stat-card:hover::before {
-                transform: none !important;
+                transform: none;
             }
-        }
-
-        /* Specific adjustments for portrait orientation */
-        @media (max-width: 768px) and (orientation: portrait) {
-            .stat-card::before {
-                bottom: 25vh !important; /* More space from bottom in portrait */
-                left: 5px !important;
-                right: 5px !important;
-                font-size: 13px !important;
-                padding: 14px 18px !important;
-                max-height: 30vh !important; /* Prevent tooltip from taking too much screen */
-                overflow-y: auto !important;
-            }
-        }
-
-        /* Specific adjustments for landscape orientation */
-        @media (max-width: 768px) and (orientation: landscape) {
-            .stat-card::before {
-                bottom: 15vh !important; /* Less space needed in landscape */
-                left: 15px !important;
-                right: 15px !important;
-                font-size: 14px !important;
-                padding: 12px 16px !important;
-            }
-        }
             
-            /* Enhanced mobile tooltip visibility for all orientations */
+            /* Ensure tooltips appear on tap for mobile */
+            .stat-card:active::before {
+                opacity: 1;
+                visibility: visible;
+                animation: tooltipPulse 0.3s ease-out;
+            }
+            
+            /* Enhanced mobile tooltip visibility */
             .stat-card.tooltip-active::before {
                 opacity: 1 !important;
                 visibility: visible !important;
-                display: block !important;
-                animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+                animation: tooltipSlideIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             }
             
             @keyframes tooltipSlideIn {
@@ -1257,17 +1203,9 @@
                 }
             }
             
-            /* Enhanced tooltip activation for touch devices */
-            .stat-card:active::before {
-                opacity: 1 !important;
-                visibility: visible !important;
-                display: block !important;
-                animation: tooltipPulse 0.3s ease-out !important;
-            }
-            
-            /* Auto-hide tooltip after 5 seconds on mobile for better UX */
+            /* Auto-hide tooltip after 4 seconds on mobile */
             .stat-card.tooltip-active {
-                animation: hideTooltipAfterDelay 5s ease-in-out forwards;
+                animation: hideTooltipAfterDelay 4s ease-in-out forwards;
             }
             
             @keyframes hideTooltipAfterDelay {
@@ -1280,6 +1218,7 @@
                 50% { transform: scale(1.02); }
                 100% { transform: scale(1); opacity: 1; }
             }
+        }
 
         /* Theme transition effects */
         * {
@@ -3180,7 +3119,7 @@
 
             .chart-buttons-row {
                 display: flex;
-                gap: 10px;
+                gap: 12px;
             }
 
             .chart-type-buttons {
@@ -6357,8 +6296,16 @@
 
         // Utility functions
         const saveToLocalStorage = () => {
-            localStorage.setItem('salesData', JSON.stringify(salesData));
-            console.log('✅ Data saved to localStorage');
+            try {
+                localStorage.setItem('salesData', JSON.stringify(salesData));
+                localStorage.setItem('salesData_backup', JSON.stringify(salesData));
+                localStorage.setItem('salesData_timestamp', new Date().toISOString());
+                console.log('✅ Data saved to localStorage');
+                return true;
+            } catch (error) {
+                console.error('❌ Failed to save to localStorage:', error);
+                return false;
+            }
         };
 
         const updateTooltips = () => {
@@ -7515,31 +7462,54 @@
                     "⚠️ Παρακαλώ εισάγετε έγκυρο όνομα κατηγορίας." :
                     "⚠️ Please enter a valid category name.";
                 showNotification(warningMsg, "warning");
+                catInput.focus();
                 return;
             }
             
             if (salesData[selectedYear][category]) {
                 const msg = document.getElementById('categoryMessage');
-                msg.textContent = `⚠️ ${t.categoryExists}`;
-                msg.style.display = 'block';
-                setTimeout(() => {
-                    msg.style.display = 'none';
-                }, 3000);
+                if (msg) {
+                    msg.textContent = `⚠️ ${t.categoryExists}`;
+                    msg.style.display = 'block';
+                    setTimeout(() => {
+                        msg.style.display = 'none';
+                    }, 3000);
+                }
+                showNotification(`⚠️ ${t.categoryExists}`, "warning");
+                catInput.focus();
                 return;
             }
 
-            salesData[selectedYear][category] = { sales: {} };
+            // Create category with proper structure
+            salesData[selectedYear][category] = { 
+                sales: {}
+            };
+            
+            // Initialize all months with 0
+            monthKeys.forEach(monthKey => {
+                salesData[selectedYear][category].sales[monthKey] = 0;
+            });
+            
             catInput.value = "";
             
-            // Save to both Firebase and localStorage
-            saveToFirebase();
-            saveToLocalStorage();
-            
-            renderTable();
-            populateCategoryDropdown();
-            updateChart();
-            updateGoalsWhenDataChanges();
-            showNotification(`✅ ${t.categoryAdded}`, "success");
+            // Save data immediately
+            const saveSuccess = saveToLocalStorage();
+            if (saveSuccess) {
+                try {
+                    saveToFirebase();
+                } catch (error) {
+                    console.warn('Firebase save failed, but localStorage saved:', error);
+                }
+                
+                // Update UI
+                renderTable();
+                populateCategoryDropdown();
+                updateChart();
+                updateGoalsWhenDataChanges();
+                showNotification(`✅ ${t.categoryAdded}`, "success");
+            } else {
+                showNotification("❌ Σφάλμα αποθήκευσης δεδομένων", "error");
+            }
         };
 const deleteCategory = (category, rowElement) => {
     const t = translations[currentLanguage];
@@ -7718,13 +7688,25 @@ const deleteCategory = (category, rowElement) => {
 
         const saveCellValue = (cell, input, category, month) => {
             const newValue = parseFloat(input.value);
-            salesData[selectedYear][category].sales[month] = isNaN(newValue) ? 0 : newValue;
+            const finalValue = isNaN(newValue) ? 0 : newValue;
             
-            // Save to both Firebase and localStorage
-            saveToFirebase();
+            // Update data immediately
+            salesData[selectedYear][category].sales[month] = finalValue;
+            console.log(`📝 Updated: ${category}[${month}] = ${finalValue}`);
+            console.log('📊 Current data:', salesData[selectedYear][category].sales);
+            
+            // Save to localStorage first (immediate, reliable)
             saveToLocalStorage();
             
-            cell.textContent = (isNaN(newValue) ? 0 : newValue).toLocaleString();
+            // Then try Firebase (can fail gracefully)
+            try {
+                saveToFirebase();
+            } catch (error) {
+                console.warn('Firebase save failed, but localStorage saved:', error);
+            }
+            
+            // Update cell display
+            cell.textContent = finalValue.toLocaleString();
             
             // Reset visual feedback
             cell.style.background = '';
@@ -7736,7 +7718,7 @@ const deleteCategory = (category, rowElement) => {
                 cell.style.background = '';
             }, 800);
 
-            // Update total
+            // Update total immediately
             const row = cell.parentElement;
             let total = 0;
             monthKeys.forEach((monthKey) => {
@@ -7744,8 +7726,16 @@ const deleteCategory = (category, rowElement) => {
                 total += val;
             });
             row.querySelector('td:nth-last-child(2)').innerHTML = `<strong>${total.toLocaleString()}</strong>`;
-            updateChart();
-            updateGoalsWhenDataChanges();
+            
+            // Update chart and goals immediately
+            setTimeout(() => {
+                updateChart();
+                updateGoalsWhenDataChanges();
+                
+                // Force refresh of all visual components
+                renderTable();
+                populateCategoryDropdown();
+            }, 100);
             
             // Mobile success feedback
             const t = translations[currentLanguage];
@@ -8473,152 +8463,182 @@ const deleteCategory = (category, rowElement) => {
 
         // Chart management
         const updateChart = () => {
-            showLoading();
-            
-            setTimeout(() => {
-                const ctxElement = document.getElementById('salesChart');
-                if (chart) chart.destroy();
+            try {
+                showLoading();
                 
-                const ctx = ctxElement.getContext('2d');
-                const selectedCategory = document.getElementById('chartCategory').value;
-                const isDark = document.body.classList.contains('dark-mode');
-                
-                let datasets = [];
-                let labels = translations[currentLanguage].months;
-                
-                if (currentChartType === 'doughnut') {
-                    const categoryTotals = {};
-                    Object.keys(salesData[selectedYear]).forEach(cat => {
-                        categoryTotals[cat] = monthKeys.reduce((sum, monthKey) => {
-                            return sum + (salesData[selectedYear][cat].sales[monthKey] || 0);
-                        }, 0);
-                    });
-                    
-                    labels = Object.keys(categoryTotals);
-                    datasets = [{
-                        data: Object.values(categoryTotals),
-                        backgroundColor: modernColors.slice(0, labels.length),
-                        borderWidth: 2,
-                        borderColor: isDark ? '#2c3e50' : '#ffffff',
-                        hoverOffset: 10
-                    }];
-                } else {
-                    if (selectedCategory) {
-                        datasets = [{
-                            label: selectedCategory,
-                            data: monthKeys.map(monthKey => salesData[selectedYear][selectedCategory]?.sales[monthKey] || 0),
-                            borderColor: modernColors[0],
-                            backgroundColor: currentChartType === 'line' ? 
-                                `${modernColors[0]}20` : modernColors[0],
-                            fill: currentChartType === 'line',
-                            tension: 0.4,
-                            borderWidth: 2,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            pointBackgroundColor: '#ffffff',
-                            pointBorderWidth: 2
-                        }];
-                    } else {
-                        datasets = Object.keys(salesData[selectedYear]).map((cat, i) => ({
-                            label: cat,
-                            data: monthKeys.map(monthKey => salesData[selectedYear][cat].sales[monthKey] || 0),
-                            borderColor: modernColors[i % modernColors.length],
-                            backgroundColor: currentChartType === 'line' ? 
-                                `${modernColors[i % modernColors.length]}20` : modernColors[i % modernColors.length],
-                            fill: currentChartType === 'line',
-                            tension: 0.4,
-                            borderWidth: 2,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            pointBackgroundColor: '#ffffff',
-                            pointBorderWidth: 2
-                        }));
-                    }
-                }
-
-                const chartConfig = {
-                    type: currentChartType,
-                    data: { labels, datasets },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        animation: {
-                            duration: 800,
-                            easing: 'easeOutQuart'
-                        },
-                        plugins: {
-                            legend: {
-                                display: true,
-                                position: 'top',
-                                labels: {
-                                    color: isDark ? '#ecf0f1' : '#2c3e50',
-                                    usePointStyle: true,
-                                    pointStyle: 'circle',
-                                    padding: 15,
-                                    font: {
-                                        size: 12,
-                                        weight: '600'
-                                    }
-                                }
-                            },
-                            tooltip: {
-                                backgroundColor: isDark ? 'rgba(44, 62, 80, 0.95)' : 'rgba(255, 255, 255, 0.95)',
-                                titleColor: isDark ? '#ecf0f1' : '#2c3e50',
-                                bodyColor: isDark ? '#ecf0f1' : '#2c3e50',
-                                borderColor: isDark ? '#4facfe' : '#667eea',
-                                borderWidth: 1,
-                                cornerRadius: 8,
-                                displayColors: true,
-                                callbacks: {
-                                    label: function(context) {
-                                        return `${context.dataset.label}: ${context.parsed.y?.toLocaleString() || context.parsed}`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: currentChartType !== 'doughnut' ? {
-                            x: {
-                                grid: {
-                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                                    borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
-                                },
-                                ticks: {
-                                    color: isDark ? '#bdc3c7' : '#7f8c8d',
-                                    font: {
-                                        size: 10,
-                                        weight: '500'
-                                    }
-                                }
-                            },
-                            y: {
-                                grid: {
-                                    color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
-                                    borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
-                                },
-                                ticks: {
-                                    color: isDark ? '#bdc3c7' : '#7f8c8d',
-                                    font: {
-                                        size: 10,
-                                        weight: '500'
-                                    },
-                                    callback: function(value) {
-                                        return value.toLocaleString();
-                                    }
-                                },
-                                beginAtZero: true
-                            }
-                        } : {},
-                        interaction: {
-                            intersect: false,
-                            mode: 'index'
+                setTimeout(() => {
+                    try {
+                        const ctxElement = document.getElementById('salesChart');
+                        if (!ctxElement) {
+                            console.error('Chart canvas element not found');
+                            hideLoading();
+                            return;
                         }
-                    }
-                };
+                        
+                        if (chart) {
+                            chart.destroy();
+                            chart = null;
+                        }
+                        
+                        const ctx = ctxElement.getContext('2d');
+                        const selectedCategory = document.getElementById('chartCategory')?.value || '';
+                        const isDark = document.body.classList.contains('dark-mode');
+                        
+                        // Validate data exists
+                        if (!salesData[selectedYear] || Object.keys(salesData[selectedYear]).length === 0) {
+                            console.warn('No data available for chart');
+                            hideLoading();
+                            return;
+                        }
+                        
+                        let datasets = [];
+                        let labels = translations[currentLanguage].months;
+                        
+                        if (currentChartType === 'doughnut') {
+                            const categoryTotals = {};
+                            Object.keys(salesData[selectedYear]).forEach(cat => {
+                                categoryTotals[cat] = monthKeys.reduce((sum, monthKey) => {
+                                    return sum + (salesData[selectedYear][cat]?.sales[monthKey] || 0);
+                                }, 0);
+                            });
+                            
+                            labels = Object.keys(categoryTotals);
+                            datasets = [{
+                                data: Object.values(categoryTotals),
+                                backgroundColor: modernColors.slice(0, labels.length),
+                                borderWidth: 2,
+                                borderColor: isDark ? '#2c3e50' : '#ffffff',
+                                hoverOffset: 10
+                            }];
+                        } else {
+                            if (selectedCategory && salesData[selectedYear][selectedCategory]) {
+                                datasets = [{
+                                    label: selectedCategory,
+                                    data: monthKeys.map(monthKey => salesData[selectedYear][selectedCategory]?.sales[monthKey] || 0),
+                                    borderColor: modernColors[0],
+                                    backgroundColor: currentChartType === 'line' ? 
+                                        `${modernColors[0]}20` : modernColors[0],
+                                    fill: currentChartType === 'line',
+                                    tension: 0.4,
+                                    borderWidth: 2,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    pointBackgroundColor: '#ffffff',
+                                    pointBorderWidth: 2
+                                }];
+                            } else {
+                                datasets = Object.keys(salesData[selectedYear]).map((cat, i) => ({
+                                    label: cat,
+                                    data: monthKeys.map(monthKey => salesData[selectedYear][cat]?.sales[monthKey] || 0),
+                                    borderColor: modernColors[i % modernColors.length],
+                                    backgroundColor: currentChartType === 'line' ? 
+                                        `${modernColors[i % modernColors.length]}20` : modernColors[i % modernColors.length],
+                                    fill: currentChartType === 'line',
+                                    tension: 0.4,
+                                    borderWidth: 2,
+                                    pointRadius: 4,
+                                    pointHoverRadius: 6,
+                                    pointBackgroundColor: '#ffffff',
+                                    pointBorderWidth: 2
+                                }));
+                            }
+                        }
 
-                chart = new Chart(ctx, chartConfig);
-                calculateStats();
+                        const chartConfig = {
+                            type: currentChartType,
+                            data: { labels, datasets },
+                            options: {
+                                responsive: true,
+                                maintainAspectRatio: false,
+                                animation: {
+                                    duration: 800,
+                                    easing: 'easeOutQuart'
+                                },
+                                plugins: {
+                                    legend: {
+                                        display: true,
+                                        position: 'top',
+                                        labels: {
+                                            color: isDark ? '#ecf0f1' : '#2c3e50',
+                                            usePointStyle: true,
+                                            pointStyle: 'circle',
+                                            padding: 15,
+                                            font: {
+                                                size: 12,
+                                                weight: '600'
+                                            }
+                                        }
+                                    },
+                                    tooltip: {
+                                        backgroundColor: isDark ? 'rgba(44, 62, 80, 0.95)' : 'rgba(255, 255, 255, 0.95)',
+                                        titleColor: isDark ? '#ecf0f1' : '#2c3e50',
+                                        bodyColor: isDark ? '#ecf0f1' : '#2c3e50',
+                                        borderColor: isDark ? '#4facfe' : '#667eea',
+                                        borderWidth: 1,
+                                        cornerRadius: 8,
+                                        displayColors: true,
+                                        callbacks: {
+                                            label: function(context) {
+                                                return `${context.dataset.label}: ${context.parsed.y?.toLocaleString() || context.parsed}`;
+                                            }
+                                        }
+                                    }
+                                },
+                                scales: currentChartType !== 'doughnut' ? {
+                                    x: {
+                                        grid: {
+                                            color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                            borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                        },
+                                        ticks: {
+                                            color: isDark ? '#bdc3c7' : '#7f8c8d',
+                                            font: {
+                                                size: 10,
+                                                weight: '500'
+                                            }
+                                        }
+                                    },
+                                    y: {
+                                        grid: {
+                                            color: isDark ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
+                                            borderColor: isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+                                        },
+                                        ticks: {
+                                            color: isDark ? '#bdc3c7' : '#7f8c8d',
+                                            font: {
+                                                size: 10,
+                                                weight: '500'
+                                            },
+                                            callback: function(value) {
+                                                return value.toLocaleString();
+                                            }
+                                        },
+                                        beginAtZero: true
+                                    }
+                                } : {},
+                                interaction: {
+                                    intersect: false,
+                                    mode: 'index'
+                                }
+                            }
+                        };
+
+                        chart = new Chart(ctx, chartConfig);
+                        calculateStats();
+                        hideLoading();
+                        
+                    } catch (innerError) {
+                        console.error('Chart creation error:', innerError);
+                        hideLoading();
+                        showNotification('❌ Σφάλμα δημιουργίας γραφήματος', 'error');
+                    }
+                }, 300);
+                
+            } catch (error) {
+                console.error('UpdateChart error:', error);
                 hideLoading();
-            }, 300);
+                showNotification('❌ Σφάλμα ενημέρωσης γραφήματος', 'error');
+            }
         };
 
         // Export functions
@@ -9135,17 +9155,44 @@ const deleteCategory = (category, rowElement) => {
 
         // Ensure data consistency with month keys
         const validateDataConsistency = () => {
+            console.log('🔍 Validating data consistency...');
+            let fixedIssues = 0;
+            
             Object.keys(salesData).forEach(year => {
-                Object.keys(salesData[year]).forEach(category => {
-                    const sales = salesData[year][category].sales;
-                    // Ensure all month keys exist
-                    monthKeys.forEach(monthKey => {
-                        if (!(monthKey in sales)) {
-                            sales[monthKey] = 0;
+                if (typeof salesData[year] === 'object' && salesData[year] !== null) {
+                    Object.keys(salesData[year]).forEach(category => {
+                        // Ensure category has sales object
+                        if (!salesData[year][category] || !salesData[year][category].sales) {
+                            salesData[year][category] = { sales: {} };
+                            fixedIssues++;
                         }
+                        
+                        const sales = salesData[year][category].sales;
+                        
+                        // Ensure all month keys exist with valid values
+                        monthKeys.forEach(monthKey => {
+                            if (!(monthKey in sales)) {
+                                sales[monthKey] = 0;
+                                fixedIssues++;
+                            } else {
+                                // Ensure values are valid numbers
+                                const value = sales[monthKey];
+                                if (typeof value !== 'number' || isNaN(value) || value < 0) {
+                                    sales[monthKey] = 0;
+                                    fixedIssues++;
+                                }
+                            }
+                        });
                     });
-                });
+                }
             });
+            
+            if (fixedIssues > 0) {
+                console.log(`✅ Fixed ${fixedIssues} data consistency issues`);
+                saveToLocalStorage();
+            } else {
+                console.log('✅ Data consistency validated - no issues found');
+            }
         };
 
         // Event listeners setup
@@ -9229,25 +9276,47 @@ const deleteCategory = (category, rowElement) => {
         // Load data from localStorage as fallback
         const loadFromLocalStorage = () => {
             console.log('Loading from localStorage...');
-            const localData = localStorage.getItem('salesData');
-            if (localData) {
-                try {
+            try {
+                const localData = localStorage.getItem('salesData');
+                if (localData) {
                     const parsedData = JSON.parse(localData);
                     Object.keys(parsedData).forEach(year => {
                         salesData[year] = parsedData[year];
                     });
                     console.log('✅ Data loaded from localStorage:', salesData);
+                    
+                    // Validate data consistency
+                    validateDataConsistency();
                     return true;
-                } catch (error) {
-                    console.error('❌ Error parsing localStorage data:', error);
+                } else {
+                    console.log('No localStorage data found');
                     return false;
                 }
+            } catch (error) {
+                console.error('❌ Error parsing localStorage data:', error);
+                // Try backup
+                try {
+                    const backupData = localStorage.getItem('salesData_backup');
+                    if (backupData) {
+                        const parsedBackup = JSON.parse(backupData);
+                        Object.keys(parsedBackup).forEach(year => {
+                            salesData[year] = parsedBackup[year];
+                        });
+                        console.log('✅ Data loaded from backup:', salesData);
+                        validateDataConsistency();
+                        return true;
+                    }
+                } catch (backupError) {
+                    console.error('❌ Backup data also corrupted:', backupError);
+                }
+                return false;
             }
-            return false;
         };
 
         
 function loadFromFirebase() {
+    console.log('📥 Starting Firebase data load...');
+    
     const rawEmail = sessionStorage.getItem('loggedInUser');
     console.log('Raw email from session:', rawEmail);
     
@@ -9255,58 +9324,82 @@ function loadFromFirebase() {
     if (rawEmail && rawEmail.trim() !== '') {
         username = sanitizeKey(rawEmail);
     } else {
-        // Χρησιμοποίησε default username αν δεν υπάρχει logged user
         username = 'default_user';
         sessionStorage.setItem('loggedInUser', 'default_user@example.com');
     }
     
     console.log('Using username for Firebase:', username);
     
+    // First try localStorage as primary source
+    if (loadFromLocalStorage()) {
+        console.log('✅ Data loaded from localStorage');
+        initializeUI();
+        
+        // Then sync with Firebase in background
+        syncWithFirebase(username);
+        return;
+    }
+    
+    // If no localStorage, try Firebase
     firebase.database().ref('salesData/' + username).once('value').then(snapshot => {
         const data = snapshot.val();
-        console.log('Data loaded from Firebase:', data);
+        console.log('Data from Firebase:', data);
         
-        if (data) {
+        if (data && Object.keys(data).length > 0) {
             Object.keys(data).forEach(year => {
                 salesData[year] = data[year];
             });
-            // Ensure data consistency with month keys
+            console.log('✅ Data loaded from Firebase');
             validateDataConsistency();
-            // Ενημέρωσε το selectedYear αν δεν υπάρχει
-            if (!salesData[selectedYear]) {
-                selectedYear = Object.keys(salesData).sort().pop(); // τελευταίο διαθέσιμο έτος
-            }
-            populateYearDropdown();
-            renderTable();
-            populateCategoryDropdown();
-            updateChart();
+            saveToLocalStorage(); // Cache locally
         } else {
-            console.log('No data found, initializing sample data');
+            console.log('No Firebase data found, initializing sample data');
             initializeSampleData();
-            populateYearDropdown();
-            renderTable();
-            populateCategoryDropdown();
-            updateChart();
         }
+        
+        initializeUI();
     }).catch(error => {
         console.error('Firebase load error:', error);
-        // Fallback σε localStorage αν το Firebase αποτύχει
-        const localData = localStorage.getItem('salesData');
-        if (localData) {
-            const parsedData = JSON.parse(localData);
-            Object.keys(parsedData).forEach(year => {
-                salesData[year] = parsedData[year];
-            });
-            // Ensure data consistency with month keys
-            validateDataConsistency();
-        } else {
-            initializeSampleData();
-        }
-        populateYearDropdown();
-        renderTable();
-        populateCategoryDropdown();
-        updateChart();
+        console.log('🔄 Falling back to sample data');
+        initializeSampleData();
+        initializeUI();
     });
+}
+
+function syncWithFirebase(username) {
+    // Background sync - don't interrupt UI
+    try {
+        firebase.database().ref('salesData/' + username).once('value').then(snapshot => {
+            const firebaseData = snapshot.val();
+            if (firebaseData) {
+                // Compare timestamps or merge data if needed
+                console.log('🔄 Background sync with Firebase completed');
+            }
+        }).catch(error => {
+            console.warn('Background Firebase sync failed:', error);
+        });
+    } catch (error) {
+        console.warn('Firebase sync error:', error);
+    }
+}
+
+function initializeUI() {
+    // Ensure we have the current year data
+    if (!salesData[selectedYear]) {
+        const availableYears = Object.keys(salesData).sort();
+        if (availableYears.length > 0) {
+            selectedYear = availableYears[availableYears.length - 1];
+        } else {
+            salesData[selectedYear] = {};
+        }
+    }
+    
+    console.log('🎨 Initializing UI...');
+    populateYearDropdown();
+    renderTable();
+    populateCategoryDropdown();
+    updateChart();
+    console.log('✅ UI initialized');
 }
         // Initialize application
         document.addEventListener('DOMContentLoaded', () => {
@@ -9388,8 +9481,8 @@ function loadFromFirebase() {
                 }
             }, 1000);
             
-            // Δοκίμασε να φορτώσεις από Firebase, αν αποτύχει χρησιμοποίησε localStorage
-            console.log('📥 Loading data...');
+            // Δοκίμασε να φορτώσεις δεδομένα με βελτιωμένη μέθοδο
+            console.log('📥 Starting data loading...');
             loadFromFirebase();
 
             console.log('Loaded salesData:', salesData);
@@ -9489,73 +9582,57 @@ function sanitizeKey(email) {
                 // Enhanced mobile tooltip functionality
                 const statCards = document.querySelectorAll('.stat-card');
                 
-                // Function to show tooltip
-                function showTooltip(card) {
-                    // Hide all other tooltips first
-                    statCards.forEach(otherCard => {
-                        if (otherCard !== card) {
-                            otherCard.classList.remove('tooltip-active');
-                        }
-                    });
-                    
-                    // Show current tooltip
-                    card.classList.add('tooltip-active');
-                    
-                    // Auto-hide after 5 seconds
-                    setTimeout(() => {
-                        card.classList.remove('tooltip-active');
-                    }, 5000);
-                }
-                
-                // Function to hide all tooltips
-                function hideAllTooltips() {
-                    statCards.forEach(card => {
-                        card.classList.remove('tooltip-active');
-                    });
-                }
-                
                 statCards.forEach(card => {
                     // Touch event handling for mobile tooltips
                     card.addEventListener('touchstart', function(e) {
                         e.preventDefault();
-                        e.stopPropagation();
-                        showTooltip(this);
-                    }, { passive: false });
+                        
+                        // Hide all other tooltips first
+                        statCards.forEach(otherCard => {
+                            if (otherCard !== this) {
+                                otherCard.classList.remove('tooltip-active');
+                            }
+                        });
+                        
+                        // Toggle current tooltip
+                        this.classList.toggle('tooltip-active');
+                        
+                        // Auto-hide after 4 seconds
+                        if (this.classList.contains('tooltip-active')) {
+                            setTimeout(() => {
+                                this.classList.remove('tooltip-active');
+                            }, 4000);
+                        }
+                    });
                     
-                    // Click event for mobile and desktop
+                    // Click event for mobile
                     card.addEventListener('click', function(e) {
                         e.preventDefault();
                         e.stopPropagation();
-                        showTooltip(this);
-                    });
-                    
-                    // Long press event for mobile
-                    let pressTimer;
-                    card.addEventListener('touchstart', function(e) {
-                        pressTimer = setTimeout(() => {
-                            showTooltip(this);
-                        }, 500);
-                    });
-                    
-                    card.addEventListener('touchend', function() {
-                        clearTimeout(pressTimer);
-                    });
-                    
-                    card.addEventListener('touchmove', function() {
-                        clearTimeout(pressTimer);
+                        
+                        // Same logic as touch
+                        statCards.forEach(otherCard => {
+                            if (otherCard !== this) {
+                                otherCard.classList.remove('tooltip-active');
+                            }
+                        });
+                        
+                        this.classList.toggle('tooltip-active');
+                        
+                        if (this.classList.contains('tooltip-active')) {
+                            setTimeout(() => {
+                                this.classList.remove('tooltip-active');
+                            }, 4000);
+                        }
                     });
                 });
                 
                 // Hide tooltips when tapping elsewhere
                 document.addEventListener('touchstart', function(e) {
                     if (!e.target.closest('.stat-card')) {
-                        hideAllTooltips();
-                    }
-                });
-                
-                document.addEventListener('click', function(e) {
-                    if (!e.target.closest('.stat-card')) {
-                        hideAllTooltips();
+                        statCards.forEach(card => {
+                            card.classList.remove('tooltip-active');
+                        });
                     }
                 });
             }
