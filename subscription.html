@@ -1,6 +1,18 @@
 ﻿<!DOCTYPE html
 <html lang="el">
 <head>
+    <!-- Force Dark Mode Script -->
+    <script>
+        document.documentElement.classList.add('dark-mode');
+        if (document.body) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                document.body.classList.add('dark-mode');
+            });
+        }
+    </script>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Premium Συνδρομή - Business Tracker</title>
@@ -22,14 +34,14 @@
             position: relative;
         }
 
-        /* Animated gradient background - same as index.html */
+        /* Force Dark Mode Background */
         .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+            background: linear-gradient(45deg, #2c3e50, #34495e, #1a252f, #2c3e50, #34495e, #1a252f);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             z-index: -2;
@@ -568,30 +580,17 @@
             color: #666;
         }
 
-        /* Enhanced Terms */
+        /* Enhanced Terms - Dark Mode Compatible */
         .terms {
             font-size: 13px;
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(236, 240, 241, 0.8);
             margin-top: 25px;
             line-height: 1.6;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.08);
             padding: 20px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .terms-link {
-            color: #667eea;
-            cursor: pointer;
-            text-decoration: underline;
-            font-weight: 500;
-            transition: all 0.2s ease;
-        }
-
-        .terms-link:hover {
-            color: #5a6fd8;
-            text-decoration: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
         .confetti {
@@ -880,14 +879,6 @@
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        body.dark-mode .terms-link {
-            color: #74b9ff;
-        }
-
-        body.dark-mode .terms-link:hover {
-            color: #0984e3;
-        }
-
         body.dark-mode .subscription-status {
             background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
@@ -984,6 +975,17 @@
             to {
                 opacity: 1;
                 backdrop-filter: blur(15px);
+            }
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
             }
         }
 
@@ -2236,7 +2238,6 @@
     <!-- Top Controls - Same as dashboard -->
     <div class="top-controls">
         <button id="languageToggle" onclick="toggleLanguage()" title="Αλλαγή Γλώσσας">🇬🇷</button>
-        <button id="darkModeToggle" onclick="toggleDarkMode()" title="Dark/Light Mode">🌙</button>
     </div>
 
     <div class="subscription-container">
@@ -2349,27 +2350,27 @@
             
             console.log('🔍 Opening Terms Modal with dashboard design...');
             
-            // Create terms content with dashboard styling
+            // Create terms content with enhanced dark mode styling
             const termsContent = `
-                <div style="color: white; text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid rgba(255,255,255,0.5);">
-                        <h3 style="color: #74b9ff; margin-top: 0;">${translations[currentLanguage]['terms_section1'] || 'Service Description'}</h3>
-                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9;">${translations[currentLanguage]['terms_desc1'] || 'This service provides premium content access for a monthly subscription fee. The service includes a 3-day free trial period.'}</p>
+                <div style="color: #ecf0f1; text-align: left; line-height: 1.8; max-height: 400px; overflow-y: auto;">
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #3498db; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="color: #74b9ff; margin-top: 0; font-weight: 700; font-size: 16px;">${translations[currentLanguage]['terms_section1'] || 'Service Description'}</h3>
+                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9; color: rgba(236, 240, 241, 0.8);">${translations[currentLanguage]['terms_desc1'] || 'This service provides premium content access for a monthly subscription fee. The service includes a 3-day free trial period.'}</p>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid rgba(255,255,255,0.5);">
-                        <h3 style="color: #00b894; margin-top: 0;">${translations[currentLanguage]['terms_section2'] || 'Payment Terms'}</h3>
-                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9;">${translations[currentLanguage]['terms_desc2'] || 'Payment is processed monthly via secure payment systems. The subscription will automatically renew unless cancelled before the renewal date.'}</p>
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #2ecc71; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="color: #00b894; margin-top: 0; font-weight: 700; font-size: 16px;">${translations[currentLanguage]['terms_section2'] || 'Payment Terms'}</h3>
+                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9; color: rgba(236, 240, 241, 0.8);">${translations[currentLanguage]['terms_desc2'] || 'Payment is processed monthly via secure payment systems. The subscription will automatically renew unless cancelled before the renewal date.'}</p>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid rgba(255,255,255,0.5);">
-                        <h3 style="color: #fdcb6e; margin-top: 0;">${translations[currentLanguage]['terms_section3'] || 'Cancellation Policy'}</h3>
-                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9;">${translations[currentLanguage]['terms_desc3'] || 'You may cancel your subscription at any time. No refunds will be provided for partial month usage.'}</p>
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #f39c12; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="color: #fdcb6e; margin-top: 0; font-weight: 700; font-size: 16px;">${translations[currentLanguage]['terms_section3'] || 'Cancellation Policy'}</h3>
+                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9; color: rgba(236, 240, 241, 0.8);">${translations[currentLanguage]['terms_desc3'] || 'You may cancel your subscription at any time. No refunds will be provided for partial month usage.'}</p>
                     </div>
                     
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid rgba(255,255,255,0.5);">
-                        <h3 style="color: #e17055; margin-top: 0;">${translations[currentLanguage]['terms_section4'] || 'User Responsibilities'}</h3>
-                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9;">${translations[currentLanguage]['terms_desc4'] || 'Users are responsible for maintaining account security and following community guidelines.'}</p>
+                    <div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #e74c3c; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="color: #e17055; margin-top: 0; font-weight: 700; font-size: 16px;">${translations[currentLanguage]['terms_section4'] || 'User Responsibilities'}</h3>
+                        <p style="margin-bottom: 0; font-size: 14px; opacity: 0.9; color: rgba(236, 240, 241, 0.8);">${translations[currentLanguage]['terms_desc4'] || 'Users are responsible for maintaining account security and following community guidelines.'}</p>
                     </div>
                 </div>
             `;
@@ -2944,65 +2945,114 @@
 
         // ==================== END FOOTER MODAL FUNCTIONS ====================
 
-        // Helper function για τα modals - Same as dashboard
+        // Helper function για τα modals - Dark Mode Compatible with Improved Event Handling
         function showCustomModal(title, content, buttonText = 'Close', primaryCallback = null, primaryButtonText = null) {
+            console.log('🔧 Creating modal with title:', title);
+            
+            // Remove any existing modals to prevent conflicts
+            const existingModals = document.querySelectorAll('.modal-overlay');
+            existingModals.forEach(modal => modal.remove());
+            
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
-                align-items: center; justify-content: center; backdrop-filter: blur(5px);
+                background: rgba(0,0,0,0.85); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; backdrop-filter: blur(15px);
+                animation: modalFadeIn 0.3s ease-out;
             `;
+            
+            const modalId = 'modal-' + Date.now();
+            modal.id = modalId;
             
             const buttonsHtml = primaryCallback && primaryButtonText ? `
                 <div style="text-align: center; margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
-                    <button onclick="this.closest('.modal-overlay').remove()" 
-                           style="background: rgba(255,255,255,0.2); color: white; border: none; 
-                                  padding: 10px 20px; border-radius: 8px; cursor: pointer; 
-                                  font-weight: 600; transition: all 0.3s ease;">
+                    <button class="modal-close-btn" type="button" data-action="close"
+                           style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2); 
+                                  padding: 12px 24px; border-radius: 12px; cursor: pointer; 
+                                  font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
                         ${buttonText}
                     </button>
-                    <button onclick="handlePrimaryAction()" 
-                           style="background: rgba(255,255,255,0.9); color: #667eea; border: none; 
-                                  padding: 10px 20px; border-radius: 8px; cursor: pointer; 
-                                  font-weight: 600; transition: all 0.3s ease;">
+                    <button class="modal-primary-btn" type="button" data-action="primary"
+                           style="background: linear-gradient(135deg, #3498db, #9b59b6); color: white; border: none; 
+                                  padding: 12px 24px; border-radius: 12px; cursor: pointer; 
+                                  font-weight: 600; transition: all 0.3s ease; box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3);">
                         ${primaryButtonText}
                     </button>
                 </div>
             ` : `
                 <div style="text-align: center; margin-top: 20px;">
-                    <button onclick="this.closest('.modal-overlay').remove()" 
-                           style="background: rgba(255,255,255,0.2); color: white; border: none; 
-                                  padding: 10px 20px; border-radius: 8px; cursor: pointer; 
-                                  font-weight: 600; transition: all 0.3s ease;">
+                    <button class="modal-close-btn" type="button" data-action="close"
+                           style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.8); border: 1px solid rgba(255,255,255,0.2); 
+                                  padding: 12px 24px; border-radius: 12px; cursor: pointer; 
+                                  font-weight: 600; transition: all 0.3s ease; backdrop-filter: blur(10px);">
                         ${buttonText}
                     </button>
                 </div>
             `;
             
             modal.innerHTML = `
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                           padding: 25px; border-radius: 15px; max-width: 500px; width: 90%; 
-                           max-height: 70vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-                    <h2 style="margin: 0 0 20px 0; color: white; font-size: 18px; text-align: center;">${title}</h2>
+                <div class="modal-content-inner" style="background: rgba(44, 62, 80, 0.95); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.15);
+                           padding: 30px; border-radius: 20px; max-width: 600px; width: 90%; 
+                           max-height: 70vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+                           animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);">
+                    <h2 style="margin: 0 0 20px 0; color: #ecf0f1; font-size: 20px; text-align: center; font-weight: 700;">${title}</h2>
                     ${content}
                     ${buttonsHtml}
                 </div>
             `;
             
             modal.className = 'modal-overlay';
-            modal.onclick = (e) => {
-                if (e.target === modal) modal.remove();
-            };
             
-            // Add primary action handler if provided
-            if (primaryCallback) {
-                window.handlePrimaryAction = function() {
-                    primaryCallback();
-                    modal.remove();
-                };
-            }
+            // Use setTimeout to ensure DOM is ready before adding event listeners
+            setTimeout(() => {
+                // Only close when clicking directly on the overlay background
+                modal.addEventListener('click', function(e) {
+                    if (e.target === modal) {
+                        console.log('🔧 Overlay clicked - closing modal');
+                        modal.remove();
+                    }
+                }, { once: false });
+                
+                // Prevent modal content clicks from bubbling
+                const modalContent = modal.querySelector('.modal-content-inner');
+                if (modalContent) {
+                    modalContent.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                    });
+                }
+                
+                // Handle close button
+                const closeBtn = modal.querySelector('.modal-close-btn');
+                if (closeBtn) {
+                    closeBtn.addEventListener('click', function(e) {
+                        console.log('🔧 Close button clicked');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        modal.remove();
+                    }, { once: true });
+                }
+                
+                // Handle primary button
+                const primaryBtn = modal.querySelector('.modal-primary-btn');
+                if (primaryBtn && primaryCallback) {
+                    primaryBtn.addEventListener('click', function(e) {
+                        console.log('🔧 Primary button clicked');
+                        e.preventDefault();
+                        e.stopPropagation();
+                        try {
+                            primaryCallback();
+                        } catch (error) {
+                            console.error('Error in primary callback:', error);
+                        }
+                        modal.remove();
+                    }, { once: true });
+                }
+                
+                console.log('✅ Modal event listeners added successfully');
+            }, 100);
             
             document.body.appendChild(modal);
+            console.log('✅ Modal created and added to DOM');
             return modal;
         }
 
@@ -3045,7 +3095,7 @@
                 ctaButton: "🚀 Ξεκινήστε τη Δωρεάν Δοκιμή",
                 cancelButton: "🗑️ Ακύρωση Συνδρομής",
                 backButton: "← Επιστροφή",
-                terms: "Με την εγγραφή συμφωνείτε με τους <span class='terms-link' onclick='showTermsModal()'>όρους χρήσης</span>. Η δωρεάν δοκιμή διαρκεί 3 μέρες. Μετά τη λήξη της δοκιμαστικής περιόδου θα χρεωθείτε €12.99/μήνα. Μπορείτε να ακυρώσετε ανά πάσα στιγμή.",
+                terms: "Με την εγγραφή συμφωνείτε με τους όρους χρήσης. Η δωρεάν δοκιμή διαρκεί 3 μέρες. Μετά τη λήξη της δοκιμαστικής περιόδου θα χρεωθείτε €12.99/μήνα. Μπορείτε να ακυρώσετε ανά πάσα στιγμή.",
                 activeSubscriptionStatus: "✅ Η Συνδρομή σας είναι Ενεργή",
                 confirmTrialTitle: " Ξεκινήστε τη Premium εμπειρία",
                 confirmTrialText: "Είστε έτοιμος να ξεκινήσετε τη <strong style='background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>δωρεάν δοκιμή 3 ημερών</strong>;<br><br><div style='background: rgba(102, 126, 234, 0.1); padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #667eea;'>✨ <strong>Θα αποκτήσετε άμεση πρόσβαση σε:</strong><br><br>🤖 Έξυπνες προτάσεις AI<br>📊 Προχωρημένα αναλυτικά<br>🔮 Προβλέψεις 24 μηνών<br>⚖️ Ανάλυση κινδύνου<br><br><span style='font-size: 12px; color: #667eea;'>💳 Καμία χρέωση κατά τη δοκιμή</span></div>",
@@ -3152,7 +3202,7 @@
                 ctaButton: "🚀 Start Free Trial",
                 cancelButton: "🗑️ Cancel Subscription",
                 backButton: "← Back",
-                terms: "By signing up you agree to the <span class='terms-link' onclick='showTermsModal()'>terms of use</span>. The free trial lasts 3 days. After the trial period expires you will be charged €12.99/month. You can cancel at any time.",
+                terms: "By signing up you agree to the terms of use. The free trial lasts 3 days. After the trial period expires you will be charged €12.99/month. You can cancel at any time.",
                 activeSubscriptionStatus: "✅ Your Subscription is Active",
                 confirmTrialTitle: " Start your Premium experience",
                 confirmTrialText: "Ready to start your <strong style='background: linear-gradient(135deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>3-day free trial</strong>?<br><br><div style='background: rgba(102, 126, 234, 0.1); padding: 20px; border-radius: 15px; margin: 20px 0; border-left: 4px solid #667eea;'>✨ <strong>You'll get instant access to:</strong><br><br>🤖 Smart AI suggestions<br>📊 Advanced analytics<br>🔮 24-month predictions<br>⚖️ Risk analysis<br><br><span style='font-size: 12px; color: #667eea;'>💳 No charges during trial</span></div>",
@@ -3287,46 +3337,17 @@
             document.title = lang === 'el' ? 'Premium Συνδρομή - Business Tracker' : 'Premium Subscription - Business Tracker';
         }
 
-        // Dark Mode Functionality
+        // Dark Mode Functionality - Force Dark Mode
         function initializeDarkMode() {
-            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (savedDarkMode) {
-                document.body.classList.add('dark-mode');
-                updateDarkModeButton();
-            }
-            
-            // Listen for dark mode changes from other tabs
-            window.addEventListener('storage', function(e) {
-                if (e.key === 'darkMode') {
-                    const isDarkMode = e.newValue === 'true';
-                    if (isDarkMode) {
-                        document.body.classList.add('dark-mode');
-                    } else {
-                        document.body.classList.remove('dark-mode');
-                    }
-                    updateDarkModeButton();
-                }
-            });
+            // Always enable dark mode
+            enableDarkMode();
         }
 
-        function toggleDarkMode() {
-            document.body.classList.toggle('dark-mode');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            const currentLang = localStorage.getItem('language') || 'el';
-            localStorage.setItem('darkMode', isDarkMode);
-            updateDarkModeButton();
-            
-            // Show notification
-            const message = isDarkMode ? translations[currentLang].notificationDarkMode : translations[currentLang].notificationLightMode;
-            showNotification(message, 'info', 2000);
+        function enableDarkMode() {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', true);
         }
 
-        function updateDarkModeButton() {
-            const toggle = document.getElementById('darkModeToggle');
-            const isDarkMode = document.body.classList.contains('dark-mode');
-            toggle.textContent = isDarkMode ? '☀️' : '🌙';
-            toggle.title = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-        }
         function showNotification(message, type = 'success', duration = 4000) {
             const notification = document.getElementById('notification');
             const icon = document.getElementById('notificationIcon');
@@ -3483,68 +3504,29 @@
         function startSubscription() {
             const currentLang = localStorage.getItem('language') || 'el';
             
-            console.log('🚀 Starting subscription confirmation flow...');
+            console.log('🚀 Starting subscription directly - no confirmation needed...');
             
-            // Create confirmation content with dashboard styling
-            const confirmationContent = `
-                <div style="color: white; text-align: left; line-height: 1.6;">
-                    <p style="margin-bottom: 15px;">
-                        ${currentLang === 'el' ? 
-                            'Είστε έτοιμος να ξεκινήσετε τη <strong>δωρεάν δοκιμή 3 ημερών</strong>;' : 
-                            'Ready to start your <strong>3-day free trial</strong>?'
-                        }
-                    </p>
-                    
-                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid rgba(255,255,255,0.5);">
-                        <div style="font-weight: 600; margin-bottom: 8px;">
-                            ${currentLang === 'el' ? '✨ Θα αποκτήσετε άμεση πρόσβαση σε:' : '✨ You\'ll get instant access to:'}
-                        </div>
-                        <div style="font-size: 14px; line-height: 1.8;">
-                            🤖 ${currentLang === 'el' ? 'Έξυπνες προτάσεις AI' : 'Smart AI suggestions'}<br>
-                            📊 ${currentLang === 'el' ? 'Προχωρημένα αναλυτικά' : 'Advanced analytics'}<br>
-                            🔮 ${currentLang === 'el' ? 'Προβλέψεις 24 μηνών' : '24-month predictions'}<br>
-                            ⚖️ ${currentLang === 'el' ? 'Ανάλυση κινδύνου' : 'Risk analysis'}
-                        </div>
-                        <div style="margin-top: 10px; font-size: 12px; opacity: 0.8;">
-                            💳 ${currentLang === 'el' ? 'Καμία χρέωση κατά τη δοκιμή' : 'No charges during trial'}
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Show confirmation modal with dashboard design
-            showCustomModal(
-                currentLang === 'el' ? '🎁 Ξεκινήστε τη Premium εμπειρία' : '🎁 Start your Premium experience',
-                confirmationContent,
-                currentLang === 'el' ? '🤔 Όχι τώρα' : '🤔 Not now',
-                function() {
-                    // Primary callback - Start trial
-                    console.log('✅ User confirmed - starting free trial');
-                    
-                    // Show loading notification
-                    showNotification(
-                        '⭐ ' + (translations[currentLang].paymentProcessing || 'Ενεργοποίηση δωρεάν δοκιμής...'), 
-                        'info', 
-                        2000
-                    );
-                    
-                    // Start free trial after short delay
-                    setTimeout(async () => {
-                        try {
-                            await processSuccessfulPayment(currentLang);
-                            console.log('✅ Free trial activated successfully');
-                        } catch (error) {
-                            console.error('Free trial activation error:', error);
-                            showNotification(
-                                '⚠️ ' + (translations[currentLang].paymentError || 'Σφάλμα ενεργοποίησης'), 
-                                'error', 
-                                4000
-                            );
-                        }
-                    }, 1500);
-                },
-                currentLang === 'el' ? '🚀 Ναι, ξεκινάμε!' : '🚀 Yes, let\'s start!'
+            // Show loading notification
+            showNotification(
+                '⭐ ' + (translations[currentLang].paymentProcessing || 'Ενεργοποίηση δωρεάν δοκιμής...'), 
+                'info', 
+                2000
             );
+            
+            // Start free trial directly
+            setTimeout(async () => {
+                try {
+                    await processSuccessfulPayment(currentLang);
+                    console.log('✅ Free trial activated successfully');
+                } catch (error) {
+                    console.error('Free trial activation error:', error);
+                    showNotification(
+                        '⚠️ ' + (translations[currentLang].paymentError || 'Σφάλμα ενεργοποίησης'), 
+                        'error', 
+                        4000
+                    );
+                }
+            }, 1500);
         }
 
         function showPaymentModal(lang) {

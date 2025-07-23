@@ -77,6 +77,19 @@
             position: relative;
         }
 
+        /* Force dark mode - always enabled */
+        body {
+            background: transparent;
+            color: #ecf0f1;
+        }
+
+        body .background {
+            background: #2c3e50; /* fallback */
+            background: linear-gradient(45deg, #2c3e50, #34495e, #1a252f, #2c3e50, #34495e, #1a252f) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 15s ease infinite !important;
+        }
+
         /* Animated gradient background - same as index.html */
         .background {
             position: fixed !important;
@@ -109,6 +122,43 @@
             background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(10px);
             z-index: -1;
+        }
+
+        /* Floating particles */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
 
         /* Ultra-Modern Dark Mode */
@@ -263,7 +313,7 @@
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.2);
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-            animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: slideUp 0.8s ease-out;
             position: relative;
             overflow: hidden;
             transition: all 0.5s ease;
@@ -304,6 +354,36 @@
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
+        }
+        
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(60px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        /* Hidden class for smooth transitions */
+        .hidden {
+            display: none !important;
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Mobile header */
@@ -563,21 +643,44 @@
         /* General button styles (for other buttons not in header) */
         button {
             border: none;
-            border-radius: 12px;
-            padding: 12px 16px;
-            font-size: 14px;
+            border-radius: 16px;
+            padding: 16px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
             touch-action: manipulation;
             min-height: 44px; /* iOS minimum touch target */
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+        
+        button:hover::before {
+            left: 100%;
         }
 
         button:hover, button:active {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(103, 126, 234, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(-1px);
         }
 
         body.dark-mode .user-buttons button {
@@ -619,6 +722,25 @@
             display: flex;
             gap: 8px;
             flex-wrap: wrap;
+        }
+
+        /* Input group glassmorphism effect */
+        .input-row::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            border-radius: 16px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .input-row:hover::before {
+            opacity: 1;
         }
 
         input, select {
@@ -820,10 +942,49 @@
             font-weight: 500;
             font-size: 14px;
             text-align: center;
-            padding: 8px;
-            background: rgba(231, 76, 60, 0.1);
-            border-radius: 8px;
+            padding: 12px 16px;
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            border-radius: 12px;
             display: none;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        
+        #categoryMessage.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Success/Error messages - Same as index.html */
+        .message {
+            padding: 12px 16px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        
+        .message.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid rgba(76, 175, 80, 0.4);
+            color: #4caf50;
+        }
+        
+        .message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid rgba(244, 67, 54, 0.4);
+            color: #f44336;
         }
 
         /* Mobile table container - Same glassmorphism as main container */
@@ -838,6 +999,7 @@
             border: 1px solid rgba(255, 255, 255, 0.2);
             position: relative;
             transition: all 0.5s ease;
+            animation: slideUp 0.8s ease-out;
         }
 
         .table-container:hover {
@@ -1147,6 +1309,7 @@
             position: relative;
             overflow: hidden;
             transition: all 0.5s ease;
+            animation: slideUp 0.8s ease-out;
         }
 
         .chart-container:hover {
@@ -1227,23 +1390,55 @@
 
         .chart-type-btn {
             flex: 1;
-            padding: 12px 16px;
+            padding: 16px 18px;
             border: none;
-            border-radius: 12px;
+            border-radius: 16px;
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             color: #667eea;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 12px;
+            font-weight: 600;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .chart-type-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.7s ease;
+        }
+        
+        .chart-type-btn:hover::before {
+            left: 100%;
+        }
+
+        .chart-type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(103, 126, 234, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .chart-type-btn.active {
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            box-shadow: 0 4px 12px rgba(103, 126, 234, 0.5);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .chart-type-btn.active:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.5);
         }
 
         body.dark-mode .chart-type-btn {
@@ -1261,12 +1456,37 @@
             position: relative;
             height: 400px;
             margin-top: 20px;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .chart-wrapper:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .chart-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        body.dark-mode .chart-wrapper {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Stats cards - mobile grid with glassmorphism */
@@ -1275,12 +1495,37 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 12px;
             margin-top: 20px;
-            padding: 16px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 16px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 48px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s ease;
+            overflow: hidden;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .chart-stats:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+        }
+
+        .chart-stats::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        body.dark-mode .chart-stats {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         /* Ultra-Modern Statistics Cards with Same Glassmorphism */
@@ -1533,16 +1778,16 @@
             color: #bdc3c7;
         }
 
-        /* Advanced Analytics Panel - Same glassmorphism as table container */
+        /* Advanced Analytics Panel - Same glassmorphism as main container */
         .analytics-panel {
-            margin-bottom: 20px;
+            margin: 20px 0;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
             position: relative;
             transition: all 0.5s ease;
         }
@@ -1562,7 +1807,6 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
             animation: shimmer 3s ease-in-out infinite;
             z-index: 1;
-            border-radius: 24px 24px 0 0;
         }
 
         body.dark-mode .analytics-panel {
@@ -1756,16 +2000,16 @@
             background: rgba(79, 172, 254, 0.1);
         }
 
-        /* Smart Insights Panel - Same glassmorphism as table container */
+        /* Smart Insights Panel - Same glassmorphism as main container */
         .insights-panel {
-            margin-bottom: 20px;
+            margin: 20px 0;
             background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
             border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
             position: relative;
             transition: all 0.5s ease;
             animation: slideIn 0.8s ease-out;
@@ -1786,7 +2030,6 @@
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
             animation: shimmer 3s ease-in-out infinite;
             z-index: 1;
-            border-radius: 24px 24px 0 0;
         }
 
         body.dark-mode .insights-panel {
@@ -5048,10 +5291,11 @@
     <div class="background"></div>
     <div class="glass-overlay"></div>
     
+    <div class="particles" id="particles"></div>
+    
     <!-- Top Controls -->
     <div class="top-controls">
         <button id="languageToggle" onclick="toggleLanguage()" title="Αλλαγή Γλώσσας">🇬🇷</button>
-        <button id="darkModeToggle" onclick="toggleDarkMode()" title="Dark/Light Mode">🌙</button>
     </div>
 
     <div class="container">
@@ -5416,10 +5660,6 @@
                         <span class="shortcut-desc" id="shortcutSave">Αποθήκευση</span>
                     </div>
                     <div class="shortcut-item">
-                        <span class="shortcut-key">Ctrl + D</span>
-                        <span class="shortcut-desc" id="shortcutDarkMode">Dark Mode</span>
-                    </div>
-                    <div class="shortcut-item">
                         <span class="shortcut-key">Esc</span>
                         <span class="shortcut-desc" id="shortcutCloseModal">Κλείσιμο Modal</span>
                     </div>
@@ -5502,6 +5742,21 @@
     </div>
 
     <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 20 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
         // Cache buster for Netlify deployment
         const CACHE_VERSION = 'v2025_01_21_fixes';
         console.log(`🚀 Dashboard loaded - ${CACHE_VERSION}`);
@@ -5878,7 +6133,6 @@
                 shortcutTools: 'Εργαλεία',
                 shortcutNewCategory: 'Νέα Κατηγορία',
                 shortcutSave: 'Αποθήκευση',
-                shortcutDarkMode: 'Dark Mode',
                 shortcutCloseModal: 'Κλείσιμο Modal',
                 shortcutChangeChartType: 'Αλλαγή Τύπου Γραφήματος',
                 shortcutForecast: 'Πρόβλεψη',
@@ -6265,7 +6519,6 @@
                 shortcutTools: 'Tools',
                 shortcutNewCategory: 'New Category',
                 shortcutSave: 'Save',
-                shortcutDarkMode: 'Dark Mode',
                 shortcutCloseModal: 'Close Modal',
                 shortcutChangeChartType: 'Change Chart Type',
                 shortcutForecast: 'Forecast',
@@ -6580,7 +6833,6 @@
             const shortcutElements = {
                 'shortcutNewCategory': t.shortcutNewCategory,
                 'shortcutSave': t.shortcutSave,
-                'shortcutDarkMode': t.shortcutDarkMode,
                 'shortcutCloseModal': t.shortcutCloseModal,
                 'shortcutChangeChartType': t.shortcutChangeChartType,
                 'shortcutForecast': t.shortcutForecast,
@@ -6844,30 +7096,11 @@
             notification.classList.remove('show');
         }
 
-        // Dark mode toggle
-        const toggleDarkMode = () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
+        // Force dark mode - always enabled
+        const enableDarkMode = () => {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', true);
             updateChart();
-            updateDarkModeButton();
-            
-            // Show notification
-            const currentLang = localStorage.getItem('language') || 'el';
-            const message = isDark ? 
-                (currentLang === 'el' ? '🌙 Dark Mode ενεργοποιήθηκε!' : '🌙 Dark Mode activated!') :
-                (currentLang === 'el' ? '☀️ Light Mode ενεργοποιήθηκε!' : '☀️ Light Mode activated!');
-            showNotification(message, 'info', 2000);
-        };
-
-        // Update dark mode button
-        const updateDarkModeButton = () => {
-            const toggle = document.getElementById('darkModeToggle');
-            if (toggle) {
-                const isDarkMode = document.body.classList.contains('dark-mode');
-                toggle.textContent = isDarkMode ? '☀️' : '🌙';
-                toggle.title = isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode';
-            }
         };
 
         // Theme management
@@ -9220,11 +9453,9 @@ const deleteCategory = (category, rowElement) => {
         };
 
         const applySavedDarkMode = () => {
-            const darkMode = localStorage.getItem('darkMode') === 'true';
-            if (darkMode) {
-                document.body.classList.add('dark-mode');
-            }
-            updateDarkModeButton();
+            // Force dark mode - always enabled
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', true);
         };
 
         // Load data from localStorage as fallback
@@ -9359,18 +9590,17 @@ function initializeUI() {
         document.addEventListener('DOMContentLoaded', () => {
             console.log('🚀 Application starting...');
             
+            // Create floating particles
+            createParticles();
+            
             // Initialize language
             updateUILanguage();
             
             // Initialize language toggle button
             updateLanguageToggleButton();
             
-            // Initialize dark mode
-            const savedDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (savedDarkMode) {
-                document.body.classList.add('dark-mode');
-            }
-            updateDarkModeButton();
+            // Force dark mode - always enabled
+            enableDarkMode();
             
             // Set username
             const userDisplay = document.getElementById('userDisplay');
@@ -9548,7 +9778,6 @@ function sanitizeKey(email) {
             
             // Existing event listeners
             document.getElementById('addCategoryBtn').addEventListener('click', addCategory);
-            document.getElementById('darkModeBtn').addEventListener('click', toggleDarkMode);
             document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
             document.getElementById('exportPdfBtn').addEventListener('click', exportToPDF);
             document.getElementById('compareBtn').addEventListener('click', compareData);
@@ -10094,10 +10323,6 @@ function sanitizeKey(email) {
                         saveToFirebase();
                         saveToLocalStorage();
                         showNotification(`💾 ${t.dataSavedShortcut}`, "success");
-                        break;
-                    case 'd':
-                        e.preventDefault();
-                        document.getElementById('darkModeBtn').click();
                         break;
                     case 'f':
                         e.preventDefault();
@@ -10769,18 +10994,18 @@ function sanitizeKey(email) {
             showCustomModal(
                 t.terms_title || 'Terms of Use',
                 `
-                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                    <h3>${t.terms_section1 || 'Service Description'}</h3>
-                    <p>${t.terms_desc1 || 'This service provides business analytics and tracking tools for a monthly subscription fee. The service includes comprehensive data analysis and forecasting capabilities.'}</p>
+                <div style="text-align: left; line-height: 1.8; max-height: 400px; overflow-y: auto;">
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.terms_section1 || 'Service Description'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.terms_desc1 || 'This service provides business analytics and tracking tools for a monthly subscription fee. The service includes comprehensive data analysis and forecasting capabilities.'}</p>
                     
-                    <h3>${t.terms_section2 || 'Payment Terms'}</h3>
-                    <p>${t.terms_desc2 || 'Payment is processed monthly via secure payment systems. The subscription will automatically renew unless cancelled before the renewal date.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.terms_section2 || 'Payment Terms'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.terms_desc2 || 'Payment is processed monthly via secure payment systems. The subscription will automatically renew unless cancelled before the renewal date.'}</p>
                     
-                    <h3>${t.terms_section3 || 'Cancellation Policy'}</h3>
-                    <p>${t.terms_desc3 || 'You may cancel your subscription at any time through the subscription page. No refunds will be provided for partial month usage.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.terms_section3 || 'Cancellation Policy'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.terms_desc3 || 'You may cancel your subscription at any time through the subscription page. No refunds will be provided for partial month usage.'}</p>
                     
-                    <h3>${t.terms_section4 || 'User Responsibilities'}</h3>
-                    <p>${t.terms_desc4 || 'Users are responsible for maintaining account security, data accuracy, and following platform guidelines.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.terms_section4 || 'User Responsibilities'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.terms_desc4 || 'Users are responsible for maintaining account security, data accuracy, and following platform guidelines.'}</p>
                 </div>
                 `,
                 'I Understand'
@@ -10792,18 +11017,18 @@ function sanitizeKey(email) {
             showCustomModal(
                 t.privacy_title || 'Privacy Policy',
                 `
-                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                    <h3>${t.privacy_section1 || 'Data Collection'}</h3>
-                    <p>${t.privacy_desc1 || 'We collect business data that you input, usage analytics, and account information necessary for service provision.'}</p>
+                <div style="text-align: left; line-height: 1.8; max-height: 400px; overflow-y: auto;">
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.privacy_section1 || 'Data Collection'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.privacy_desc1 || 'We collect business data that you input, usage analytics, and account information necessary for service provision.'}</p>
                     
-                    <h3>${t.privacy_section2 || 'Data Usage'}</h3>
-                    <p>${t.privacy_desc2 || 'Your business data is used solely for providing analytics, forecasting, and insights. We do not share or sell your business information.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.privacy_section2 || 'Data Usage'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.privacy_desc2 || 'Your business data is used solely for providing analytics, forecasting, and insights. We do not share or sell your business information.'}</p>
                     
-                    <h3>${t.privacy_section3 || 'Data Security'}</h3>
-                    <p>${t.privacy_desc3 || 'All data is encrypted and stored securely in Firebase with industry-standard security measures. Local data is stored in your browser only.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.privacy_section3 || 'Data Security'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.privacy_desc3 || 'All data is encrypted and stored securely in Firebase with industry-standard security measures. Local data is stored in your browser only.'}</p>
                     
-                    <h3>${t.privacy_section4 || 'Your Rights'}</h3>
-                    <p>${t.privacy_desc4 || 'You have the right to export, modify, or delete your business data at any time through the dashboard or by contacting support.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.privacy_section4 || 'Your Rights'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.privacy_desc4 || 'You have the right to export, modify, or delete your business data at any time through the dashboard or by contacting support.'}</p>
                 </div>
                 `,
                 'Understood'
@@ -10815,18 +11040,18 @@ function sanitizeKey(email) {
             showCustomModal(
                 t.refund_title || 'Refund Policy',
                 `
-                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                    <h3>${t.refund_section1 || 'General Policy'}</h3>
-                    <p>${t.refund_desc1 || 'Due to the nature of our analytics service, refunds are considered on a case-by-case basis for technical issues that prevent service use.'}</p>
+                <div style="text-align: left; line-height: 1.8; max-height: 400px; overflow-y: auto;">
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.refund_section1 || 'General Policy'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.refund_desc1 || 'Due to the nature of our analytics service, refunds are considered on a case-by-case basis for technical issues that prevent service use.'}</p>
                     
-                    <h3>${t.refund_section2 || 'Trial Period'}</h3>
-                    <p>${t.refund_desc2 || 'If you have an active trial, you can cancel before it ends to avoid charges. Contact support for assistance with trial management.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.refund_section2 || 'Trial Period'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.refund_desc2 || 'If you have an active trial, you can cancel before it ends to avoid charges. Contact support for assistance with trial management.'}</p>
                     
-                    <h3>${t.refund_section3 || 'Special Circumstances'}</h3>
-                    <p>${t.refund_desc3 || 'Refunds may be provided for verified technical issues, billing errors, or service outages affecting your ability to use the platform.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.refund_section3 || 'Special Circumstances'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.refund_desc3 || 'Refunds may be provided for verified technical issues, billing errors, or service outages affecting your ability to use the platform.'}</p>
                     
-                    <h3>${t.refund_section4 || 'Contact Support'}</h3>
-                    <p>${t.refund_desc4 || 'For refund requests, contact our support team with your account details, subscription information, and detailed reason for the request.'}</p>
+                    <h3 style="color: #e76f51; margin: 20px 0 12px 0; font-size: 18px; border-bottom: 1px solid rgba(231, 111, 81, 0.3); padding-bottom: 8px;">${t.refund_section4 || 'Contact Support'}</h3>
+                    <p style="color: rgba(244, 241, 222, 0.85); margin-bottom: 16px;">${t.refund_desc4 || 'For refund requests, contact our support team with your account details, subscription information, and detailed reason for the request.'}</p>
                 </div>
                 `,
                 'Contact Support'
@@ -10838,23 +11063,37 @@ function sanitizeKey(email) {
             showCustomModal(
                 t.contact_title || 'Contact Support',
                 `
-                <div style="text-align: left; line-height: 1.6;">
-                    <div style="background: rgba(52, 152, 219, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                        <h3 style="margin-top: 0;">${t.contact_email || 'Email Support'}</h3>
-                        <p style="margin: 5px 0;"><strong>Email:</strong> support@businesstracker.com</p>
-                        <p style="margin: 5px 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.contact_response || 'Response within 24 hours'}</p>
+                <div style="text-align: left; line-height: 1.8;">
+                    <div style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(52, 152, 219, 0.05) 100%); 
+                               border: 1px solid rgba(52, 152, 219, 0.3); padding: 18px; border-radius: 12px; margin-bottom: 18px;
+                               backdrop-filter: blur(10px);">
+                        <h3 style="margin-top: 0; color: #3498db; font-size: 18px;">${t.contact_email || 'Email Support'}</h3>
+                        <p style="margin: 8px 0; color: rgba(244, 241, 222, 0.9);"><strong style="color: #e76f51;">Email:</strong> support@businesstracker.com</p>
+                        <p style="margin: 8px 0; font-size: 13px; color: rgba(244, 241, 222, 0.7);">${t.contact_response || 'Response within 24 hours'}</p>
                     </div>
                     
-                    <div style="background: rgba(46, 204, 113, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                        <h3 style="margin-top: 0;">${t.contact_live || 'Live Chat'}</h3>
-                        <p style="margin: 5px 0;">${t.contact_available || 'Available Monday-Friday 9AM-6PM EST'}</p>
-                        <button onclick="startLiveChat()" style="background: #2ecc71; color: white; border: none; padding: 8px 16px; border-radius: 5px; margin-top: 8px;">${t.contact_start_chat || 'Start Chat'}</button>
+                    <div style="background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(46, 204, 113, 0.05) 100%); 
+                               border: 1px solid rgba(46, 204, 113, 0.3); padding: 18px; border-radius: 12px; margin-bottom: 18px;
+                               backdrop-filter: blur(10px);">
+                        <h3 style="margin-top: 0; color: #2ecc71; font-size: 18px;">${t.contact_live || 'Live Chat'}</h3>
+                        <p style="margin: 8px 0; color: rgba(244, 241, 222, 0.9);">${t.contact_available || 'Available Monday-Friday 9AM-6PM EST'}</p>
+                        <button onclick="startLiveChat()" 
+                               style="background: linear-gradient(135deg, #2ecc71, #27ae60); color: #f4f1de; border: none; 
+                                      padding: 10px 18px; border-radius: 8px; margin-top: 10px; cursor: pointer; 
+                                      font-weight: 600; transition: all 0.3s ease; 
+                                      box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);"
+                               onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 6px 20px rgba(46, 204, 113, 0.4)';"
+                               onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 4px 15px rgba(46, 204, 113, 0.3)';">
+                            ${t.contact_start_chat || 'Start Chat'}
+                        </button>
                     </div>
                     
-                    <div style="background: rgba(155, 89, 182, 0.1); padding: 15px; border-radius: 10px;">
-                        <h3 style="margin-top: 0;">${t.contact_phone || 'Technical Support'}</h3>
-                        <p style="margin: 5px 0;"><strong>Phone:</strong> +1 (555) 123-4567</p>
-                        <p style="margin: 5px 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.contact_business || 'Business hours only'}</p>
+                    <div style="background: linear-gradient(135deg, rgba(155, 89, 182, 0.15) 0%, rgba(155, 89, 182, 0.05) 100%); 
+                               border: 1px solid rgba(155, 89, 182, 0.3); padding: 18px; border-radius: 12px;
+                               backdrop-filter: blur(10px);">
+                        <h3 style="margin-top: 0; color: #9b59b6; font-size: 18px;">${t.contact_phone || 'Technical Support'}</h3>
+                        <p style="margin: 8px 0; color: rgba(244, 241, 222, 0.9);"><strong style="color: #e76f51;">Phone:</strong> +1 (555) 123-4567</p>
+                        <p style="margin: 8px 0; font-size: 13px; color: rgba(244, 241, 222, 0.7);">${t.contact_business || 'Business hours only'}</p>
                     </div>
                 </div>
                 `,
@@ -10867,26 +11106,46 @@ function sanitizeKey(email) {
             showCustomModal(
                 t.help_title || 'Help Center',
                 `
-                <div style="text-align: left; line-height: 1.6;">
-                    <div style="display: grid; gap: 12px;">
-                        <div style="background: rgba(52, 152, 219, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showDataHelp()">
-                            <h4 style="margin: 0; color: #3498db;">${t.help_data || '📊 Data Management'}</h4>
-                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_data_desc || 'Adding data, editing values, importing/exporting'}</p>
+                <div style="text-align: left; line-height: 1.8;">
+                    <div style="display: grid; gap: 15px;">
+                        <div style="background: linear-gradient(135deg, rgba(52, 152, 219, 0.15) 0%, rgba(52, 152, 219, 0.05) 100%); 
+                                   border: 1px solid rgba(52, 152, 219, 0.3); padding: 16px; border-radius: 10px; cursor: pointer; 
+                                   transition: all 0.3s ease; backdrop-filter: blur(10px);" 
+                             onclick="showDataHelp()"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(52, 152, 219, 0.2)';"
+                             onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none';">
+                            <h4 style="margin: 0; color: #3498db; font-size: 16px;">${t.help_data || '📊 Data Management'}</h4>
+                            <p style="margin: 8px 0 0; font-size: 13px; color: rgba(244, 241, 222, 0.7);">${t.help_data_desc || 'Adding data, editing values, importing/exporting'}</p>
                         </div>
                         
-                        <div style="background: rgba(46, 204, 113, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showAnalyticsHelp()">
-                            <h4 style="margin: 0; color: #2ecc71;">${t.help_analytics || '📈 Analytics & Charts'}</h4>
-                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_analytics_desc || 'Understanding charts, forecasting, insights'}</p>
+                        <div style="background: linear-gradient(135deg, rgba(46, 204, 113, 0.15) 0%, rgba(46, 204, 113, 0.05) 100%); 
+                                   border: 1px solid rgba(46, 204, 113, 0.3); padding: 16px; border-radius: 10px; cursor: pointer; 
+                                   transition: all 0.3s ease; backdrop-filter: blur(10px);" 
+                             onclick="showAnalyticsHelp()"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(46, 204, 113, 0.2)';"
+                             onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none';">
+                            <h4 style="margin: 0; color: #2ecc71; font-size: 16px;">${t.help_analytics || '📈 Analytics & Charts'}</h4>
+                            <p style="margin: 8px 0 0; font-size: 13px; color: rgba(244, 241, 222, 0.7);">${t.help_analytics_desc || 'Understanding charts, forecasting, insights'}</p>
                         </div>
                         
-                        <div style="background: rgba(230, 126, 34, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showAccountHelp()">
-                            <h4 style="margin: 0; color: #e67e22;">${t.help_account || '👤 Account & Billing'}</h4>
-                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_account_desc || 'Subscription management, billing, account settings'}</p>
+                        <div style="background: linear-gradient(135deg, rgba(230, 126, 34, 0.15) 0%, rgba(230, 126, 34, 0.05) 100%); 
+                                   border: 1px solid rgba(230, 126, 34, 0.3); padding: 16px; border-radius: 10px; cursor: pointer; 
+                                   transition: all 0.3s ease; backdrop-filter: blur(10px);" 
+                             onclick="showAccountHelp()"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(230, 126, 34, 0.2)';"
+                             onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none';">
+                            <h4 style="margin: 0; color: #e67e22; font-size: 16px;">${t.help_account || '👤 Account & Billing'}</h4>
+                            <p style="margin: 8px 0 0; font-size: 13px; color: rgba(244, 241, 222, 0.7);">${t.help_account_desc || 'Subscription management, billing, account settings'}</p>
                         </div>
                         
-                        <div style="background: rgba(155, 89, 182, 0.1); padding: 12px; border-radius: 8px; cursor: pointer;" onclick="showTechnicalHelp()">
-                            <h4 style="margin: 0; color: #9b59b6;">${t.help_technical || '⚙️ Technical Support'}</h4>
-                            <p style="margin: 5px 0 0; font-size: 12px; color: rgba(255,255,255,0.7);">${t.help_technical_desc || 'Browser issues, performance, troubleshooting'}</p>
+                        <div style="background: linear-gradient(135deg, rgba(155, 89, 182, 0.15) 0%, rgba(155, 89, 182, 0.05) 100%); 
+                                   border: 1px solid rgba(155, 89, 182, 0.3); padding: 16px; border-radius: 10px; cursor: pointer; 
+                                   transition: all 0.3s ease; backdrop-filter: blur(10px);" 
+                             onclick="showTechnicalHelp()"
+                             onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 25px rgba(155, 89, 182, 0.2)';"
+                             onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='none';">
+                            <h4 style="margin: 0; color: #9b59b6; font-size: 16px;">${t.help_technical || '⚙️ Technical Support'}</h4>
+                            <p style="margin: 8px 0 0; font-size: 13px; color: rgba(244, 241, 222, 0.7);">${t.help_technical_desc || 'Browser issues, performance, troubleshooting'}</p>
                         </div>
                     </div>
                 </div>
@@ -10900,30 +11159,35 @@ function sanitizeKey(email) {
             showCustomModal(
                 t.faq_title || 'Frequently Asked Questions',
                 `
-                <div style="text-align: left; line-height: 1.6; max-height: 400px; overflow-y: auto;">
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #3498db; margin: 0 0 5px 0;">${t.faq_q1 || 'How do I add sales data?'}</h4>
-                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a1 || 'Click on any cell in the table to edit values directly. Use the "Add Category" button to create new product categories.'}</p>
+                <div style="text-align: left; line-height: 1.8; max-height: 400px; overflow-y: auto;">
+                    <div style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0.05) 100%); 
+                               border: 1px solid rgba(52, 152, 219, 0.2); padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #3498db; margin: 0 0 8px 0; font-size: 16px;">${t.faq_q1 || 'How do I add sales data?'}</h4>
+                        <p style="margin: 0; font-size: 14px; color: rgba(244, 241, 222, 0.8);">${t.faq_a1 || 'Click on any cell in the table to edit values directly. Use the "Add Category" button to create new product categories.'}</p>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #2ecc71; margin: 0 0 5px 0;">${t.faq_q2 || 'How accurate are the forecasts?'}</h4>
-                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a2 || 'Forecasts use advanced algorithms combining trend analysis, seasonal patterns, and historical data. Accuracy improves with more data.'}</p>
+                    <div style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0.05) 100%); 
+                               border: 1px solid rgba(46, 204, 113, 0.2); padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #2ecc71; margin: 0 0 8px 0; font-size: 16px;">${t.faq_q2 || 'How accurate are the forecasts?'}</h4>
+                        <p style="margin: 0; font-size: 14px; color: rgba(244, 241, 222, 0.8);">${t.faq_a2 || 'Forecasts use advanced algorithms combining trend analysis, seasonal patterns, and historical data. Accuracy improves with more data.'}</p>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #e67e22; margin: 0 0 5px 0;">${t.faq_q3 || 'Can I export my data?'}</h4>
-                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a3 || 'Yes, use the Export buttons to download your data in Excel or PDF format. Your data is also automatically saved.'}</p>
+                    <div style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(230, 126, 34, 0.1) 0%, rgba(230, 126, 34, 0.05) 100%); 
+                               border: 1px solid rgba(230, 126, 34, 0.2); padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #e67e22; margin: 0 0 8px 0; font-size: 16px;">${t.faq_q3 || 'Can I export my data?'}</h4>
+                        <p style="margin: 0; font-size: 14px; color: rgba(244, 241, 222, 0.8);">${t.faq_a3 || 'Yes, use the Export buttons to download your data in Excel or PDF format. Your data is also automatically saved.'}</p>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #9b59b6; margin: 0 0 5px 0;">${t.faq_q4 || 'What are Smart Insights?'}</h4>
-                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a4 || 'AI-powered analysis that identifies trends, opportunities, and potential issues in your business data automatically.'}</p>
+                    <div style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(155, 89, 182, 0.1) 0%, rgba(155, 89, 182, 0.05) 100%); 
+                               border: 1px solid rgba(155, 89, 182, 0.2); padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #9b59b6; margin: 0 0 8px 0; font-size: 16px;">${t.faq_q4 || 'What are Smart Insights?'}</h4>
+                        <p style="margin: 0; font-size: 14px; color: rgba(244, 241, 222, 0.8);">${t.faq_a4 || 'AI-powered analysis that identifies trends, opportunities, and potential issues in your business data automatically.'}</p>
                     </div>
                     
-                    <div style="margin-bottom: 15px;">
-                        <h4 style="color: #e74c3c; margin: 0 0 5px 0;">${t.faq_q5 || 'Is my business data secure?'}</h4>
-                        <p style="margin: 0; font-size: 13px; color: rgba(255,255,255,0.8);">${t.faq_a5 || 'Yes, all data is encrypted and stored securely. You can also work offline with local storage as backup.'}</p>
+                    <div style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(231, 76, 60, 0.1) 0%, rgba(231, 76, 60, 0.05) 100%); 
+                               border: 1px solid rgba(231, 76, 60, 0.2); padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #e74c3c; margin: 0 0 8px 0; font-size: 16px;">${t.faq_q5 || 'Is my business data secure?'}</h4>
+                        <p style="margin: 0; font-size: 14px; color: rgba(244, 241, 222, 0.8);">${t.faq_a5 || 'Yes, all data is encrypted and stored securely. You can also work offline with local storage as backup.'}</p>
                     </div>
                 </div>
                 `,
@@ -10936,22 +11200,42 @@ function sanitizeKey(email) {
             const modal = document.createElement('div');
             modal.style.cssText = `
                 position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-                background: rgba(0,0,0,0.8); z-index: 10000; display: flex; 
-                align-items: center; justify-content: center; backdrop-filter: blur(5px);
+                background: rgba(13, 20, 33, 0.95); z-index: 10000; display: flex; 
+                align-items: center; justify-content: center; backdrop-filter: blur(15px);
+                animation: modalFadeIn 0.3s ease-out;
             `;
             
             modal.innerHTML = `
-                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                           padding: 25px; border-radius: 15px; max-width: 500px; width: 90%; 
-                           max-height: 70vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
-                    <h2 style="margin: 0 0 20px 0; color: white; font-size: 18px; text-align: center;">${title}</h2>
-                    ${content}
-                    <div style="text-align: center; margin-top: 20px;">
+                <div style="background: linear-gradient(135deg, rgba(30, 39, 73, 0.95) 0%, rgba(13, 20, 33, 0.98) 50%, rgba(25, 32, 56, 0.95) 100%);
+                           backdrop-filter: blur(20px); border: 1px solid rgba(139, 69, 19, 0.3);
+                           padding: 35px; border-radius: 20px; max-width: 550px; width: 90%; 
+                           max-height: 80vh; overflow-y: auto; 
+                           box-shadow: 0 25px 80px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(139, 69, 19, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                           animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+                           position: relative; overflow: hidden;">
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 1px; 
+                               background: linear-gradient(90deg, transparent, rgba(139, 69, 19, 0.5), transparent);"></div>
+                    
+                    <h2 style="margin: 0 0 25px 0; color: #f4f1de; font-size: 22px; text-align: center; 
+                              font-weight: 600; text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+                              background: linear-gradient(135deg, #f4f1de, #e76f51); 
+                              -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+                              background-clip: text;">${title}</h2>
+                    <div style="color: rgba(244, 241, 222, 0.9); line-height: 1.7;">${content}</div>
+                    <div style="text-align: center; margin-top: 30px;">
                         <button onclick="this.closest('.modal-overlay').remove()" 
-                               style="background: rgba(255,255,255,0.2); color: white; border: none; 
-                                      padding: 10px 20px; border-radius: 8px; cursor: pointer; 
-                                      font-weight: 600; transition: all 0.3s ease;">
-                            ${buttonText}
+                               style="background: linear-gradient(135deg, #e76f51, #d62828);
+                                      color: #f4f1de; border: none; padding: 14px 32px; 
+                                      border-radius: 12px; cursor: pointer; font-weight: 600; 
+                                      font-size: 16px; transition: all 0.3s ease;
+                                      box-shadow: 0 8px 25px rgba(231, 111, 81, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+                                      position: relative; overflow: hidden;"
+                               onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 12px 35px rgba(231, 111, 81, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2)';"
+                               onmouseout="this.style.transform='translateY(0px)'; this.style.boxShadow='0 8px 25px rgba(231, 111, 81, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2)';">
+                            <span style="position: relative; z-index: 1;">${buttonText}</span>
+                            <div style="position: absolute; top: 0; left: -100%; width: 100%; height: 100%; 
+                                       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+                                       transition: left 0.6s ease; z-index: 0;"></div>
                         </button>
                     </div>
                 </div>
@@ -10959,8 +11243,38 @@ function sanitizeKey(email) {
             
             modal.className = 'modal-overlay';
             modal.onclick = (e) => {
-                if (e.target === modal) modal.remove();
+                if (e.target === modal) {
+                    modal.style.animation = 'modalFadeOut 0.3s ease-in forwards';
+                    setTimeout(() => modal.remove(), 300);
+                }
             };
+            
+            // Add keyframes for animations if not already present
+            if (!document.querySelector('#modal-animations-style')) {
+                const style = document.createElement('style');
+                style.id = 'modal-animations-style';
+                style.textContent = `
+                    @keyframes modalFadeIn {
+                        from { opacity: 0; }
+                        to { opacity: 1; }
+                    }
+                    @keyframes modalFadeOut {
+                        from { opacity: 1; }
+                        to { opacity: 0; }
+                    }
+                    @keyframes modalSlideUp {
+                        from { 
+                            opacity: 0; 
+                            transform: translateY(50px) scale(0.9); 
+                        }
+                        to { 
+                            opacity: 1; 
+                            transform: translateY(0px) scale(1); 
+                        }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
             
             document.body.appendChild(modal);
         }

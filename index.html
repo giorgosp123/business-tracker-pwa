@@ -1,6 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Force Dark Mode Script -->
+    <script>
+        document.documentElement.classList.add('dark-mode');
+        if (document.body) {
+            document.body.classList.add('dark-mode');
+        } else {
+            document.addEventListener('DOMContentLoaded', function() {
+                document.body.classList.add('dark-mode');
+            });
+        }
+    </script>
+    
     <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
@@ -26,14 +38,14 @@
             position: relative;
         }
         
-        /* Animated gradient background */
+        /* Force Dark Mode Background */
         .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd);
+            background: linear-gradient(45deg, #2c3e50, #34495e, #1a252f, #2c3e50, #34495e, #1a252f);
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
             z-index: -2;
@@ -440,6 +452,11 @@
                 particlesContainer.appendChild(particle);
             }
         }
+        
+        // Initialize particles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+        });
         
         // Form management
         let isRegisterMode = false;
