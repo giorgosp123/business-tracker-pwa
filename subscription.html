@@ -2168,16 +2168,7 @@
                 border-radius: 10px;
             }
 
-            .notification {
-                bottom: 15px;
-                left: 10px;
-                right: 10px;
-                width: auto;
-                border-radius: 12px;
-                padding: 12px;
-                max-width: none;
-                min-width: auto;
-            }
+            /* Removed duplicate notification styling - conflicts with main mobile notifications */
 
             .notification-content {
                 padding: 8px;
@@ -2594,85 +2585,9 @@
             }
         }
 
-        /* Notification System - Same as dashboard */
-        .notification {
-            position: fixed;
-            top: 30px;
-            left: 30px;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            color: #333;
-            padding: 20px 25px;
-            border-radius: 15px;
-            box-shadow:
-                0 20px 25px -5px rgba(0, 0, 0, 0.1),
-                0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            z-index: 10000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-            max-width: 350px;
-            min-width: 300px;
-        }
-
-        .notification.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .notification.success {
-            border-left: 4px solid #2ecc71;
-        }
-
-        .notification.error {
-            border-left: 4px solid #e74c3c;
-        }
-
-        .notification.warning {
-            border-left: 4px solid #f39c12;
-        }
-
-        .notification.info {
-            border-left: 4px solid #3498db;
-        }
-
-        .notification .notification-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .notification .notification-icon {
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-
-        .notification .notification-text {
-            flex: 1;
-            font-weight: 600;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        /* Dark mode notifications */
-        body.dark-mode .notification {
-            background: rgba(44, 62, 80, 0.95);
-            color: #ecf0f1;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Mobile notifications */
-        @media (max-width: 768px) {
-            .notification {
-                top: 20px;
-                left: 20px;
-                right: 20px;
-                max-width: none;
-                min-width: auto;
-            }
-        }
-        /* General Mobile Optimizations */
+        /* Removed duplicated notification system - main notification system already exists above */
+        
+        /* Enhanced Mobile Experience - More Functional */
         @media (max-width: 768px) {
             /* Improve touch interactions */
             * {
@@ -2682,58 +2597,211 @@
                 -moz-user-select: none;
                 -ms-user-select: none;
                 user-select: none;
+                -webkit-tap-highlight-color: transparent;
             }
             
-            input, textarea, button {
+            input, textarea, button, select {
                 -webkit-user-select: auto;
                 -moz-user-select: auto;
                 -ms-user-select: auto;
                 user-select: auto;
             }
             
-            /* Prevent zoom on focus */
+            /* Prevent zoom on focus - critical for mobile */
             input, select, textarea {
                 font-size: 16px !important;
+                max-width: 100%;
+                box-sizing: border-box;
             }
             
-            /* Optimize scrolling */
+            /* Optimize scrolling and performance */
             body {
                 -webkit-overflow-scrolling: touch;
                 scroll-behavior: smooth;
+                touch-action: manipulation;
+                overscroll-behavior-y: contain;
             }
             
-            /* Improve tap targets */
-            button, .cta-button, .cancel-button, .back-button {
-                min-height: 44px;
-                min-width: 44px;
+            /* Enhance viewport and container for mobile */
+            .container {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 15px !important;
+                border-radius: 0 !important;
+                min-height: 100vh;
+                box-sizing: border-box;
+            }
+            
+            /* Improve touch targets - minimum 44px (Apple/Google guidelines) */
+            button, .cta-button, .cancel-button, .back-button, .modal-btn,
+            input[type="submit"], input[type="button"], .payment-submit {
+                min-height: 48px !important;
+                min-width: 48px !important;
+                padding: 12px 20px !important;
+                border-radius: 12px !important;
+                font-size: 16px !important;
+                font-weight: 600 !important;
+                cursor: pointer !important;
+                touch-action: manipulation !important;
+                user-select: none !important;
+                -webkit-user-select: none !important;
+                position: relative !important;
+                overflow: hidden !important;
+                transition: all 0.2s ease !important;
+            }
+            
+            /* Enhanced button interactions */
+            button:active, .cta-button:active, .cancel-button:active,
+            .back-button:active, .modal-btn:active {
+                transform: scale(0.96) !important;
+                transition: transform 0.1s ease !important;
+            }
+            
+            /* Better form controls */
+            select, input[type="text"], input[type="email"], input[type="password"],
+            input[type="number"], textarea {
+                min-height: 48px !important;
+                padding: 12px 16px !important;
+                border-radius: 8px !important;
+                font-size: 16px !important;
+                border: 2px solid rgba(0,0,0,0.1) !important;
+                box-sizing: border-box !important;
+                width: 100% !important;
+                background: rgba(255,255,255,0.9) !important;
+                transition: all 0.2s ease !important;
+            }
+            
+            /* Focus states for accessibility */
+            select:focus, input:focus, textarea:focus {
+                outline: 3px solid rgba(0,123,255,0.5) !important;
+                outline-offset: 2px !important;
+                border-color: #007bff !important;
+            }
+            
+            /* Spacing improvements */
+            .plan-card {
+                margin: 20px 0 !important;
+                padding: 24px 20px !important;
+            }
+            
+            /* Typography optimization */
+            h1, h2, h3 {
+                line-height: 1.3 !important;
+                margin-bottom: 16px !important;
+            }
+            
+            p, .description {
+                line-height: 1.5 !important;
+                margin-bottom: 16px !important;
             }
         }
 
         @media (max-width: 480px) {
             /* Extra small screens optimizations */
-            .subscription-container:hover {
-                transform: none; /* Disable hover effects on mobile */
-            }
-            
-            .plan-card:hover {
-                transform: none;
-            }
-            
-            .feature-item:hover {
-                transform: none;
+            .subscription-container:hover, .plan-card:hover, .feature-item:hover {
+                transform: none !important; /* Disable hover effects on mobile */
             }
             
             /* Disable complex animations on small screens for performance */
-            .logo::after {
-                display: none;
+            .logo::after, .feature-icon {
+                animation: none !important;
             }
             
-            .feature-icon {
-                animation: none;
+            /* Ultra-compact layout */
+            .container {
+                padding: 10px !important;
+            }
+            
+            .plan-card {
+                padding: 20px 16px !important;
+                margin: 15px 0 !important;
+            }
+            
+            button, .cta-button, .modal-btn {
+                min-height: 44px !important;
+                padding: 10px 16px !important;
+                font-size: 15px !important;
+            }
+            
+            h1 { font-size: 24px !important; }
+            h2 { font-size: 20px !important; }
+            h3 { font-size: 18px !important; }
+            
+            /* Better modal experience */
+            .modal-content {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 5% auto !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
             }
         }
 
-        /* Landscape mobile adjustments */
+        /* Landscape Mode Optimizations */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .container {
+                padding: 10px 20px !important;
+            }
+            
+            .plan-card {
+                margin: 10px 0 !important;
+                padding: 20px !important;
+            }
+            
+            /* Compact header in landscape */
+            h1 {
+                font-size: 28px !important;
+                margin-bottom: 12px !important;
+            }
+            
+            /* Side-by-side layout for landscape when space allows */
+            .subscription-container {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 15px;
+            }
+            
+            .plan-card {
+                flex: 1;
+                min-width: 280px;
+            }
+            
+            /* Better modal positioning in landscape */
+            .modal-content {
+                width: 80% !important;
+                max-width: 600px !important;
+                margin: 5% auto !important;
+                max-height: 85vh !important;
+            }
+        }
+
+        /* Performance optimizations for mobile */
+        @media (max-width: 768px) {
+            /* Hardware acceleration for smooth scrolling */
+            * {
+                -webkit-transform: translateZ(0);
+                transform: translateZ(0);
+                backface-visibility: hidden;
+                perspective: 1000px;
+            }
+            
+            /* Optimize animations */
+            .plan-card, button, .modal-content {
+                will-change: transform;
+            }
+            
+            /* Reduce motion for users who prefer it */
+            @media (prefers-reduced-motion: reduce) {
+                * {
+                    animation-duration: 0.01ms !important;
+                    animation-iteration-count: 1 !important;
+                    transition-duration: 0.01ms !important;
+                }
+            }
+        }
+
+        /* Additional Landscape mobile adjustments */
         @media (max-width: 768px) and (orientation: landscape) {
             .subscription-container {
                 margin: 5px auto;
@@ -2770,6 +2838,47 @@
             
             .subtitle {
                 font-size: 13px;
+            }
+        }
+
+        /* Enhanced Mobile Navigation Features */
+        @media (max-width: 768px) {
+            /* Mobile back-to-top button for better navigation */
+            .back-to-top {
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                background: linear-gradient(135deg, #667eea, #764ba2);
+                color: white;
+                border: none;
+                font-size: 18px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+                cursor: pointer;
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                touch-action: manipulation;
+            }
+            
+            .back-to-top.show {
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            .back-to-top:active {
+                transform: scale(0.95);
+            }
+            
+            /* Better scroll indication */
+            body {
+                scroll-padding-top: 20px;
             }
         }
     </style>
@@ -4673,6 +4782,125 @@
             }
         `;
         document.head.appendChild(style);
+
+        // Mobile back-to-top button functionality
+        const backToTopBtn = document.createElement('button');
+        backToTopBtn.innerHTML = '↑';
+        backToTopBtn.className = 'back-to-top';
+        backToTopBtn.setAttribute('aria-label', 'Back to top');
+        document.body.appendChild(backToTopBtn);
+
+        // Show/hide back-to-top button
+        let ticking = false;
+        function updateBackToTop() {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
+            ticking = false;
+        }
+
+        function requestUpdateBackToTop() {
+            if (!ticking) {
+                requestAnimationFrame(updateBackToTop);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestUpdateBackToTop, { passive: true });
+
+        // Back-to-top click handler
+        backToTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Enhanced mobile touch feedback and UX improvements
+        if (window.innerWidth <= 768) {
+            // Add haptic feedback for touch devices (when available)
+            document.addEventListener('touchstart', function(e) {
+                if (e.target.matches('button, .cta-button, .cancel-button, .back-button, .modal-btn')) {
+                    if ('vibrate' in navigator) {
+                        navigator.vibrate(10); // Light haptic feedback
+                    }
+                    // Visual feedback
+                    e.target.style.transform = 'scale(0.98)';
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchend', function(e) {
+                if (e.target.matches('button, .cta-button, .cancel-button, .back-button, .modal-btn')) {
+                    // Reset visual feedback
+                    setTimeout(() => {
+                        e.target.style.transform = '';
+                    }, 100);
+                }
+            }, { passive: true });
+
+            // Optimize focus management for mobile forms
+            document.addEventListener('focusin', function(e) {
+                if (e.target.matches('input, textarea, select')) {
+                    setTimeout(() => {
+                        e.target.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'center' 
+                        });
+                    }, 300); // Wait for mobile keyboard animation
+                }
+            });
+
+            // Prevent double-tap zoom on buttons
+            let lastTouchEnd = 0;
+            document.addEventListener('touchend', function(e) {
+                const now = (new Date()).getTime();
+                if (now - lastTouchEnd <= 300) {
+                    e.preventDefault();
+                }
+                lastTouchEnd = now;
+            }, false);
+
+            // Add swipe gesture support for modal dismissal
+            let startY = 0;
+            let startX = 0;
+            
+            document.addEventListener('touchstart', function(e) {
+                if (e.target.closest('.modal-content')) {
+                    startY = e.touches[0].clientY;
+                    startX = e.touches[0].clientX;
+                }
+            }, { passive: true });
+
+            document.addEventListener('touchmove', function(e) {
+                if (e.target.closest('.modal-content')) {
+                    const currentY = e.touches[0].clientY;
+                    const currentX = e.touches[0].clientX;
+                    const diffY = startY - currentY;
+                    const diffX = startX - currentX;
+                    
+                    // Swipe down to dismiss modal
+                    if (diffY < -100 && Math.abs(diffX) < 50) {
+                        const modal = e.target.closest('.modal');
+                        if (modal && modal.style.display !== 'none') {
+                            modal.style.display = 'none';
+                        }
+                    }
+                }
+            }, { passive: true });
+
+            // Performance optimization: reduce repaints on scroll
+            let scrollTimer = null;
+            window.addEventListener('scroll', function() {
+                if (scrollTimer !== null) {
+                    clearTimeout(scrollTimer);        
+                }
+                scrollTimer = setTimeout(function() {
+                    // Trigger any scroll-based updates here
+                }, 150);
+            }, { passive: true });
+        }
     </script>
 </body>
 </html>
