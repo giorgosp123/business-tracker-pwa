@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Force Dark Mode Script -->
-    <script>
-        document.documentElement.classList.add('dark-mode');
-        if (document.body) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.addEventListener('DOMContentLoaded', function() {
-                document.body.classList.add('dark-mode');
-            });
-        }
-    </script>
-    
     <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
 <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
@@ -31,30 +19,22 @@
         
         body {
             font-family: 'Inter', sans-serif;
-            background: #0a0a0a;
-            color: #ffffff;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
+            color: #f5f6fa;
             overflow-x: hidden;
             min-height: 100vh;
             position: relative;
         }
         
-        /* Force Dark Mode Background */
+        /* Background */
         .background {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(45deg, #2c3e50, #34495e, #1a252f, #2c3e50, #34495e, #1a252f);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
             z-index: -2;
-        }
-        
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
         }
         
         /* Glassmorphism overlay */
@@ -64,7 +44,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(44, 62, 80, 0.45);
             backdrop-filter: blur(10px);
             z-index: -1;
         }
@@ -84,7 +64,7 @@
             position: absolute;
             width: 4px;
             height: 4px;
-            background: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 50%;
             animation: float 20s infinite linear;
         }
@@ -118,14 +98,14 @@
         }
         
         .login-card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(44, 62, 80, 0.85);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 24px;
             padding: 48px;
             width: 100%;
             max-width: 440px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
             position: relative;
             overflow: hidden;
             transition: all 0.5s ease;
@@ -145,7 +125,7 @@
         
         .login-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 35px 70px rgba(0, 0, 0, 0.35);
         }
         
         .login-card::before {
@@ -155,7 +135,7 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
             animation: shimmer 3s ease-in-out infinite;
         }
         
@@ -186,7 +166,7 @@
             font-size: 32px;
             font-weight: 800;
             margin-bottom: 8px;
-            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            background: linear-gradient(135deg, #f5f6fa, #bdc3c7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -195,15 +175,15 @@
         
         .app-subtitle {
             font-size: 16px;
-            color: rgba(255, 255, 255, 0.7);
+            color: #f5f6fa;
             font-weight: 400;
         }
         
         .form-title {
-             font-size: 28 px;
+            font-size: 28px;
             font-weight: 700;
             margin-bottom: 32px;
-            background: linear-gradient(135deg, #ffffff, #f0f0f0);
+            background: linear-gradient(135deg, #f5f6fa, #bdc3c7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -220,10 +200,10 @@
         .input-group input {
             width: 100%;
             padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(44, 62, 80, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: 16px;
-            color: #ffffff;
+            color: #f5f6fa;
             font-size: 16px;
             font-weight: 400;
             transition: all 0.3s ease;
@@ -236,10 +216,10 @@
         }
         
         .input-group input:focus {
-            border-color: rgba(255, 255, 255, 0.6);
-            background: rgba(255, 255, 255, 0.15);
+            border-color: #f5f6fa;
+            background: rgba(44, 62, 80, 0.9);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
         
         .input-group::before {
@@ -264,10 +244,10 @@
         .submit-btn {
             width: 100%;
             padding: 16px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #232526 0%, #414345 100%);
             border: none;
             border-radius: 16px;
-            color: white;
+            color: #f5f6fa;
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
@@ -286,7 +266,7 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
             transition: left 0.7s ease;
         }
         
@@ -307,7 +287,7 @@
         .toggle-link {
             display: block;
             text-align: center;
-            color: rgba(255, 255, 255, 0.8);
+            color: #f5f6fa;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -329,7 +309,7 @@
         }
         
         .toggle-link:hover {
-            color: #ffffff;
+            color: #f5f6fa;
             transform: translateY(-2px);
         }
         
@@ -356,30 +336,29 @@
         }
         
         .message.success {
-            background: rgba(76, 175, 80, 0.2);
-            border: 1px solid rgba(76, 175, 80, 0.4);
-            color: #4caf50;
+            background: rgba(76, 175, 80, 0.18);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #b6ffb0;
         }
         
         .message.error {
-            background: rgba(244, 67, 54, 0.2);
-            border: 1px solid rgba(244, 67, 54, 0.4);
-            color: #f44336;
+            background: rgba(244, 67, 54, 0.18);
+            border: 1px solid rgba(244, 67, 54, 0.3);
+            color: #ffb6b0;
         }
         
         /* Responsive design */
         @media (max-width: 480px) {
             .login-card {
-                padding: 32px 24px;
-                margin: 20px;
+                padding: 24px 10px;
+                margin: 10px;
+                background: rgba(44, 62, 80, 0.95);
             }
-            
             .app-title {
-                font-size: 28px;
-            }
-            
-            .form-title {
                 font-size: 24px;
+            }
+            .form-title {
+                font-size: 20px;
             }
         }
         
