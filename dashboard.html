@@ -5742,6 +5742,85 @@
     </div>
 
     <script>
+// Premium feature buttons/sections
+const premiumFeatureButtons = [
+    'goalsBtn', // Στόχοι & Targets
+    'chartCategory', // Έξυπνες Προτάσεις AI (select)
+    'chartTitle', // Προηγμένα Αναλυτικά Στοιχεία
+    'forecastPeriod' // AI Πρόβλεψη (select)
+];
+
+function isTrialActive() {
+    const trialActive = localStorage.getItem('freeTrialActive');
+    const trialEndDate = localStorage.getItem('freeTrialEndDate');
+    if (trialActive === 'true' && trialEndDate) {
+        const endDate = new Date(trialEndDate);
+        const now = new Date();
+        return now < endDate;
+    }
+    return false;
+}
+
+function applyPremiumLocks() {
+    const unlocked = isTrialActive();
+    premiumFeatureButtons.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        // Remove previous lock
+        if (el._lockClickHandler) {
+            el.removeEventListener('click', el._lockClickHandler, true);
+            el._lockClickHandler = null;
+        }
+        if (unlocked) {
+            if ('disabled' in el) el.disabled = false;
+            el.classList.remove('locked-feature');
+            el.title = '';
+            if (el._originalClick) {
+                el.click = el._originalClick;
+                el._originalClick = null;
+            }
+        } else {
+            if ('disabled' in el) el.disabled = true;
+            el.classList.add('locked-feature');
+            el.title = 'Ξεκλειδώνει με δωρεάν δοκιμή';
+            if (!('disabled' in el)) {
+                el._lockClickHandler = function(e) {
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    e.preventDefault();
+                    if (typeof showNotification === 'function') {
+                        showNotification('Αυτή η λειτουργία είναι κλειδωμένη. Ξεκλειδώνει με δωρεάν δοκιμή.', 'warning');
+                    }
+                    return false;
+                };
+                el.addEventListener('click', el._lockClickHandler, true);
+                if (!el._originalClick) {
+                    el._originalClick = el.click;
+                }
+                el.click = function() {
+                    if (typeof showNotification === 'function') {
+                        showNotification('Αυτή η λειτουργία είναι κλειδωμένη. Ξεκλειδώνει με δωρεάν δοκιμή.', 'warning');
+                    }
+                };
+            }
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    applyPremiumLocks();
+});
+
+window.refreshSubscriptionStatus = function() {
+    applyPremiumLocks();
+}
+
+// Listen for trial cancel or activation from subscription.html
+window.addEventListener('storage', function(e) {
+    if (e.key === 'freeTrialActive' || e.key === 'freeTrialEndDate') {
+        applyPremiumLocks();
+    }
+});
         // Create floating particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
