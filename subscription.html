@@ -16,6 +16,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Premium Συνδρομή - Business Tracker</title>
+    
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
     <style>
         * {
             margin: 0;
@@ -1655,6 +1658,104 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Additional Stripe Payment Styles */
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s ease;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .close-modal:hover {
+            background: rgba(0, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+
+        .price-display {
+            font-size: 20px;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .payment-loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .payment-loading p {
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+
+        .payment-loading .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+        }
+
+        .payment-errors {
+            background: #ffe6e6;
+            border: 1px solid #ffcccc;
+            color: #d32f2f;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .button-spinner {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trial-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .trial-info p {
+            margin: 0;
+            padding: 10px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 8px;
+        }
+
+        .secure-icon {
+            font-size: 16px;
+        }
+
         /* Enhanced Dark Mode Styles for Payment Modal */
         body.dark-mode .payment-container {
             background: linear-gradient(145deg, rgba(44, 62, 80, 0.98), rgba(52, 73, 94, 0.95));
@@ -2881,8 +2982,10 @@
         - Webhook endpoint to handle payment events
         */
 
-        // Payment Configuration
-        // Payment system will be integrated here
+        // Payment Configuration - STRIPE INTEGRATION
+        // Replace with your actual Stripe publishable key
+        const STRIPE_PUBLISHABLE_KEY = 'pk_test_your_stripe_publishable_key_here';
+        let stripe;
         let elements;
         let paymentElement;
 
@@ -4073,6 +4176,14 @@
         }
 
         function showPaymentModal(lang) {
+            console.log('💳 Showing Stripe payment modal...');
+            
+            // Remove any existing modal
+            const existingModal = document.getElementById('paymentModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
             // Create payment modal
             const paymentModal = document.createElement('div');
             paymentModal.className = 'payment-modal';
@@ -4081,32 +4192,127 @@
             paymentModal.innerHTML = `
                 <div class="payment-container">
                     <div class="payment-header">
-                        <h2 class="payment-title">${translations[lang].paymentTitle}</h2>
-                        <p class="payment-subtitle">${translations[lang].paymentSubtitle}</p>
+                        <div class="close-modal" onclick="closePaymentModal()">&times;</div>
+                        <h2 class="payment-title">${translations[lang].paymentTitle || 'Complete Your Payment'}</h2>
+                        <p class="payment-subtitle">${translations[lang].paymentSubtitle || 'Secure payment processed by Stripe'}</p>
+                        <div class="price-display">€12.99/month</div>
                     </div>
                     
                     <form id="payment-form">
+                        <!-- Stripe Payment Element will be mounted here -->
                         <div id="payment-element" class="payment-element">
-                            <!-- Payment elements will be created here -->
+                            <div class="payment-loading">
+                                <div class="spinner"></div>
+                                <p>Loading secure payment form...</p>
+                            </div>
                         </div>
                         
+                        <div id="payment-errors" class="payment-errors" style="display: none;"></div>
+                        
                         <div class="secure-badge">
-                            ${translations[lang].securePayment}
+                            <span class="secure-icon">🔒</span>
+                            ${translations[lang].securePayment || 'Secure payment powered by Stripe'}
                         </div>
                         
                         <div class="payment-buttons">
-                            <button type="submit" id="submit-payment" class="payment-submit">
-                                ${translations[lang].paymentSubmit}
+                            <button type="submit" id="submit-payment" class="payment-submit" disabled>
+                                <span class="button-text">${translations[lang].paymentSubmit || 'Start Free Trial'}</span>
+                                <span class="button-spinner" style="display: none;">
+                                    <div class="spinner"></div>
+                                </span>
                             </button>
                             <button type="button" class="payment-cancel" onclick="closePaymentModal()">
-                                ${translations[lang].paymentCancel}
+                                ${translations[lang].paymentCancel || 'Cancel'}
                             </button>
+                        </div>
+                        
+                        <div class="trial-info">
+                            <p>🎁 ${translations[lang].trialInfo || '3 days free trial, then €12.99/month. Cancel anytime.'}</p>
                         </div>
                     </form>
                 </div>
             `;
             
             document.body.appendChild(paymentModal);
+            
+            // Add form submission handler
+            setupPaymentFormHandler();
+            
+            console.log('✅ Payment modal created and ready for Stripe integration');
+        }
+
+        function setupPaymentFormHandler() {
+            const form = document.getElementById('payment-form');
+            const submitButton = document.getElementById('submit-payment');
+            
+            if (!form || !submitButton) return;
+            
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                const currentLang = localStorage.getItem('language') || 'el';
+                
+                // Disable submit button and show loading
+                submitButton.disabled = true;
+                submitButton.querySelector('.button-text').style.display = 'none';
+                submitButton.querySelector('.button-spinner').style.display = 'inline-flex';
+                
+                try {
+                    if (!stripe || !elements) {
+                        // For demo mode when Stripe is not configured
+                        showNotification(
+                            '🚀 ' + (currentLang === 'el' ? 'Demo Mode: Ενεργοποίηση συνδρομής...' : 'Demo Mode: Activating subscription...'), 
+                            'info', 
+                            3000
+                        );
+                        
+                        setTimeout(async () => {
+                            await processSuccessfulPayment(currentLang);
+                        }, 2000);
+                        return;
+                    }
+                    
+                    // Confirm payment with Stripe
+                    const {error} = await stripe.confirmPayment({
+                        elements,
+                        confirmParams: {
+                            return_url: window.location.origin + '/subscription.html?success=true',
+                        },
+                        redirect: 'if_required'
+                    });
+
+                    if (error) {
+                        // Show error to customer
+                        showPaymentError(error.message);
+                    } else {
+                        // Payment succeeded
+                        await processSuccessfulPayment(currentLang);
+                    }
+                    
+                } catch (error) {
+                    console.error('Payment submission error:', error);
+                    showPaymentError(error.message);
+                } finally {
+                    // Re-enable submit button
+                    submitButton.disabled = false;
+                    submitButton.querySelector('.button-text').style.display = 'inline';
+                    submitButton.querySelector('.button-spinner').style.display = 'none';
+                }
+            });
+        }
+
+        function showPaymentError(message) {
+            const errorElement = document.getElementById('payment-errors');
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.style.display = 'block';
+                
+                // Hide error after 5 seconds
+                setTimeout(() => {
+                    errorElement.style.display = 'none';
+                }, 5000);
+            }
+        }
             
             // Apply dark mode if active
             if (document.body.classList.contains('dark-mode')) {
@@ -4391,23 +4597,158 @@
         }
 
         async function processRealPayment(lang) {
-            // Placeholder for real payment processing
-            // const {error, paymentIntent} = await paymentSystem.confirmPayment({
-            //     elements,
-            //     confirmParams: {
-            //         return_url: window.location.href,
-            //     },
-            //     redirect: 'if_required'
-            // });
+            console.log('💳 Starting Stripe payment process...');
+            
+            try {
+                // Initialize Stripe if not already done
+                if (!stripe) {
+                    stripe = Stripe(STRIPE_PUBLISHABLE_KEY);
+                    console.log('✅ Stripe initialized');
+                }
 
-            // For now, show message that payment system needs to be integrated
-            throw new Error('Payment system integration required');
+                // Create Payment Intent on your backend
+                const paymentIntentResponse = await createPaymentIntent();
+                
+                if (!paymentIntentResponse.clientSecret) {
+                    throw new Error('Failed to create payment intent');
+                }
 
-            if (paymentIntent.status === 'succeeded') {
-                await processSuccessfulPayment(lang);
-            } else {
-                throw new Error('Payment not completed');
+                console.log('✅ Payment Intent created');
+                
+                // Setup Stripe Elements for payment
+                await setupStripeElements(paymentIntentResponse.clientSecret);
+                
+                // Confirm payment with Stripe
+                const paymentResult = await confirmStripePayment();
+                
+                if (paymentResult && paymentResult.paymentIntent) {
+                    if (paymentResult.paymentIntent.status === 'succeeded') {
+                        await processSuccessfulPayment(lang);
+                    } else {
+                        throw new Error('Payment not completed. Status: ' + paymentResult.paymentIntent.status);
+                    }
+                } else {
+                    throw new Error('Payment processing failed');
+                }
+                
+            } catch (error) {
+                console.error('❌ Stripe payment error:', error);
+                
+                // For demo purposes when backend is not configured
+                if (error.message.includes('Backend not configured') || 
+                    error.message === 'Payment system integration required') {
+                    
+                    showNotification(
+                        '🚀 ' + (lang === 'el' ? 'Demo Mode: Ενεργοποίηση συνδρομής...' : 'Demo Mode: Activating subscription...'), 
+                        'info', 
+                        3000
+                    );
+                    
+                    // Simulate successful payment after delay
+                    setTimeout(async () => {
+                        await processSuccessfulPayment(lang);
+                    }, 2000);
+                    
+                    return;
+                }
+                
+                throw error; // Re-throw to be handled by parent function
             }
+        }
+
+        // Create Payment Intent (requires backend)
+        async function createPaymentIntent() {
+            console.log('🔄 Creating payment intent with backend...');
+            
+            // Replace with your actual backend endpoint
+            const backendUrl = '/api/create-payment-intent'; 
+            
+            try {
+                const response = await fetch(backendUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        priceId: 'price_1234567890abcdef', // Replace with your Stripe Price ID
+                        trialDays: 3,
+                        currency: 'eur',
+                        customerId: localStorage.getItem('customerId') || null
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Backend not configured');
+                }
+
+                const data = await response.json();
+                console.log('✅ Payment Intent created:', data);
+                return data;
+                
+            } catch (error) {
+                console.log('⚠️ Backend not available, using demo mode');
+                throw new Error('Backend not configured - using demo mode');
+            }
+        }
+
+        // Setup Stripe Elements for payment
+        async function setupStripeElements(clientSecret) {
+            console.log('🎨 Setting up Stripe Elements...');
+            
+            const options = {
+                clientSecret: clientSecret,
+                appearance: {
+                    theme: document.body.classList.contains('dark-mode') ? 'night' : 'stripe',
+                    variables: {
+                        colorPrimary: '#667eea',
+                        colorBackground: document.body.classList.contains('dark-mode') ? '#2c3e50' : '#ffffff',
+                        colorText: document.body.classList.contains('dark-mode') ? '#ecf0f1' : '#424770',
+                        colorDanger: '#e74c3c',
+                        fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+                        spacingUnit: '4px',
+                        borderRadius: '8px'
+                    }
+                }
+            };
+
+            elements = stripe.elements(options);
+            
+            // Create payment element
+            paymentElement = elements.create('payment');
+            
+            // Mount to DOM element in modal
+            const paymentElementContainer = document.getElementById('payment-element');
+            if (paymentElementContainer) {
+                paymentElement.mount('#payment-element');
+                console.log('✅ Stripe Payment Element mounted');
+            } else {
+                console.log('⚠️ Payment element container not found');
+            }
+        }
+
+        // Confirm Stripe Payment
+        async function confirmStripePayment() {
+            console.log('🔐 Confirming Stripe payment...');
+            
+            if (!stripe || !elements) {
+                throw new Error('Stripe not properly initialized');
+            }
+
+            const {error, paymentIntent} = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: window.location.origin + '/subscription.html?success=true',
+                },
+                redirect: 'if_required'
+            });
+
+            if (error) {
+                console.error('❌ Stripe confirmation error:', error);
+                throw new Error(error.message);
+            }
+
+            console.log('✅ Payment confirmed successfully');
+            return { paymentIntent };
         }
 
         async function processSuccessfulPayment(lang) {
