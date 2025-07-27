@@ -6858,7 +6858,6 @@ window.refreshSubscriptionStatus = function() {
                 localStorage.setItem('salesData', JSON.stringify(salesData));
                 localStorage.setItem('salesData_backup', JSON.stringify(salesData));
                 localStorage.setItem('salesData_timestamp', new Date().toISOString());
-                localStorage.setItem('lastDataChange', Date.now().toString()); // Track when data was changed
                 console.log('✅ Data saved to localStorage');
                 return true;
             } catch (error) {
@@ -9838,9 +9837,6 @@ function loadFromFirebase() {
         
         // Then sync with Firebase in background
         syncWithFirebase(username);
-        
-        // Setup real-time listener for updates
-        setupFirebaseListener(username);
         return;
     }
     
@@ -9850,11 +9846,8 @@ function loadFromFirebase() {
         console.log('Data from Firebase:', data);
         
         if (data && Object.keys(data).length > 0) {
-            // Filter out metadata when loading
-            Object.keys(data).forEach(key => {
-                if (key !== 'lastUpdated' && key !== 'deviceType' && data[key]) {
-                    salesData[key] = data[key];
-                }
+            Object.keys(data).forEach(year => {
+                salesData[year] = data[year];
             });
             console.log('✅ Data loaded from Firebase');
             validateDataConsistency();
@@ -9865,9 +9858,6 @@ function loadFromFirebase() {
         }
         
         initializeUI();
-        
-        // Setup real-time listener for future updates
-        setupFirebaseListener(username);
     }).catch(error => {
         console.error('Firebase load error:', error);
         console.log('🔄 Falling back to sample data');
@@ -9881,39 +9871,9 @@ function syncWithFirebase(username) {
     try {
         firebase.database().ref('salesData/' + username).once('value').then(snapshot => {
             const firebaseData = snapshot.val();
-            if (firebaseData && Object.keys(firebaseData).length > 0) {
-                console.log('🔄 Firebase data found, merging...');
-                
-                // Merge Firebase data with local data
-                let hasChanges = false;
-                Object.keys(firebaseData).forEach(year => {
-                    if (!salesData[year]) {
-                        salesData[year] = firebaseData[year];
-                        hasChanges = true;
-                        console.log(`📥 Added year ${year} from Firebase`);
-                    } else {
-                        // Merge categories for existing years
-                        Object.keys(firebaseData[year]).forEach(category => {
-                            if (!salesData[year][category]) {
-                                salesData[year][category] = firebaseData[year][category];
-                                hasChanges = true;
-                                console.log(`📥 Added category ${category} for year ${year} from Firebase`);
-                            }
-                        });
-                    }
-                });
-                
-                if (hasChanges) {
-                    console.log('✅ Data merged from Firebase');
-                    saveToLocalStorage();
-                    renderTable();
-                    updateChart();
-                    populateYearDropdown();
-                }
-                
+            if (firebaseData) {
+                // Compare timestamps or merge data if needed
                 console.log('🔄 Background sync with Firebase completed');
-            } else {
-                console.log('🔄 No Firebase data to sync');
             }
         }).catch(error => {
             console.warn('Background Firebase sync failed:', error);
@@ -10095,172 +10055,21 @@ function initializeUI() {
             console.log('Saving to Firebase with username:', username);
             console.log('Data being saved:', salesData);
             
-            // Always save to localStorage first (immediate)
+            // Αποθήκευση στο Firebase
+            firebase.database().ref('salesData/' + username).set(salesData).then(() => {
+                console.log('✅ Data saved to Firebase successfully');
+            }).catch(error => {
+                console.error('❌ Firebase save error:', error);
+            });
+            
+            // Backup στο localStorage
             localStorage.setItem('salesData', JSON.stringify(salesData));
             localStorage.setItem('salesData_backup_' + username, JSON.stringify(salesData));
-            localStorage.setItem('lastSyncTime', Date.now().toString());
-            
-            // Try to save to Firebase (can fail gracefully)
-            if (window.isFirebaseReady && window.isFirebaseReady()) {
-                // Αποθήκευση στο Firebase με timestamp
-                const dataWithTimestamp = {
-                    ...salesData,
-                    lastUpdated: Date.now(),
-                    deviceType: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
-                };
-                
-                firebase.database().ref('salesData/' + username).set(dataWithTimestamp).then(() => {
-                    console.log('✅ Data saved to Firebase successfully');
-                    localStorage.setItem('lastFirebaseSync', Date.now().toString());
-                }).catch(error => {
-                    console.error('❌ Firebase save error:', error);
-                    // Mark for retry when connection is restored
-                    localStorage.setItem('pendingFirebaseSync', 'true');
-                });
-            } else {
-                console.warn('⚠️ Firebase not connected, saving locally only');
-                localStorage.setItem('pendingFirebaseSync', 'true');
-            }
         }
 // filepath: [dashboard.html](http://_vscodecontentref_/0)
 function sanitizeKey(email) {
     // Αντικαθιστά . # $ [ ] με _
     return email.replace(/[.#$\[\]]/g, '_');
-}
-
-// Real-time Firebase listener for cross-device sync
-function setupFirebaseListener(username) {
-    console.log('🔗 Setting up Firebase listener for real-time sync...');
-    
-    firebase.database().ref('salesData/' + username).on('value', snapshot => {
-        const firebaseData = snapshot.val();
-        
-        if (!firebaseData) return;
-        
-        // Check if data was updated from another device
-        const lastLocalSync = localStorage.getItem('lastSyncTime');
-        const firebaseLastUpdated = firebaseData.lastUpdated;
-        
-        if (firebaseLastUpdated && lastLocalSync && firebaseLastUpdated > parseInt(lastLocalSync)) {
-            console.log('🔄 Data updated from another device, syncing...');
-            
-            // Smart merge instead of complete replacement
-            const hasLocalChanges = checkForLocalChanges();
-            
-            if (hasLocalChanges) {
-                console.log('⚠️ Local changes detected, performing smart merge...');
-                performSmartMerge(firebaseData);
-            } else {
-                console.log('📥 No local changes, updating from Firebase...');
-                // Clear current data and load from Firebase
-                salesData = {};
-                
-                Object.keys(firebaseData).forEach(key => {
-                    if (key !== 'lastUpdated' && key !== 'deviceType' && firebaseData[key]) {
-                        salesData[key] = firebaseData[key];
-                    }
-                });
-            }
-            
-            // Update UI
-            saveToLocalStorage();
-            renderTable();
-            updateChart();
-            populateYearDropdown();
-            
-            // Update last sync time
-            localStorage.setItem('lastSyncTime', firebaseLastUpdated.toString());
-            
-            // Show notification
-            showSyncNotification();
-        }
-    }, error => {
-        console.error('Firebase listener error:', error);
-    });
-}
-
-// Check if there are unsaved local changes
-function checkForLocalChanges() {
-    const lastLocalSync = localStorage.getItem('lastSyncTime');
-    const lastDataChange = localStorage.getItem('lastDataChange') || '0';
-    
-    return parseInt(lastDataChange) > parseInt(lastLocalSync || '0');
-}
-
-// Perform smart merge of Firebase and local data
-function performSmartMerge(firebaseData) {
-    console.log('🔄 Performing smart merge...');
-    
-    Object.keys(firebaseData).forEach(key => {
-        if (key === 'lastUpdated' || key === 'deviceType') return;
-        
-        if (!salesData[key]) {
-            // New year data from Firebase
-            salesData[key] = firebaseData[key];
-            console.log(`📥 Added new year ${key} from Firebase`);
-        } else {
-            // Merge categories for existing years
-            Object.keys(firebaseData[key] || {}).forEach(category => {
-                if (!salesData[key][category]) {
-                    salesData[key][category] = firebaseData[key][category];
-                    console.log(`📥 Added new category ${category} for year ${key} from Firebase`);
-                } else {
-                    // For existing categories, merge monthly data
-                    Object.keys(firebaseData[key][category] || {}).forEach(month => {
-                        if (!salesData[key][category][month] || 
-                            salesData[key][category][month] === 0) {
-                            salesData[key][category][month] = firebaseData[key][category][month];
-                        }
-                    });
-                }
-            });
-        }
-    });
-    
-    console.log('✅ Smart merge completed');
-}
-
-// Show sync notification to user
-function showSyncNotification() {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 12px;
-        box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-        z-index: 9999;
-        font-size: 14px;
-        font-weight: 600;
-        animation: slideInRight 0.3s ease;
-        backdrop-filter: blur(10px);
-    `;
-    notification.innerHTML = '🔄 Δεδομένα συγχρονίστηκαν από άλλη συσκευή';
-    
-    document.body.appendChild(notification);
-    
-    // Add animation
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
-    
-    // Remove after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideInRight 0.3s ease reverse';
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.parentNode.removeChild(notification);
-            }
-        }, 300);
-    }, 3000);
 }
         // Make functions globally available
         window.deleteCategory = deleteCategory;
@@ -10365,49 +10174,13 @@ function showSyncNotification() {
 };
       // Initialize Firebase
       firebase.initializeApp(firebaseConfig);
-      
-      // Enhanced Firebase connection monitoring
-      let isFirebaseConnected = false;
-      
       firebase.database().ref('.info/connected').on('value', function(snap) {
-        if (snap.val() === true) {
-            console.log('✅ Συνδέθηκε στο Firebase Database');
-            isFirebaseConnected = true;
-            
-            // Check for pending sync when connection is restored
-            const pendingSync = localStorage.getItem('pendingFirebaseSync');
-            if (pendingSync === 'true') {
-                console.log('🔄 Connection restored, performing pending sync...');
-                setTimeout(() => {
-                    const username = sessionStorage.getItem('loggedInUser');
-                    if (username && window.salesData) {
-                        saveToFirebase();
-                        localStorage.removeItem('pendingFirebaseSync');
-                    }
-                }, 1000);
-            }
-            
-            // Trigger sync when connection is restored
-            if (window.salesData && Object.keys(window.salesData).length > 0) {
-                console.log('🔄 Connection restored, syncing data...');
-                const username = sessionStorage.getItem('loggedInUser');
-                if (username) {
-                    syncWithFirebase(sanitizeKey(username));
-                }
-            }
-        } else {
-            console.log('❌ Δεν συνδέθηκε στο Firebase Database');
-            isFirebaseConnected = false;
-        }
-      });
-      
-      // Check Firebase connection status
-      function isFirebaseReady() {
-          return isFirebaseConnected;
-      }
-      
-      // Make functions globally available
-      window.isFirebaseReady = isFirebaseReady;
+    if (snap.val() === true) {
+        console.log('✅ Συνδέθηκε στο Firebase Database');
+    } else {
+        console.log('❌ Δεν συνδέθηκε στο Firebase Database');
+    }
+});
 
         // Dropdown Menu Functions
         function toggleActionsDropdown() {

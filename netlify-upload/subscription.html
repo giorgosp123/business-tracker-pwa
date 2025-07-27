@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon-192.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#667eea">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Business Tracker">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <title>Συνδρομή - Business Tracker Pro</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --info-color: #3498db;
+            --dark-bg: #2c3e50;
+            --light-bg: #ecf0f1;
+            --primary-color-rgb: 102, 126, 234;
+            --animation-duration: 0.3s;
+            --mobile-padding: 15px;
+            --desktop-padding: 20px;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+        }
+
+        html, body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: transparent;
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+            -webkit-text-size-adjust: 100%;
+            font-feature-settings: 'liga' 1, 'kern' 1;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            letter-spacing: -0.01em;
+            position: relative;
+        }
+
+        /* Animated gradient background */
+        /* Notification System - Exact subscription styling positioned left with fade animation */
+        .notification {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            color: #ffffff;
+            padding: 20px 25px;
+            border-radius: 15px;
+            box-shadow:
+                0 20px 25px -5px rgba(0, 0, 0, 0.1),
+                0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55), visibility 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            max-width: 350px;
+            min-width: 300px;
+        }
+
+        .notification.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .notification.success {
+            border-left: 4px solid #2ecc71;
+        }
+
+        .notification.error {
+            border-left: 4px solid #e74c3c;
+        }
+
+        .notification.warning {
+            border-left: 4px solid #f39c12;
+        }
+
+        .notification.info {
+            border-left: 4px solid #3498db;
+        }
+
+        .notification .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .notification .notification-icon {
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .notification .notification-text {
+            flex: 1;
+            font-weight: 600;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        body.dark-mode .notification {
+            background: rgba(44, 62, 80, 0.95);
+            color: #ecf0f1;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .notification {
+                top: 70px;
+                left: 10px;
+                right: 10px;
+                bottom: auto;
+                width: auto;
+                border-radius: 12px;
+                padding: 12px;
+                max-width: none;
+                min-width: auto;
+                z-index: 9997;
+            }
+            .notification-content {
+                padding: 8px;
+            }
+            .notification-text {
+                font-size: 13px;
+                margin: 0 10px;
+            }
+        }
+        .background {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            height: 100% !important;
+            background: #2c3e50;
+            background: linear-gradient(45deg, #2c3e50, #34495e, #1a252f, #2c3e50, #34495e, #1a252f) !important;
+            background-size: 400% 400% !important;
+            animation: gradientShift 15s ease infinite !important;
+            z-index: -1 !important;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-top: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: #ecf0f1;
+        }
+
+        /* Back button */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .back-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        /* Subscription plans */
+        .plans-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+            flex: 1;
+        }
+
+        .plan-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+
+        .plan-card.featured {
+            border: 2px solid var(--primary-color);
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .plan-card.featured::before {
+            content: "🎉 ΔΩΡΕΑΝ ΔΟΚΙΜΗ";
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .plan-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .plan-price {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .plan-duration {
+            font-size: 1rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+            color: #ecf0f1;
+        }
+
+        .plan-features {
+            list-style: none;
+            margin-bottom: 30px;
+            text-align: left;
+        }
+
+        .plan-features li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            color: #ecf0f1;
+            font-size: 0.95rem;
+        }
+
+        .plan-features li::before {
+            content: "✅";
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .plan-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 12px;
+            padding: 15px 25px;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .plan-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .plan-button:active {
+            transform: translateY(0);
+        }
+
+        .plan-button.secondary {
+            background: transparent;
+            border: 2px solid var(--glass-border);
+            color: #ecf0f1;
+        }
+
+        .plan-button.secondary:hover {
+            background: var(--glass-bg);
+            border-color: var(--primary-color);
+        }
+
+        /* Trial notice */
+        .trial-notice {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .trial-notice h3 {
+            color: var(--success-color);
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+
+        .trial-notice p {
+            color: #ecf0f1;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+
+        /* Mobile responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .plans-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .plan-card {
+                padding: 25px 20px;
+            }
+
+            .plan-price {
+                font-size: 2.5rem;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background"></div>
+    <!-- Notification System -->
+    <div class="notification" id="notification">
+        <div class="notification-content">
+            <div class="notification-icon" id="notificationIcon">🔔</div>
+            <div class="notification-text" id="notificationText"></div>
+        </div>
+    </div>
+    <div class="container">
+        <a href="dashboard.html" class="back-button">
+            ← Πίσω 
+        </a>
+
+        <div class="header">
+            <h1>💼 Επιλέξτε Συνδρομή</h1>
+            <p>Αναβαθμίστε την επιχείρησή σας με τα προηγμένα εργαλεία μας</p>
+        </div>
+
+        <div class="trial-notice">
+            <h3>🎁 Ειδική Προσφορά!</h3>
+            <p>Δοκιμάστε όλες τις premium λειτουργίες ΔΩΡΕΑΝ για 3 ημέρες! Χωρίς δέσμευση, χωρίς χρεώσεις.</p>
+        </div>
+
+        <div class="plans-container">
+            <!-- Free Trial Plan -->
+            <div class="plan-card featured">
+                <div class="plan-title">🆓 Δωρεάν Δοκιμή</div>
+                <div class="plan-price">0€</div>
+                <div class="plan-duration">για 3 ημέρες</div>
+                <ul class="plan-features">
+                    <!-- Μόνο τα premium features που ξεκλειδώνει η δοκιμή -->
+                    <li class="locked-feature" id="feature-goals"><span class="lock-icon">🔒</span> Στόχοι & Targets <span class="unlock-msg" style="display:none;color:#2ecc71;font-weight:600;">Ξεκλειδώθηκε!</span></li>
+                    <li class="locked-feature" id="feature-ai-suggestions"><span class="lock-icon">🔒</span> Έξυπνες Προτάσεις AI <span class="unlock-msg" style="display:none;color:#2ecc71;font-weight:600;">Ξεκλειδώθηκε!</span></li>
+                    <li class="locked-feature" id="feature-advanced-analytics"><span class="lock-icon">🔒</span> Προηγμένα Αναλυτικά Στοιχεία <span class="unlock-msg" style="display:none;color:#2ecc71;font-weight:600;">Ξεκλειδώθηκε!</span></li>
+                    <li class="locked-feature" id="feature-ai-forecast"><span class="lock-icon">🔒</span> AI Πρόβλεψη <span class="unlock-msg" style="display:none;color:#2ecc71;font-weight:600;">Ξεκλειδώθηκε!</span></li>
+                </ul>
+                <button class="plan-button" onclick="startFreeTrial()">
+                    🚀 Ξεκινήστε Δωρεάν Δοκιμή
+                </button>
+                <button id="cancelTrialBtn" class="plan-button secondary" style="display:none;margin-top:12px;" onclick="cancelFreeTrial()">
+                    ❌ Ακύρωση Δωρεάν Δοκιμής
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Modal -->
+    <div id="loadingModal" class="loading">
+        <div class="spinner"></div>
+        <h3>Ενεργοποιείται η δωρεάν δοκιμή...</h3>
+        <p>Παρακαλώ περιμένετε</p>
+    </div>
+
+    <script>
+        // Animate cards on load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.plan-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 150);
+            });
+        });
+
+        // Start free trial function
+        function startFreeTrial() {
+            const loadingModal = document.getElementById('loadingModal');
+            loadingModal.style.display = 'block';
+            // Simulate API call
+            setTimeout(() => {
+                // Store trial info in localStorage
+                const trialEndDate = new Date();
+                trialEndDate.setDate(trialEndDate.getDate() + 3);
+                localStorage.setItem('freeTrialActive', 'true');
+                localStorage.setItem('freeTrialEndDate', trialEndDate.toISOString());
+                localStorage.setItem('userPlan', 'trial');
+                // Show notification
+                showNotification('🎉 Συγχαρητήρια! Η δωρεάν δοκιμή σας ενεργοποιήθηκε!\nΈχετε πλήρη πρόσβαση για 3 ημέρες.\nΛήγει στις: ' + trialEndDate.toLocaleDateString('el-GR'), 'success', 3500);
+                // Unlock features visually
+                unlockTrialFeatures();
+                // Redirect back to dashboard after notification
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 3500);
+            }, 2000);
+        }
+
+        // Select plan function
+        function selectPlan(planType) {
+            showNotification('🚧 Η πληρωμή θα υλοποιηθεί σύντομα!\nΓια τώρα μπορείτε να δοκιμάσετε τη δωρεάν έκδοση για 3 ημέρες.', 'info', 3500);
+        }
+
+        // Check if user already has an active trial
+        // Notification system functions
+        function showNotification(message, type = 'success', duration = 3000) {
+            const notification = document.getElementById('notification');
+            const icon = document.getElementById('notificationIcon');
+            const text = document.getElementById('notificationText');
+            // Set notification content
+            text.textContent = message;
+            // Set icon based on type
+            const icons = {
+                success: '🎉',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            icon.textContent = icons[type] || icons.success;
+            // Set notification type class
+            notification.className = `notification ${type}`;
+            // Show notification with fade animation
+            setTimeout(() => {
+                notification.classList.add('show');
+            }, 100);
+            // Auto hide after duration
+            setTimeout(() => {
+                hideNotification();
+            }, duration);
+        }
+
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+        }
+        window.addEventListener('load', function() {
+            const trialActive = localStorage.getItem('freeTrialActive');
+            const trialEndDate = localStorage.getItem('freeTrialEndDate');
+            
+            if (trialActive === 'true' && trialEndDate) {
+                const endDate = new Date(trialEndDate);
+                const now = new Date();
+                
+                if (now < endDate) {
+                    const daysLeft = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
+                    document.querySelector('.trial-notice h3').textContent = '⏰ Ενεργή Δωρεάν Δοκιμή!';
+                    document.querySelector('.trial-notice p').textContent = `Σας απομένουν ${daysLeft} ημέρες από την δωρεάν δοκιμή σας.`;
+                    
+                    // Update trial button
+                    const trialButton = document.querySelector('.featured .plan-button');
+                    trialButton.textContent = `✅ Ενεργή Δοκιμή (${daysLeft} ημέρες)`;
+                    trialButton.disabled = true;
+                    trialButton.style.opacity = '0.7';
+                    trialButton.onclick = null;
+                    // Show cancel button
+                    document.getElementById('cancelTrialBtn').style.display = 'block';
+                    // Unlock features visually
+                    unlockTrialFeatures();
+                }
+            }
+        });
+
+        function unlockTrialFeatures() {
+            const features = [
+                'feature-goals',
+                'feature-ai-suggestions',
+                'feature-advanced-analytics',
+                'feature-ai-forecast'
+            ];
+            features.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('unlocked');
+                    el.querySelector('.lock-icon').textContent = '✅';
+                    el.querySelector('.unlock-msg').style.display = 'inline';
+                }
+            });
+        }
+
+        function lockTrialFeatures() {
+            const features = [
+                'feature-goals',
+                'feature-ai-suggestions',
+                'feature-advanced-analytics',
+                'feature-ai-forecast'
+            ];
+            features.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.remove('unlocked');
+                    el.querySelector('.lock-icon').textContent = '🔒';
+                    el.querySelector('.unlock-msg').style.display = 'none';
+                }
+            });
+        }
+
+        function cancelFreeTrial() {
+            localStorage.setItem('freeTrialActive', 'false');
+            localStorage.setItem('freeTrialEndDate', '');
+            localStorage.removeItem('userPlan');
+            // Reset UI
+            document.querySelector('.trial-notice h3').textContent = '🎁 Ειδική Προσφορά!';
+            document.querySelector('.trial-notice p').textContent = 'Δοκιμάστε όλες τις premium λειτουργίες ΔΩΡΕΑΝ για 3 ημέρες! Χωρίς δέσμευση, χωρίς χρεώσεις.';
+            const trialButton = document.querySelector('.featured .plan-button');
+            trialButton.textContent = '🚀 Ξεκινήστε Δωρεάν Δοκιμή';
+            trialButton.disabled = false;
+            trialButton.style.opacity = '1';
+            trialButton.onclick = startFreeTrial;
+            document.getElementById('cancelTrialBtn').style.display = 'none';
+            lockTrialFeatures();
+            showNotification('❌ Η δωρεάν δοκιμή ακυρώθηκε.', 'error', 3000);
+        }
+    </script>
+</body>
+</html>
