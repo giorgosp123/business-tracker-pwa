@@ -1,0 +1,36 @@
+# Netlify configuration for automatic deployment
+[build]
+  publish = "./"
+  command = "echo 'No build step required'"
+
+# Redirect all requests to index.html for SPA/PWA
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Set headers for PWA and caching
+[[headers]]
+  for = "/manifest.json"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/icon-*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+[[headers]]
+  for = "/dashboard.html"
+  [headers.values]
+    Cache-Control = "public, max-age=3600"
+
+# Enable pretty URLs
+[build.environment]
+  PRETTY_URLS = "true"
+
+# Optional: Set a custom domain
+#[[redirects]]
+#  from = "https://yourdomain.com/*"
+#  to = "/:splat"
+#  status = 200
