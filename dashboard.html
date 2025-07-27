@@ -26,6 +26,30 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 
     <style>
+/* Ensure lock icon for dropdowns is always visible and on the right */
+.locked-feature + .lock-icon,
+select.locked-feature + .lock-icon,
+.locked-feature-panel .lock-icon {
+    position: absolute !important;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    z-index: 100;
+    opacity: 0.85;
+    pointer-events: none;
+}
+/* Ensure lock icon inside button is always visible and on the right */
+.locked-feature .lock-icon {
+    position: absolute !important;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 18px;
+    z-index: 100;
+    opacity: 0.85;
+    pointer-events: none;
+}
         * {
             margin: 0;
             padding: 0;
@@ -77,6 +101,30 @@
             position: relative;
         }
 
+            // Remove lock icon if present (for dropdowns)
+            if (id === 'chartCategory' || id === 'forecastPeriod') {
+                const lockIcon = el.parentElement && el.parentElement.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+                if (el.parentElement) el.parentElement.style.position = '';
+            }
+            // Remove lock icon if present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                const lockIcon = el.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+                el.style.position = '';
+            }
+            // Remove lock icon if present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                const lockIcon = el.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+                el.style.position = '';
+            }
+            // Remove lock icon if present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                const lockIcon = el.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+                el.style.position = '';
+            }
         /* Force dark mode - always enabled */
         body {
             background: transparent;
@@ -95,26 +143,122 @@
             position: fixed !important;
             top: 0 !important;
             left: 0 !important;
+            // Add lock icon if not present (for dropdowns)
+            if ((id === 'chartCategory' || id === 'forecastPeriod') && el.parentElement) {
+                el.parentElement.style.position = 'relative';
+                // Remove any previous icon
+                const prevIcon = el.parentElement.querySelector('.lock-icon');
+                if (prevIcon) prevIcon.remove();
+                if (!el.parentElement.querySelector('.lock-icon')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    icon.style.position = 'absolute';
+                    icon.style.top = '50%';
+                    icon.style.right = '10px';
+                    icon.style.transform = 'translateY(-50%)';
+                    icon.style.fontSize = '18px';
+                    icon.style.zIndex = '100';
+                    icon.style.opacity = '0.85';
+                    icon.style.pointerEvents = 'none';
+                    el.parentElement.appendChild(icon);
+                }
+            }
             width: 100% !important;
             height: 100% !important;
             background: #ff6b6b; /* fallback */
             background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #ffeaa7, #dda0dd) !important;
             background-size: 400% 400% !important;
             animation: gradientShift 15s ease infinite !important;
+            // Add lock icon if not present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                el.style.position = 'relative';
+                // Remove any previous icon
+                const prevIcon = el.querySelector('.lock-icon');
+                if (prevIcon) prevIcon.remove();
+                if (!el.querySelector('.lock-icon')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    el.appendChild(icon);
+                }
+            }
             z-index: -2 !important;
             display: block !important;
             visibility: visible !important;
         }
         
         @keyframes gradientShift {
+            // Add lock icon if not present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                el.style.position = 'relative';
+                // Remove any previous icon
+                const prevIcon = el.querySelector('.lock-icon');
+                if (prevIcon) prevIcon.remove();
+                // Try to append to button itself
+                if (!el.querySelector('.lock-icon')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    icon.style.position = 'absolute';
+                    icon.style.top = '50%';
+                    icon.style.right = '10px';
+                    icon.style.transform = 'translateY(-50%)';
+                    icon.style.fontSize = '18px';
+                    icon.style.zIndex = '100';
+                    icon.style.opacity = '0.85';
+                    icon.style.pointerEvents = 'none';
+                    el.appendChild(icon);
+                }
+                // Fallback: if button is too small, append to parent
+                if (!el.querySelector('.lock-icon') && el.parentElement) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    icon.style.position = 'absolute';
+                    icon.style.top = '50%';
+                    icon.style.right = '10px';
+                    icon.style.transform = 'translateY(-50%)';
+                    icon.style.fontSize = '18px';
+                    icon.style.zIndex = '100';
+                    icon.style.opacity = '0.85';
+                    icon.style.pointerEvents = 'none';
+                    el.parentElement.style.position = 'relative';
+                    el.parentElement.appendChild(icon);
+                }
+            }
             0% { background-position: 0% 50%; }
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
         
         /* Glassmorphism overlay - same as index.html */
+            // Add lock icon if not present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                el.style.position = 'relative';
+                if (!el.querySelector('.lock-icon')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    icon.style.position = 'absolute';
+                    icon.style.top = '6px';
+                    icon.style.right = '10px';
+                    icon.style.fontSize = '18px';
+                    icon.style.zIndex = '10';
+                    icon.style.opacity = '0.8';
+                    el.appendChild(icon);
+                }
+            }
         .glass-overlay {
             position: fixed;
+/* Lock icon for locked premium features/buttons */
+.locked-feature {
+    position: relative !important;
+}
+.lock-icon {
+    pointer-events: none;
+    user-select: none;
+}
             top: 0;
             left: 0;
             width: 100%;
@@ -5766,25 +5910,104 @@ function applyPremiumLocks() {
     premiumFeatureButtons.forEach(id => {
         const el = document.getElementById(id);
         if (!el) return;
-        // Remove previous lock
-        if (el._lockClickHandler) {
-            el.removeEventListener('click', el._lockClickHandler, true);
-            el._lockClickHandler = null;
+        // Remove previous locks
+        if (el._lockHandlers) {
+            el._lockHandlers.forEach(({type, handler}) => {
+                el.removeEventListener(type, handler, true);
+            });
+            el._lockHandlers = null;
         }
         if (unlocked) {
             if ('disabled' in el) el.disabled = false;
             el.classList.remove('locked-feature');
             el.title = '';
+            el.style.pointerEvents = '';
+            el.style.opacity = '';
+            el.style.cursor = '';
+            el.style.display = '';
             if (el._originalClick) {
                 el.click = el._originalClick;
                 el._originalClick = null;
             }
         } else {
-            if ('disabled' in el) el.disabled = true;
+            // Strong visual lock
             el.classList.add('locked-feature');
             el.title = 'Ξεκλειδώνει με δωρεάν δοκιμή';
-            if (!('disabled' in el)) {
-                el._lockClickHandler = function(e) {
+            el.style.pointerEvents = 'none';
+            el.style.opacity = '0.5';
+            el.style.cursor = 'not-allowed';
+            el.style.display = '';
+            // For selects, force disabled
+            if (el.tagName === 'SELECT' || 'disabled' in el) {
+                el.disabled = true;
+            }
+            // Block all possible events
+            const events = ['click','change','input','focus','mousedown','mouseup','keydown','keyup','touchstart','touchend'];
+            el._lockHandlers = events.map(type => {
+
+    // ...existing code for premiumFeatureButtons...
+    // Lock/unlock Έξυπνες Προτάσεις AI panel (insightsPanel) after all premium features
+    setTimeout(function() {
+        const insightsPanel = document.getElementById('insightsPanel');
+        if (insightsPanel) {
+            if (unlocked) {
+                insightsPanel.classList.remove('locked-feature-panel');
+                insightsPanel.style.pointerEvents = '';
+                insightsPanel.style.opacity = '';
+                // Remove lock icon if present
+                const lockIcon = insightsPanel.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+            } else {
+                insightsPanel.classList.add('locked-feature-panel');
+                insightsPanel.style.pointerEvents = 'none';
+                insightsPanel.style.opacity = '0.5';
+                // Add lock icon if not present
+                if (!insightsPanel.querySelector('.lock-icon')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    icon.style.position = 'absolute';
+                    icon.style.top = '10px';
+                    icon.style.right = '16px';
+                    icon.style.fontSize = '22px';
+                    icon.style.zIndex = '10';
+                    icon.style.opacity = '0.8';
+                    insightsPanel.appendChild(icon);
+                }
+            }
+        }
+
+        // Lock/unlock Προηγμένα Αναλυτικά Στοιχεία panel (analyticsPanel)
+        const analyticsPanel = document.getElementById('analyticsPanel');
+        if (analyticsPanel) {
+            if (unlocked) {
+                analyticsPanel.classList.remove('locked-feature-panel');
+                analyticsPanel.style.pointerEvents = '';
+                analyticsPanel.style.opacity = '';
+                // Remove lock icon if present
+                const lockIcon = analyticsPanel.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+            } else {
+                analyticsPanel.classList.add('locked-feature-panel');
+                analyticsPanel.style.pointerEvents = 'none';
+                analyticsPanel.style.opacity = '0.5';
+                // Add lock icon if not present
+                if (!analyticsPanel.querySelector('.lock-icon')) {
+                    const icon = document.createElement('span');
+                    icon.className = 'lock-icon';
+                    icon.innerHTML = '🔒';
+                    icon.style.position = 'absolute';
+                    icon.style.top = '10px';
+                    icon.style.right = '16px';
+                    icon.style.fontSize = '22px';
+                    icon.style.zIndex = '10';
+                    icon.style.opacity = '0.8';
+                    analyticsPanel.appendChild(icon);
+                }
+            }
+        }
+    }, 0);
+                const handler = function(e) {
                     e.stopPropagation();
                     e.stopImmediatePropagation();
                     e.preventDefault();
@@ -5793,16 +6016,18 @@ function applyPremiumLocks() {
                     }
                     return false;
                 };
-                el.addEventListener('click', el._lockClickHandler, true);
-                if (!el._originalClick) {
-                    el._originalClick = el.click;
-                }
-                el.click = function() {
-                    if (typeof showNotification === 'function') {
-                        showNotification('Αυτή η λειτουργία είναι κλειδωμένη. Ξεκλειδώνει με δωρεάν δοκιμή.', 'warning');
-                    }
-                };
+                el.addEventListener(type, handler, true);
+                return {type, handler};
+            });
+            // Block programmatic .click
+            if (!el._originalClick) {
+                el._originalClick = el.click;
             }
+            el.click = function() {
+                if (typeof showNotification === 'function') {
+                    showNotification('Αυτή η λειτουργία είναι κλειδωμένη. Ξεκλειδώνει με δωρεάν δοκιμή.', 'warning');
+                }
+            };
         }
     });
 }
@@ -5813,14 +6038,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 window.refreshSubscriptionStatus = function() {
     applyPremiumLocks();
-}
-
-// Listen for trial cancel or activation from subscription.html
-window.addEventListener('storage', function(e) {
-    if (e.key === 'freeTrialActive' || e.key === 'freeTrialEndDate') {
-        applyPremiumLocks();
-    }
-});
+};
         // Create floating particles
         function createParticles() {
             const particlesContainer = document.getElementById('particles');
@@ -8298,6 +8516,11 @@ const deleteCategory = (category, rowElement) => {
 
         const analyzeGrowthTrends = (data, category) => {
             const insights = [];
+            // Remove lock icon if present (only for goalsBtn)
+            if (id === 'goalsBtn') {
+                const lockIcon = el.querySelector('.lock-icon');
+                if (lockIcon) lockIcon.remove();
+            }
             const t = translations[currentLanguage];
             const recentMonths = data.slice(-3);
             const previousMonths = data.slice(-6, -3);
@@ -8334,6 +8557,19 @@ const deleteCategory = (category, rowElement) => {
                     priority: 'high'
                 });
             } else if (growthRate < -5) {
+            // Add lock icon if not present (only for goalsBtn)
+            if (id === 'goalsBtn' && !el.querySelector('.lock-icon')) {
+                const icon = document.createElement('span');
+                icon.className = 'lock-icon';
+                icon.innerHTML = '🔒';
+                icon.style.position = 'absolute';
+                icon.style.top = '6px';
+                icon.style.right = '10px';
+                icon.style.fontSize = '18px';
+                icon.style.zIndex = '10';
+                icon.style.opacity = '0.8';
+                el.appendChild(icon);
+            }
                 insights.push({
                     icon: '📉',
                     title: t.downwardTrend,
